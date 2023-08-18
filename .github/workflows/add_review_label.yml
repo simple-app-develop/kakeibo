@@ -1,0 +1,21 @@
+name: "プルリクエストに自動的にラベルを付ける/外す"
+
+on:
+  pull_request:
+    types: [opened, ready_for_review, reopened]
+jobs:
+  add_review_label:
+    if: github.event.pull_request.draft != true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions-ecosystem/action-remove-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            🚧wip
+      - uses: actions-ecosystem/action-add-labels@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          labels: |
+            👀needs_review
