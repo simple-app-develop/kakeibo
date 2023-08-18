@@ -26,3 +26,11 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
+
+// Language Switcher Route 言語切替用ルートだよ
+Route::get('language/{locale}', function ($locale) {
+    app()->setLocale($locale);
+    session()->put('locale', $locale);
+
+    return redirect()->back();
+});
