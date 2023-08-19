@@ -13,10 +13,20 @@ use Laravel\Jetstream\Events\TeamMemberAdded;
 use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Rules\Role;
 
+/**
+ * チームに新しいメンバーを追加するクラス
+ * 
+ * このクラスは、Jetstreamを利用して、チームに新しいメンバーを追加するロジックを提供します。
+ */
 class AddTeamMember implements AddsTeamMembers
 {
     /**
-     * Add a new team member to the given team.
+     * 指定されたチームに新しいメンバーを追加するメソッド
+     *
+     * @param User $user チームのオーナーか管理者
+     * @param Team $team メンバーを追加する対象のチーム
+     * @param string $email 追加するメンバーのメールアドレス
+     * @param string|null $role メンバーの役割（オプション）
      */
     public function add(User $user, Team $team, string $email, string $role = null): void
     {
@@ -29,14 +39,19 @@ class AddTeamMember implements AddsTeamMembers
         AddingTeamMember::dispatch($team, $newTeamMember);
 
         $team->users()->attach(
-            $newTeamMember, ['role' => $role]
+            $newTeamMember,
+            ['role' => $role]
         );
 
         TeamMemberAdded::dispatch($team, $newTeamMember);
     }
 
     /**
-     * Validate the add member operation.
+     * メンバー追加操作を検証するメソッド
+     *
+     * @param Team $team メンバーを追加する対象のチーム
+     * @param string $email 追加するメンバーのメールアドレス
+     * @param string|null $role メンバーの役割
      */
     protected function validate(Team $team, string $email, ?string $role): void
     {
@@ -51,22 +66,26 @@ class AddTeamMember implements AddsTeamMembers
     }
 
     /**
-     * Get the validation rules for adding a team member.
+     * チームメンバー追加のための検証ルールを取得するメソッド
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string> 検証ルールの配列
      */
     protected function rules(): array
     {
         return array_filter([
             'email' => ['required', 'email', 'exists:users'],
             'role' => Jetstream::hasRoles()
-                            ? ['required', 'string', new Role]
-                            : null,
+                ? ['required', 'string', new Role]
+                : null,
         ]);
     }
 
     /**
-     * Ensure that the user is not already on the team.
+     * ユーザーが既にチームに存在していないことを確認するメソッド
+     *
+     * @param Team $team メンバーを追加する対象のチーム
+     * @param string $email 追加するメンバーのメールアドレス
+     * @return Closure クロージャーで、存在している場合にバリデーションエラーを追加する
      */
     protected function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): Closure
     {

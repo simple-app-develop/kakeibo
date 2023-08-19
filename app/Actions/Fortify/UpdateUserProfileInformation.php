@@ -8,12 +8,18 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rule;
 use Laravel\Fortify\Contracts\UpdatesUserProfileInformation;
 
+/**
+ * ユーザーのプロフィール情報を更新するクラス
+ * 
+ * このクラスは、ユーザーのプロフィール情報を更新するためのロジックを提供します。
+ */
 class UpdateUserProfileInformation implements UpdatesUserProfileInformation
 {
     /**
-     * Validate and update the given user's profile information.
+     * 与えられたユーザーのプロフィール情報を検証して更新するメソッド
      *
-     * @param  array<string, string>  $input
+     * @param User $user プロフィール情報を更新するユーザーのインスタンス
+     * @param array<string, string> $input ユーザーからの入力 (名前、メール、写真など)
      */
     public function update(User $user, array $input): void
     {
@@ -27,8 +33,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             $user->updateProfilePhoto($input['photo']);
         }
 
-        if ($input['email'] !== $user->email &&
-            $user instanceof MustVerifyEmail) {
+        if (
+            $input['email'] !== $user->email &&
+            $user instanceof MustVerifyEmail
+        ) {
             $this->updateVerifiedUser($user, $input);
         } else {
             $user->forceFill([
@@ -39,9 +47,10 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
     }
 
     /**
-     * Update the given verified user's profile information.
+     * 与えられた検証済みのユーザーのプロフィール情報を更新するメソッド
      *
-     * @param  array<string, string>  $input
+     * @param User $user プロフィール情報を更新するユーザーのインスタンス
+     * @param array<string, string> $input ユーザーからの入力 (名前、メールなど)
      */
     protected function updateVerifiedUser(User $user, array $input): void
     {

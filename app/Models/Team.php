@@ -8,13 +8,21 @@ use Laravel\Jetstream\Events\TeamDeleted;
 use Laravel\Jetstream\Events\TeamUpdated;
 use Laravel\Jetstream\Team as JetstreamTeam;
 
+/**
+ * チームモデルクラス
+ * 
+ * このモデルは、Jetstreamのチームモデルを拡張しており、
+ * アプリケーション内のチームやグループのデータを表現します。
+ */
 class Team extends JetstreamTeam
 {
     use HasFactory;
 
     /**
-     * The attributes that should be cast.
+     * 型変換をする属性
      *
+     * この属性定義は、データベースの値をモデルの属性値に変換する際の型を指定します。
+     * 
      * @var array<string, string>
      */
     protected $casts = [
@@ -22,8 +30,10 @@ class Team extends JetstreamTeam
     ];
 
     /**
-     * The attributes that are mass assignable.
+     * 代入可能な属性
      *
+     * この属性定義は、モデルのインスタンスを作成または更新する際に、一括で代入可能な属性を指定します。
+     * 
      * @var array<int, string>
      */
     protected $fillable = [
@@ -32,8 +42,10 @@ class Team extends JetstreamTeam
     ];
 
     /**
-     * The event map for the model.
+     * モデルのイベントマップ
      *
+     * この属性定義は、モデルの特定のイベントが発生したときに発火するイベントクラスを指定します。
+     * 
      * @var array<string, class-string>
      */
     protected $dispatchesEvents = [
