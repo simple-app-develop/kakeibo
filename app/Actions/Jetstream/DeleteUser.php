@@ -8,17 +8,25 @@ use Illuminate\Support\Facades\DB;
 use Laravel\Jetstream\Contracts\DeletesTeams;
 use Laravel\Jetstream\Contracts\DeletesUsers;
 
+/**
+ * ユーザーを削除するクラス
+ * 
+ * このクラスは、Jetstreamを利用して、指定されたユーザーを削除するロジックを提供します。
+ * ユーザーが関連付けられているチームやチームの関連情報も削除します。
+ */
 class DeleteUser implements DeletesUsers
 {
     /**
-     * The team deleter implementation.
+     * チーム削除の実装
      *
      * @var \Laravel\Jetstream\Contracts\DeletesTeams
      */
     protected $deletesTeams;
 
     /**
-     * Create a new action instance.
+     * 新しいアクションインスタンスを作成するコンストラクタ
+     *
+     * @param DeletesTeams $deletesTeams チーム削除の実装
      */
     public function __construct(DeletesTeams $deletesTeams)
     {
@@ -26,7 +34,9 @@ class DeleteUser implements DeletesUsers
     }
 
     /**
-     * Delete the given user.
+     * 指定されたユーザーを削除するメソッド
+     *
+     * @param User $user 削除するユーザーのインスタンス
      */
     public function delete(User $user): void
     {
@@ -39,7 +49,9 @@ class DeleteUser implements DeletesUsers
     }
 
     /**
-     * Delete the teams and team associations attached to the user.
+     * ユーザーに関連付けられたチームとチームの関連情報を削除するメソッド
+     *
+     * @param User $user チーム関連情報を削除するユーザーのインスタンス
      */
     protected function deleteTeams(User $user): void
     {

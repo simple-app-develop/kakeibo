@@ -16,10 +16,20 @@ use Laravel\Jetstream\Jetstream;
 use Laravel\Jetstream\Mail\TeamInvitation;
 use Laravel\Jetstream\Rules\Role;
 
+/**
+ * チームに新しいメンバーを招待するクラス
+ * 
+ * このクラスは、Jetstreamを利用して、指定されたチームに新しいメンバーを招待するロジックを提供します。
+ */
 class InviteTeamMember implements InvitesTeamMembers
 {
     /**
-     * Invite a new team member to the given team.
+     * 指定されたチームに新しいメンバーを招待するメソッド
+     *
+     * @param User $user チームのオーナーか管理者
+     * @param Team $team メンバーを招待する対象のチーム
+     * @param string $email 招待するメンバーのメールアドレス
+     * @param string|null $role メンバーの役割（オプション）
      */
     public function invite(User $user, Team $team, string $email, string $role = null): void
     {
@@ -38,7 +48,11 @@ class InviteTeamMember implements InvitesTeamMembers
     }
 
     /**
-     * Validate the invite member operation.
+     * メンバー招待操作を検証するメソッド
+     *
+     * @param Team $team メンバーを招待する対象のチーム
+     * @param string $email 招待するメンバーのメールアドレス
+     * @param string|null $role メンバーの役割
      */
     protected function validate(Team $team, string $email, ?string $role): void
     {
@@ -53,9 +67,10 @@ class InviteTeamMember implements InvitesTeamMembers
     }
 
     /**
-     * Get the validation rules for inviting a team member.
+     * チームメンバー招待のための検証ルールを取得するメソッド
      *
-     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string>
+     * @param Team $team メンバーを招待する対象のチーム
+     * @return array<string, \Illuminate\Contracts\Validation\Rule|array|string> 検証ルールの配列
      */
     protected function rules(Team $team): array
     {
@@ -67,13 +82,17 @@ class InviteTeamMember implements InvitesTeamMembers
                 }),
             ],
             'role' => Jetstream::hasRoles()
-                            ? ['required', 'string', new Role]
-                            : null,
+                ? ['required', 'string', new Role]
+                : null,
         ]);
     }
 
     /**
-     * Ensure that the user is not already on the team.
+     * ユーザーが既にチームに存在していないことを確認するメソッド
+     *
+     * @param Team $team メンバーを招待する対象のチーム
+     * @param string $email 招待するメンバーのメールアドレス
+     * @return Closure クロージャーで、存在している場合にバリデーションエラーを追加する
      */
     protected function ensureUserIsNotAlreadyOnTeam(Team $team, string $email): Closure
     {

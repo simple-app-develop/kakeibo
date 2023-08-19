@@ -10,12 +10,19 @@ use Laravel\Jetstream\Contracts\CreatesTeams;
 use Laravel\Jetstream\Events\AddingTeam;
 use Laravel\Jetstream\Jetstream;
 
+/**
+ * ユーザーのための新しいチームを作成するクラス
+ * 
+ * このクラスは、Jetstreamを利用して、指定されたユーザーのための新しいチームを作成するロジックを提供します。
+ */
 class CreateTeam implements CreatesTeams
 {
     /**
-     * Validate and create a new team for the given user.
+     * 指定されたユーザーのために新しいチームを検証して作成するメソッド
      *
-     * @param  array<string, string>  $input
+     * @param User $user チームを作成するユーザー
+     * @param array<string, string> $input ユーザーからの入力 (チーム名など)
+     * @return Team 作成されたチームのインスタンス
      */
     public function create(User $user, array $input): Team
     {

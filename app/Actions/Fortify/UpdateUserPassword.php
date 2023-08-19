@@ -7,14 +7,23 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\UpdatesUserPasswords;
 
+/**
+ * ユーザーのパスワードを更新するクラス
+ * 
+ * このクラスは、ユーザーの現在のパスワードを新しいパスワードに変更するロジックを提供します。
+ */
 class UpdateUserPassword implements UpdatesUserPasswords
 {
     use PasswordValidationRules;
 
     /**
-     * Validate and update the user's password.
+     * ユーザーのパスワードを検証して更新するメソッド
      *
-     * @param  array<string, string>  $input
+     * このメソッドは、提供された現在のパスワードと新しいパスワードの入力を検証し、
+     * ユーザーのパスワードを新しいものに更新します。
+     * 
+     * @param User $user パスワードを更新するユーザーのインスタンス
+     * @param array<string, string> $input ユーザーからの入力 (現在のパスワードと新しいパスワード)
      */
     public function update(User $user, array $input): void
     {
