@@ -35,13 +35,12 @@ jobs:
       - name: "プルリクエストのタイトルを取得"
         id: pr_title
         run: |
-          pr_title=$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/pulls?state=closed | jq '.[0].title' | sed 's/"//g')
+          pr_title=$(curl -H 'Accept: application/vnd.github.v3+json' -H 'Authorization: token ${{ secrets.GITHUB_TOKEN }}' https://api.github.com/repos/${{ github.repository }}/pulls/${{ github.event.pull_request.number }} | jq '.title' | sed 's/"//g')
           if [[ -z "$pr_title" ]]; then
             pr_title=""
           fi
           echo "PR_TITLE=$pr_title" >> $GITHUB_ENV
           echo "DEBUG: pr_title is $pr_title"
-
 
       - name: "バージョンをインクリメントする"
         id: bump_version
