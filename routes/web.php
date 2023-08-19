@@ -27,10 +27,11 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// Language Switcher Route 言語切替用ルートだよ
 Route::get('language/{locale}', function ($locale) {
     app()->setLocale($locale);
     session()->put('locale', $locale);
 
     return redirect()->back();
 });
+
+require __DIR__ . '/expenses.php';
