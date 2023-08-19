@@ -9,9 +9,15 @@ changelog:
     - title: New Features 🎉
       labels:
         - "🌟feature"
+    - title: Fix 🛠️
+      labels:
+        - "🛠️fix"
+    - title: Refactoring ♻️
+      labels:
+        - "♻refactor"
     - title: Bug Fix 🕷️
       labels:
-        - "🕷️bug"     
+        - "🕷️bug"
     - title: Other Changes 🛠
       labels:
         - "*"
