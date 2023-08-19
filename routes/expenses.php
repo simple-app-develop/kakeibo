@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Expenses\ExpenseCategoryController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -7,7 +8,7 @@ Route::middleware([
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
-    Route::get('/expense-categories', function () {
-        return view('expenses.categories');
-    })->name('expense-categories');
+
+    Route::get('/expense-category/create', [ExpenseCategoryController::class, 'create'])->name('expense-category-create');
+    Route::post('/expense-category/store', [ExpenseCategoryController::class, 'store'])->name('expense-category-store');
 });
