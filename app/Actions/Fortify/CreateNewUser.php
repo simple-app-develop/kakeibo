@@ -10,14 +10,22 @@ use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\CreatesNewUsers;
 use Laravel\Jetstream\Jetstream;
 
+/**
+ * 新しいユーザーを作成するクラス
+ * 
+ * ユーザー登録時のビジネスロジックを提供するアクションクラスです。
+ */
 class CreateNewUser implements CreatesNewUsers
 {
     use PasswordValidationRules;
 
     /**
-     * Create a newly registered user.
+     * 新しい登録ユーザーを作成するメソッド
      *
-     * @param  array<string, string>  $input
+     * 与えられた入力値を検証した後、新しいユーザーをデータベースに保存します。
+     * 
+     * @param  array<string, string>  $input ユーザー情報の入力値
+     * @return User 作成されたUserモデルインスタンス
      */
     public function create(array $input): User
     {
@@ -40,13 +48,17 @@ class CreateNewUser implements CreatesNewUsers
     }
 
     /**
-     * Create a personal team for the user.
+     * ユーザーのための個人チームを作成するメソッド
+     *
+     * 新しいユーザーが登録された際に、そのユーザーの個人チームを作成します。
+     * 
+     * @param User $user チームを作成するユーザーのインスタンス
      */
     protected function createTeam(User $user): void
     {
         $user->ownedTeams()->save(Team::forceCreate([
             'user_id' => $user->id,
-            'name' => explode(' ', $user->name, 2)[0]."'s Team",
+            'name' => explode(' ', $user->name, 2)[0] . "'s Team",
             'personal_team' => true,
         ]));
     }

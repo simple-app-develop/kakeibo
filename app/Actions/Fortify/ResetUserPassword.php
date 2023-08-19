@@ -7,14 +7,22 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Fortify\Contracts\ResetsUserPasswords;
 
+/**
+ * ユーザーのパスワードリセットを実行するクラス
+ * 
+ * このクラスは、ユーザーがパスワードを忘れた場合のリセットロジックを提供します。
+ */
 class ResetUserPassword implements ResetsUserPasswords
 {
     use PasswordValidationRules;
 
     /**
-     * Validate and reset the user's forgotten password.
+     * ユーザーの忘れたパスワードを検証してリセットするメソッド
      *
-     * @param  array<string, string>  $input
+     * このメソッドは、提供された入力を検証し、ユーザーのパスワードを新しいものにリセットします。
+     * 
+     * @param User $user パスワードをリセットするユーザーのインスタンス
+     * @param array<string, string> $input ユーザーからの入力 (新しいパスワードなど)
      */
     public function reset(User $user, array $input): void
     {

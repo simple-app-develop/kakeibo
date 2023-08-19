@@ -11,17 +11,23 @@ use Laravel\Jetstream\HasProfilePhoto;
 use Laravel\Jetstream\HasTeams;
 use Laravel\Sanctum\HasApiTokens;
 
+/**
+ * ユーザーモデルクラス
+ * 
+ * このモデルは、アプリケーション内のユーザーに関連するデータを表現し、
+ * 認証や権限のチェック、プロフィール画像の取り扱いなどの機能を提供します。
+ */
 class User extends Authenticatable
 {
-    use HasApiTokens;
-    use HasFactory;
-    use HasProfilePhoto;
-    use HasTeams;
-    use Notifiable;
-    use TwoFactorAuthenticatable;
+    use HasApiTokens;            // APIトークンの関連機能を提供
+    use HasFactory;             // ファクトリーパターンに関連する機能を提供
+    use HasProfilePhoto;        // プロフィール画像の関連機能を提供
+    use HasTeams;               // チーム関連の機能を提供
+    use Notifiable;             // 通知関連の機能を提供
+    use TwoFactorAuthenticatable; // 2要素認証に関連する機能を提供
 
     /**
-     * The attributes that are mass assignable.
+     * 代入可能な属性
      *
      * @var array<int, string>
      */
@@ -30,7 +36,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be hidden for serialization.
+     * シリアル化時に非表示にする属性
      *
      * @var array<int, string>
      */
@@ -42,7 +48,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The attributes that should be cast.
+     * 属性の型変換を定義
      *
      * @var array<string, string>
      */
@@ -51,7 +57,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * The accessors to append to the model's array form.
+     * モデルの配列形式への変換時に追加するアクセサ
      *
      * @var array<int, string>
      */

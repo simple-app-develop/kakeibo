@@ -4,12 +4,21 @@ namespace App\Actions\Fortify;
 
 use Laravel\Fortify\Rules\Password;
 
+/**
+ * パスワードの検証ルールを提供するトレイト
+ * 
+ * このトレイトは、パスワードの検証ルールを提供するためのものです。
+ * これにより、パスワードのバリデーションを一貫して適用することができます。
+ */
 trait PasswordValidationRules
 {
     /**
-     * Get the validation rules used to validate passwords.
+     * パスワードを検証するためのルールを取得するメソッド
      *
-     * @return array<int, \Illuminate\Contracts\Validation\Rule|array|string>
+     * このメソッドは、パスワードの検証ルールを返します。
+     * 'required', 'string', 新しいPasswordルールおよび'confirmed'の4つのルールを適用します。
+     *
+     * @return array<int, \Illuminate\Contracts\Validation\Rule|array|string> パスワードの検証ルールの配列
      */
     protected function passwordRules(): array
     {
