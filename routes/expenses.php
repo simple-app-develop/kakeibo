@@ -11,4 +11,6 @@ Route::middleware([
 
     Route::get('/expense-category/create', [ExpenseCategoryController::class, 'create'])->name('expense-category-create');
     Route::post('/expense-category/store', [ExpenseCategoryController::class, 'store'])->name('expense-category-store');
+
+    Route::get('/expense-category/', [ExpenseCategoryController::class, 'index'])->name('expense-category-index');
 });

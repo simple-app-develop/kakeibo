@@ -28,6 +28,12 @@ class ExpenseCategoryController extends Controller
 
         ExpenseCategory::create($data);
 
-        return redirect()->route('expense-categories.index')->with('status', 'Category created successfully!');
+        return redirect()->route('expense-category-index')->with('status', 'Category created successfully!');
+    }
+
+    public function index()
+    {
+        $categories = ExpenseCategory::where('team_id', auth()->user()->currentTeam->id)->get();
+        return view('expenses.expense_categories.index', compact('categories'));
     }
 }
