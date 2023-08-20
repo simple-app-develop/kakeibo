@@ -11,15 +11,6 @@
                 <form method="POST" action="{{ route('expense-category-store') }}">
                     @csrf
 
-                    @if ($errors->any())
-                        <div class="alert alert-danger">
-                            @foreach ($errors->all() as $error)
-                                <p>{{ $error }}</p>
-                            @endforeach
-                        </div>
-                    @endif
-
-
                     <!-- Type Selection -->
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="type" value="{{ __('Type') }}" />
@@ -45,7 +36,6 @@
                     </div>
 
                     <div class="p-6">
-
                         <x-button type="submit">
                             {{ __('Create') }}
                         </x-button>
