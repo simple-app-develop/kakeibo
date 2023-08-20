@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers\Expenses;
 
+use App\Actions\Expenses\ExpenseCategory\CreateExpenseCategory;
+use App\Actions\Expenses\ExpenseCategory\GetExpenseCategoriesByTeam;
 use App\Http\Controllers\Controller;
 use App\Models\ExpenseCategory;
 use Illuminate\Http\Request;
@@ -13,7 +15,7 @@ class ExpenseCategoryController extends Controller
         return view('expenses.expense_categories.create');
     }
 
-    public function store(Request $request)
+    public function store(Request $request, CreateExpenseCategory $action)
     {
         $teamId = auth()->user()->currentTeam->id;
 
@@ -24,16 +26,14 @@ class ExpenseCategoryController extends Controller
         ]);
         $data['team_id'] = $teamId;
 
-
-
-        ExpenseCategory::create($data);
+        $action->create($data);
 
         return redirect()->route('expense-category-index')->with('status', 'Category created successfully!');
     }
 
-    public function index()
+    public function index(GetExpenseCategoriesByTeam $action)
     {
-        $categories = ExpenseCategory::where('team_id', auth()->user()->currentTeam->id)->get();
+        $categories = $action->getByTeam(auth()->user()->currentTeam->id);
         return view('expenses.expense_categories.index', compact('categories'));
     }
 }
