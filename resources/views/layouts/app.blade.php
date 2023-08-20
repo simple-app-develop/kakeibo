@@ -38,6 +38,9 @@
             </header>
         @endif
 
+        {{-- Flash message --}}
+        <x-flash-message />
+
         <!-- Page Content -->
         <main>
             {{ $slot }}

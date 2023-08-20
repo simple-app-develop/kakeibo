@@ -34,7 +34,7 @@ class ExpenseCategoryController extends Controller
 
         $this->createExpenseCategoryAction->create($data);
 
-        return redirect()->route('expense-category-index')->with('status', 'Category created successfully!');
+        return redirect()->route('expense-category-index')->with('success', 'Category created successfully!');
     }
 
     public function index()

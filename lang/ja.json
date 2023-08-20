@@ -145,5 +145,6 @@
     "Expense": "支出",
     "Income": "収入",
     "No expense categories found.": "支出カテゴリが見つかりません",
-    "No income categories found.": "収入カテゴリが見つかりません"
+    "No income categories found.": "収入カテゴリが見つかりません",
+    "Category created successfully!": "カテゴリを作成しました！"
 }
