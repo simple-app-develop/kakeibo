@@ -1,3 +1,7 @@
+html {
+    overflow-y: scroll;
+}
+
 /* カテゴリーリストのスタイリング */
 .category-item {
     background-color: #f5f5f5;
