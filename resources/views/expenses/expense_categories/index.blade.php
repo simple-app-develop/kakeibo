@@ -60,21 +60,29 @@
     {{-- FABボタンの追加 --}}
     <a href="{{ route('expense-category-create') }}" class="fab">+</a>
 
-    <!-- モーダル -->
+    <!-- 削除確認モーダル -->
     <div id="deleteModal"
-        class="fixed inset-0 w-full h-full z-20 bg-black bg-opacity-50 duration-300 overflow-y-auto hidden">
-        <div class="relative p-6 mx-auto mt-20 text-left bg-white border-0 rounded-lg w-96">
-            <span class="block w-full text-xl leading-6 font-medium text-gray-900">
-                このカテゴリを削除しますか？
-            </span>
-            <div class="mt-5">
-                <form id="deleteForm" method="POST" action="">
+        class="hidden fixed inset-0 z-40 flex items-center justify-center w-full h-full text-center lg:p-8 lg:items-end bg-black bg-opacity-50 sm:p-0">
+        <div
+            class="flex flex-col w-full h-1/3 p-6 bg-white rounded-t-lg shadow-xl sm:m-2 sm:w-1/3 sm:rounded-lg sm:h-auto">
+            <div>
+                <h3 class="text-xl font-bold">{{ __('Delete Category') }}</h3>
+            </div>
+
+            <div class="mt-3">
+                <p class="text-sm text-gray-500">
+                    {{ __('Are you sure you want to delete this category? This action cannot be undone.') }}</p>
+            </div>
+
+            <div class="flex justify-between mt-5">
+                <button onclick="toggleModal()"
+                    class="px-4 py-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100">{{ __('Cancel') }}</button>
+
+                <form id="deleteForm" method="POST" action="" class="flex gap-4">
                     @csrf
                     @method('DELETE')
-                    <button type="submit" class="px-6 py-2 text-white bg-red-600 rounded hover:bg-red-700">削除</button>
-                    <button type="button"
-                        class="px-6 py-2 ml-4 text-red-600 border border-red-600 rounded hover:text-white hover:bg-red-600"
-                        onclick="toggleModal()">キャンセル</button>
+                    <button type="submit"
+                        class="px-4 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700">{{ __('Delete') }}</button>
                 </form>
             </div>
         </div>
