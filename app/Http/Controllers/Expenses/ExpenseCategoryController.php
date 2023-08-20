@@ -13,8 +13,14 @@ use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
 use App\Models\ExpenseCategory;
 
+/**
+ * 品目カテゴリコントローラ
+ * 
+ * このクラスは品目カテゴリに関連するアクションを管理します。
+ */
 class ExpenseCategoryController extends Controller
 {
+    // 品目カテゴリに関連するアクションのプロパティ定義
     protected $createExpenseCategoryAction;
     protected $getExpenseCategoriesByTeamAction;
     protected $reorderExpenseCategoryAction;
@@ -35,11 +41,20 @@ class ExpenseCategoryController extends Controller
         $this->deleteExpenseCategoryAction = $deleteExpenseCategoryAction;
     }
 
+    /**
+     * 新しいカテゴリを作成
+     */
     public function create()
     {
+        // 品目カテゴリ作成ビューを返す
         return view('expenses.expense_categories.create');
     }
 
+    /**
+     * カテゴリの保存
+     *
+     * @param ExpenseCategoryStoreRequest $request リクエストデータ
+     */
     public function store(ExpenseCategoryStoreRequest $request)
     {
         $data = $request->all();
@@ -50,12 +65,21 @@ class ExpenseCategoryController extends Controller
         return redirect()->route('expense-category-index')->with('success', 'Category created successfully!');
     }
 
+    /**
+     * カテゴリの一覧表示
+     */
     public function index()
     {
+        // 現在のチームに関連するカテゴリの一覧を取得してビューを返す
         $categories = $this->getExpenseCategoriesByTeamAction->getByTeam($this->getCurrentTeamId());
         return view('expenses.expense_categories.index', compact('categories'));
     }
 
+    /**
+     * カテゴリの並び替え
+     *
+     * @param ExpenseCategoryReorderRequest $request リクエストデータ
+     */
     public function reorder(ExpenseCategoryReorderRequest $request)
     {
         $order = $request->input('order');
@@ -69,6 +93,11 @@ class ExpenseCategoryController extends Controller
         }
     }
 
+    /**
+     * カテゴリの削除
+     *
+     * @param int $id カテゴリID
+     */
     public function destroy($id)
     {
         $result = $this->deleteExpenseCategoryAction->delete($id);
@@ -80,12 +109,23 @@ class ExpenseCategoryController extends Controller
         }
     }
 
+    /**
+     * カテゴリの編集画面表示
+     *
+     * @param int $id カテゴリID
+     */
     public function edit($id)
     {
         $category = ExpenseCategory::findOrFail($id);
         return view('expenses.expense_categories.edit', compact('category'));
     }
 
+    /**
+     * カテゴリの更新
+     *
+     * @param ExpenseCategoryUpdateRequest $request リクエストデータ
+     * @param int $id カテゴリID
+     */
     public function update(ExpenseCategoryUpdateRequest $request, $id)
     {
         $result = $this->updateExpenseCategoryAction->update($id, $request->all());
@@ -99,8 +139,12 @@ class ExpenseCategoryController extends Controller
         }
     }
 
+    /**
+     * 現在のチームIDを取得
+     */
     private function getCurrentTeamId()
     {
+        // 認証済みのユーザーから現在のチームIDを取得して返す
         return auth()->user()->currentTeam->id;
     }
 }
