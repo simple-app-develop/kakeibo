@@ -138,5 +138,9 @@
     "results": "件",
     "to": "から",
     "Showing": "表示中：",
-    "Item category": "品目カテゴリ"
+    "Item category": "品目カテゴリ",
+    "Expense": "支出",
+    "Income": "収入",
+    "No expense categories found.": "支出カテゴリが見つかりません",
+    "No income categories found.": "収入カテゴリが見つかりません"
 }
