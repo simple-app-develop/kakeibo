@@ -62,9 +62,9 @@
 
     <!-- 削除確認モーダル -->
     <div id="deleteModal"
-        class="hidden fixed inset-0 z-40 flex items-center justify-center w-full h-full text-center lg:p-8 lg:items-end bg-black bg-opacity-50 sm:p-0">
-        <div
-            class="flex flex-col w-full h-1/3 p-6 bg-white rounded-t-lg shadow-xl sm:m-2 sm:w-1/3 sm:rounded-lg sm:h-auto">
+        class="opacity-0 hidden fixed inset-0 z-40 w-full h-full transition-opacity duration-300 bg-black bg-opacity-50">
+        <div class="relative p-6 mx-auto mt-20 text-left bg-white border-0 rounded-lg w-96 bottom-0">
+            <!-- モーダルの内容 -->
             <div>
                 <h3 class="text-xl font-bold">{{ __('Delete Category') }}</h3>
             </div>
@@ -91,7 +91,21 @@
     <script>
         function toggleModal() {
             const modal = document.getElementById('deleteModal');
-            modal.classList.toggle('hidden');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                setTimeout(() => {
+                    modal.classList.remove('opacity-0');
+                }, 100);
+            } else {
+                modal.classList.add('opacity-0');
+                modal.addEventListener('transitionend', () => {
+                    if (modal.classList.contains('opacity-0')) {
+                        modal.classList.add('hidden');
+                    }
+                }, {
+                    once: true
+                });
+            }
         }
 
         function showDeleteModal(route) {
