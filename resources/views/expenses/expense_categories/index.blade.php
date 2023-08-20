@@ -17,7 +17,6 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($categories->where('type', 'expense') as $category)
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-no-wrap">{{ $category->type }}</td>
                                             <td class="px-6 py-4 whitespace-no-wrap">{{ $category->name }}</td>
                                             <td class="px-6 py-4 whitespace-no-wrap">{{ $category->description }}</td>
                                         </tr>
@@ -35,7 +34,6 @@
                                 <tbody class="bg-white divide-y divide-gray-200">
                                     @foreach ($categories->where('type', 'income') as $category)
                                         <tr>
-                                            <td class="px-6 py-4 whitespace-no-wrap">{{ $category->type }}</td>
                                             <td class="px-6 py-4 whitespace-no-wrap">{{ $category->name }}</td>
                                             <td class="px-6 py-4 whitespace-no-wrap">{{ $category->description }}</td>
                                         </tr>
