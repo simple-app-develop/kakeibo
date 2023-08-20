@@ -13,13 +13,16 @@ class ExpenseCategoryController extends Controller
 {
     protected $createExpenseCategoryAction;
     protected $getExpenseCategoriesByTeamAction;
+    protected $reorderExpenseCategoryAction;
 
     public function __construct(
         CreateExpenseCategory $createExpenseCategoryAction,
-        GetExpenseCategoriesByTeam $getExpenseCategoriesByTeamAction
+        GetExpenseCategoriesByTeam $getExpenseCategoriesByTeamAction,
+        ReorderExpenseCategory $reorderExpenseCategoryAction
     ) {
         $this->createExpenseCategoryAction = $createExpenseCategoryAction;
         $this->getExpenseCategoriesByTeamAction = $getExpenseCategoriesByTeamAction;
+        $this->reorderExpenseCategoryAction = $reorderExpenseCategoryAction;
     }
 
     public function create()
@@ -43,11 +46,11 @@ class ExpenseCategoryController extends Controller
         return view('expenses.expense_categories.index', compact('categories'));
     }
 
-    public function reorder(ExpenseCategoryReorderRequest $request, ReorderExpenseCategory $reorderAction)
+    public function reorder(ExpenseCategoryReorderRequest $request)
     {
         $order = $request->input('order');
 
-        $result = $reorderAction->reorder($order);
+        $result = $this->reorderExpenseCategoryAction->reorder($order);
 
         if ($result['status']) {
             return response()->json(['message' => $result['message']]);
