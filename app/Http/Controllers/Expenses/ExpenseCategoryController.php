@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Expenses;
 
 use App\Actions\Expenses\ExpenseCategory\CreateExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\DeleteExpenseCategory;
+use App\Actions\Expenses\ExpenseCategory\EditExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\GetExpenseCategoriesByTeam;
 use App\Actions\Expenses\ExpenseCategory\ReorderExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\UpdateExpenseCategory;
@@ -11,7 +12,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
-use App\Models\ExpenseCategory;
 
 /**
  * 品目カテゴリコントローラ
@@ -24,6 +24,7 @@ class ExpenseCategoryController extends Controller
     protected $createExpenseCategoryAction;
     protected $getExpenseCategoriesByTeamAction;
     protected $reorderExpenseCategoryAction;
+    protected $editExpenseCategoryAction;
     protected $updateExpenseCategoryAction;
     protected $deleteExpenseCategoryAction;
 
@@ -31,18 +32,20 @@ class ExpenseCategoryController extends Controller
         CreateExpenseCategory $createExpenseCategoryAction,
         GetExpenseCategoriesByTeam $getExpenseCategoriesByTeamAction,
         ReorderExpenseCategory $reorderExpenseCategoryAction,
+        EditExpenseCategory $editExpenseCategoryAction,
         UpdateExpenseCategory $updateExpenseCategoryAction,
         DeleteExpenseCategory $deleteExpenseCategoryAction,
     ) {
         $this->createExpenseCategoryAction = $createExpenseCategoryAction;
         $this->getExpenseCategoriesByTeamAction = $getExpenseCategoriesByTeamAction;
         $this->reorderExpenseCategoryAction = $reorderExpenseCategoryAction;
+        $this->editExpenseCategoryAction = $editExpenseCategoryAction;
         $this->updateExpenseCategoryAction = $updateExpenseCategoryAction;
         $this->deleteExpenseCategoryAction = $deleteExpenseCategoryAction;
     }
 
     /**
-     * 新しいカテゴリを作成
+     * 品目カテゴリの作成画面表示
      */
     public function create()
     {
@@ -116,7 +119,7 @@ class ExpenseCategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = ExpenseCategory::findOrFail($id);
+        $category = $this->editExpenseCategoryAction->get($id);
         return view('expenses.expense_categories.edit', compact('category'));
     }
 
