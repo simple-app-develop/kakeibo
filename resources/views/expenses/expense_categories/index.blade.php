@@ -16,8 +16,12 @@
                             <div class="min-w-full divide-y divide-gray-200" id="expenseCategoryList">
                                 @foreach ($categories->where('type', 'expense') as $category)
                                     <div class="category-item" data-id="{{ $category->id }}">
-                                        <td class="px-6 py-4 whitespace-no-wrap">{{ $category->name }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap">{{ $category->description }}
+                                        <span class="px-6 py-4 whitespace-no-wrap category-name">
+                                            {{ $category->name }}
+                                        </span>
+                                        <span class="px-6 py-4 whitespace-no-wrap category-description">
+                                            {{ $category->description }}
+                                        </span>
                                     </div>
                                 @endforeach
                             </div>
@@ -31,8 +35,12 @@
                             <div class="min-w-full divide-y divide-gray-200" id="incomeCategoryList">
                                 @foreach ($categories->where('type', 'income') as $category)
                                     <div class="category-item" data-id="{{ $category->id }}">
-                                        <td class="px-6 py-4 whitespace-no-wrap">{{ $category->name }}</td>
-                                        <td class="px-6 py-4 whitespace-no-wrap">{{ $category->description }}
+                                        <span class="px-6 py-4 whitespace-no-wrap category-name">
+                                            {{ $category->name }}
+                                        </span>
+                                        <span class="px-6 py-4 whitespace-no-wrap category-description">
+                                            {{ $category->description }}
+                                        </span>
                                     </div>
                                 @endforeach
                             </div>
