@@ -1,0 +1,76 @@
+html {
+    overflow-y: scroll;
+}
+
+/* カテゴリーリストのスタイリング */
+.category-item {
+    background-color: #f5f5f5;
+    cursor: grab;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    word-wrap: break-word;
+    padding: 16px;
+}
+
+/* リストの最後のアイテムのボーダーを削除 */
+#expenseCategoryList .category-item:last-child,
+#incomeCategoryList .category-item:last-child {
+    border-bottom: none;
+}
+
+/* ホバー時のスタイリング */
+.category-item:hover {
+    background-color: #e0e0e0;
+}
+
+/* ドラッグ中のアイテムのスタイリング */
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+/* カテゴリ名とカテゴリ説明のスタイリング */
+.category-name,
+.category-description {
+    padding: 0 8px;
+    white-space: normal;
+    word-wrap: break-word;
+}
+
+/* カテゴリー名のスタイリング */
+.category-name {
+    font-weight: bold;
+    flex-shrink: 0;
+    width: 160px;
+    overflow: hidden;
+}
+
+/* カテゴリー説明のスタイリング */
+.category-description {
+    font-size: 0.8rem;
+    color: #777;
+    flex-grow: 1;
+}
+
+.fab {
+    background-color: #ff4081;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    position: fixed;
+    bottom: 16px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: background-color 0.3s;
+    text-decoration: none;
+    z-index: 1000;
+}
+
+.fab:hover {
+    background-color: #e91e63;
+}
