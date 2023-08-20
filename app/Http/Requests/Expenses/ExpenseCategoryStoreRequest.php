@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Expenses;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class ExpenseCategoryStoreRequest extends FormRequest
 {
@@ -21,9 +22,20 @@ class ExpenseCategoryStoreRequest extends FormRequest
      */
     public function rules(): array
     {
+        $teamId = auth()->user()->currentTeam->id;
+
         return [
             'type' => 'required|in:income,expense',
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                // team_id, name, そして type の組み合わせがユニークであることを確認
+                Rule::unique('expense_categories')->where(function ($query) use ($teamId) {
+                    return $query->where('team_id', $teamId)
+                        ->where('type', $this->type);
+                }),
+            ],
             'description' => 'nullable|string|max:255',
         ];
     }
