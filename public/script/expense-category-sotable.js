@@ -31,9 +31,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         if (data.message === "Order updated successfully") {
                             console.log("Order updated on backend");
                         } else {
-                            console.error(
-                                "Error updating order on backend:",
-                                data.message
+                            alert(
+                                "Error updating order on backend:" +
+                                    data.message
                             );
                         }
                     });
