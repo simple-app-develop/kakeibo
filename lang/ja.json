@@ -138,6 +138,7 @@
     "results": "件",
     "to": "から",
     "Showing": "表示中：",
+    "Delete": "削除",
     "Description": "説明",
     "Item category": "品目カテゴリ",
     "Category Name": "カテゴリ名",
@@ -146,5 +147,8 @@
     "Income": "収入",
     "No expense categories found.": "支出カテゴリが見つかりません",
     "No income categories found.": "収入カテゴリが見つかりません",
-    "Category created successfully!": "カテゴリを作成しました！"
+    "Category created successfully!": "カテゴリを作成しました！",
+    "Category deleted successfully!": "カテゴリを削除しました！",
+    "Delete Category": "カテゴリを削除",
+    "Are you sure you want to delete this category? Once deleted, any data set to this category will be changed to [Uncategorized]. This action cannot be undone.": "このカテゴリを削除してもよろしいですか？削除すると、現在このカテゴリに設定されているデータは「未分類」に変更されます。この操作は取り消せません。"
 }

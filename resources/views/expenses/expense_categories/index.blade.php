@@ -46,7 +46,7 @@
                                         </span>
                                         <button
                                             onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
-                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">削除</button>
+                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
                                     </div>
                                 @endforeach
                             </div>
@@ -71,7 +71,8 @@
 
             <div class="mt-3">
                 <p class="text-sm text-gray-500">
-                    {{ __('Are you sure you want to delete this category? This action cannot be undone.') }}</p>
+                    {{ __('Are you sure you want to delete this category? Once deleted, any data set to this category will be changed to [Uncategorized]. This action cannot be undone.') }}
+                </p>
             </div>
 
             <div class="flex justify-between mt-5">
