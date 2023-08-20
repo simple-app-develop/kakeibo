@@ -15,9 +15,9 @@
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="type" value="{{ __('Category Type') }}" />
                         <x-radio-button label="{{ __('Expense') }}" id="type-expense" name="type" value="expense"
-                            :checked="old('type') === 'expense'"></x-radio-button>
+                            :checked="old('type', 'expense') === 'expense'"></x-radio-button>
                         <x-radio-button label="{{ __('Income') }}" id="type-income" name="type" value="income"
-                            :checked="old('type') === 'income'"></x-radio-button>
+                            :checked="old('type', 'expense') === 'income'"></x-radio-button>
                         <x-input-error for="type" class="mt-2" />
                     </div>
 
