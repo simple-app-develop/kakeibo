@@ -15,8 +15,10 @@
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="type" value="{{ __('Category Type') }}" />
                         <x-select-input id="type" name="type">
-                            <option value="income">{{ __('Income') }}</option>
-                            <option value="expense">{{ __('Expense') }}</option>
+                            <option value="income" {{ old('type') === 'income' ? 'selected' : '' }}>{{ __('Income') }}
+                            </option>
+                            <option value="expense" {{ old('type') === 'expense' ? 'selected' : '' }}>
+                                {{ __('Expense') }}</option>
                         </x-select-input>
                         <x-input-error for="type" class="mt-2" />
                     </div>
@@ -24,14 +26,18 @@
                     <!-- Category Name -->
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="name" value="{{ __('Category Name') }}" />
-                        <x-input id="name" type="text" class="mt-1 block w-full" name="name" />
+                        <x-input id="name" type="text" class="mt-1 block w-full" name="name"
+                            :value="old('name')" />
                         <x-input-error for="name" class="mt-2" />
                     </div>
 
                     <!-- Category Description -->
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="description" value="{{ __('Description') }}" />
-                        <x-textarea id="description" class="mt-1 block w-full" name="description"></x-textarea>
+                        <x-textarea id="description" name="description" class="mt-1 block w-full">
+                            {{ old('description') }}
+                        </x-textarea>
+
                         <x-input-error for="description" class="mt-2" />
                     </div>
 
