@@ -14,11 +14,11 @@
                     <!-- Type Selection -->
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="type" value="{{ __('Category Type') }}" />
-                        <select id="type" name="type"
-                            class="mt-1 block w-full rounded-md shadow-sm border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50">
+                        <x-select-input id="type" name="type">
                             <option value="income">{{ __('Income') }}</option>
                             <option value="expense">{{ __('Expense') }}</option>
-                        </select>
+                        </x-select-input>
+                        <x-input-error for="type" class="mt-2" />
                     </div>
 
                     <!-- Category Name -->
