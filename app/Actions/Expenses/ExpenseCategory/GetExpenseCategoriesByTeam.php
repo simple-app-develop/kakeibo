@@ -8,6 +8,8 @@ class GetExpenseCategoriesByTeam
 {
     public function getByTeam(int $teamId)
     {
-        return ExpenseCategory::where('team_id', $teamId)->get();
+        return ExpenseCategory::where('team_id', $teamId)
+            ->orderBy('order_column', 'asc')
+            ->get();
     }
 }

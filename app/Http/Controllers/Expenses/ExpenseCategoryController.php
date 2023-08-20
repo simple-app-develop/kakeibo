@@ -6,6 +6,8 @@ use App\Actions\Expenses\ExpenseCategory\CreateExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\GetExpenseCategoriesByTeam;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
+use App\Models\ExpenseCategory;
+use Illuminate\Http\Request;
 
 class ExpenseCategoryController extends Controller
 {
@@ -39,6 +41,25 @@ class ExpenseCategoryController extends Controller
     {
         $categories = $this->getExpenseCategoriesByTeamAction->getByTeam($this->getCurrentTeamId());
         return view('expenses.expense_categories.index', compact('categories'));
+    }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order');
+        if (!is_array($order) || empty($order)) {
+            return response()->json(['message' => 'Invalid order data provided'], 400);
+        }
+
+        // リクエストから送られてきた順序に従ってorder_columnを更新
+        foreach ($order as $index => $id) {
+            $category = ExpenseCategory::find($id);
+            if ($category) {
+                $category->order_column = $index;
+                $category->save();
+            }
+        }
+
+        return response()->json(['message' => 'Order updated successfully']);
     }
 
     private function getCurrentTeamId()
