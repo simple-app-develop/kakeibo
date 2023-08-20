@@ -47,7 +47,7 @@ html {
 
 /* カテゴリー説明のスタイリング */
 .category-description {
-    font-size: 4px;
+    font-size: 0.8rem;
     color: #777;
     flex-grow: 1;
 }
