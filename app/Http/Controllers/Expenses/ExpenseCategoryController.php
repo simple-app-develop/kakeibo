@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Expenses;
 use App\Actions\Expenses\ExpenseCategory\CreateExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\GetExpenseCategoriesByTeam;
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 
 class ExpenseCategoryController extends Controller
 {
@@ -25,13 +25,9 @@ class ExpenseCategoryController extends Controller
         return view('expenses.expense_categories.create');
     }
 
-    public function store(Request $request)
+    public function store(ExpenseCategoryStoreRequest $request)
     {
-        $data = $request->validate([
-            'type' => 'required|in:income,expense',
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string|max:255',
-        ]);
+        $data = $request->all();
         $data['team_id'] = $this->getCurrentTeamId();
 
         $this->createExpenseCategoryAction->create($data);
