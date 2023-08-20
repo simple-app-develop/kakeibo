@@ -3,30 +3,36 @@
 namespace App\Http\Controllers\Expenses;
 
 use App\Actions\Expenses\ExpenseCategory\CreateExpenseCategory;
+use App\Actions\Expenses\ExpenseCategory\DeleteExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\GetExpenseCategoriesByTeam;
 use App\Actions\Expenses\ExpenseCategory\ReorderExpenseCategory;
+use App\Actions\Expenses\ExpenseCategory\UpdateExpenseCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
 use App\Models\ExpenseCategory;
-use Illuminate\Database\QueryException;
-use Illuminate\Http\Request;
 
 class ExpenseCategoryController extends Controller
 {
     protected $createExpenseCategoryAction;
     protected $getExpenseCategoriesByTeamAction;
     protected $reorderExpenseCategoryAction;
+    protected $updateExpenseCategoryAction;
+    protected $deleteExpenseCategoryAction;
 
     public function __construct(
         CreateExpenseCategory $createExpenseCategoryAction,
         GetExpenseCategoriesByTeam $getExpenseCategoriesByTeamAction,
-        ReorderExpenseCategory $reorderExpenseCategoryAction
+        ReorderExpenseCategory $reorderExpenseCategoryAction,
+        UpdateExpenseCategory $updateExpenseCategoryAction,
+        DeleteExpenseCategory $deleteExpenseCategoryAction,
     ) {
         $this->createExpenseCategoryAction = $createExpenseCategoryAction;
         $this->getExpenseCategoriesByTeamAction = $getExpenseCategoriesByTeamAction;
         $this->reorderExpenseCategoryAction = $reorderExpenseCategoryAction;
+        $this->updateExpenseCategoryAction = $updateExpenseCategoryAction;
+        $this->deleteExpenseCategoryAction = $deleteExpenseCategoryAction;
     }
 
     public function create()
@@ -65,10 +71,13 @@ class ExpenseCategoryController extends Controller
 
     public function destroy($id)
     {
-        // 削除ロジックの実装
-        // 例えば、Eloquentのモデルを使用してカテゴリを削除する
-        ExpenseCategory::find($id)->delete();
-        return redirect()->route('expense-category-index')->with('success', 'Category deleted successfully!');
+        $result = $this->deleteExpenseCategoryAction->delete($id);
+
+        if ($result['status']) {
+            return redirect()->route('expense-category-index')->with('success', $result['message']);
+        } else {
+            return redirect()->route('expense-category-index')->withErrors(['error' => $result['message']]);
+        }
     }
 
     public function edit($id)
@@ -79,23 +88,14 @@ class ExpenseCategoryController extends Controller
 
     public function update(ExpenseCategoryUpdateRequest $request, $id)
     {
-        try {
-            $category = ExpenseCategory::findOrFail($id);
+        $result = $this->updateExpenseCategoryAction->update($id, $request->all());
 
-            $category->update([
-                'name' => $request->input('name'),
-                'description' => $request->input('description')
-            ]);
-
-            return redirect()->route('expense-category-index')->with('success', 'Category updated successfully!');
-        } catch (QueryException $e) {
-            // 一意性制約違反のエラーコードは "23000" です。
-            if ($e->getCode() === "23000") {
-                return redirect()->back()
-                    ->withErrors(['name' => trans('messages.category_name_taken')])
-                    ->withInput();
-            }
-            return redirect()->back()->withErrors(['error' => trans('messages.db_error')])->withInput();
+        if ($result['status']) {
+            return redirect()->route('expense-category-index')->with('success', $result['message']);
+        } elseif ($result['error'] === 'unique_constraint') {
+            return redirect()->back()->withErrors(['name' => $result['message']])->withInput();
+        } else {
+            return redirect()->back()->withErrors(['error' => $result['message']])->withInput();
         }
     }
 
