@@ -8,6 +8,7 @@ use App\Actions\Expenses\ExpenseCategory\ReorderExpenseCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
+use App\Models\ExpenseCategory;
 
 class ExpenseCategoryController extends Controller
 {
@@ -58,6 +59,15 @@ class ExpenseCategoryController extends Controller
             return response()->json(['message' => $result['message']], 400);
         }
     }
+
+    public function destroy($id)
+    {
+        // 削除ロジックの実装
+        // 例えば、Eloquentのモデルを使用してカテゴリを削除する
+        ExpenseCategory::find($id)->delete();
+        return redirect()->route('expense-category-index')->with('success', 'Category deleted successfully!');
+    }
+
 
     private function getCurrentTeamId()
     {

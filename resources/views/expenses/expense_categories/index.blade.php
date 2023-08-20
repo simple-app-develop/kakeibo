@@ -22,6 +22,9 @@
                                         <span class="px-6 py-4 whitespace-no-wrap category-description">
                                             {{ $category->description }}
                                         </span>
+                                        <button
+                                            onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
+                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">削除</button>
                                     </div>
                                 @endforeach
                             </div>
@@ -41,6 +44,9 @@
                                         <span class="px-6 py-4 whitespace-no-wrap category-description">
                                             {{ $category->description }}
                                         </span>
+                                        <button
+                                            onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
+                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">削除</button>
                                     </div>
                                 @endforeach
                             </div>
@@ -53,4 +59,37 @@
 
     {{-- FABボタンの追加 --}}
     <a href="{{ route('expense-category-create') }}" class="fab">+</a>
+
+    <!-- モーダル -->
+    <div id="deleteModal"
+        class="fixed inset-0 w-full h-full z-20 bg-black bg-opacity-50 duration-300 overflow-y-auto hidden">
+        <div class="relative p-6 mx-auto mt-20 text-left bg-white border-0 rounded-lg w-96">
+            <span class="block w-full text-xl leading-6 font-medium text-gray-900">
+                このカテゴリを削除しますか？
+            </span>
+            <div class="mt-5">
+                <form id="deleteForm" method="POST" action="">
+                    @csrf
+                    @method('DELETE')
+                    <button type="submit" class="px-6 py-2 text-white bg-red-600 rounded hover:bg-red-700">削除</button>
+                    <button type="button"
+                        class="px-6 py-2 ml-4 text-red-600 border border-red-600 rounded hover:text-white hover:bg-red-600"
+                        onclick="toggleModal()">キャンセル</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleModal() {
+            const modal = document.getElementById('deleteModal');
+            modal.classList.toggle('hidden');
+        }
+
+        function showDeleteModal(route) {
+            document.getElementById('deleteForm').action = route;
+            toggleModal();
+        }
+    </script>
+
 </x-app-layout>
