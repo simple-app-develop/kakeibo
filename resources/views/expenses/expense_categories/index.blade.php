@@ -50,4 +50,7 @@
             </div>
         </div>
     </div>
+
+    {{-- FABボタンの追加 --}}
+    <a href="{{ route('expense-category-create') }}" class="fab">+</a>
 </x-app-layout>
