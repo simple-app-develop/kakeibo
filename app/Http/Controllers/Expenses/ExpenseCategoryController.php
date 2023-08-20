@@ -8,7 +8,10 @@ use App\Actions\Expenses\ExpenseCategory\ReorderExpenseCategory;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
+use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
 use App\Models\ExpenseCategory;
+use Illuminate\Database\QueryException;
+use Illuminate\Http\Request;
 
 class ExpenseCategoryController extends Controller
 {
@@ -68,6 +71,33 @@ class ExpenseCategoryController extends Controller
         return redirect()->route('expense-category-index')->with('success', 'Category deleted successfully!');
     }
 
+    public function edit($id)
+    {
+        $category = ExpenseCategory::findOrFail($id);
+        return view('expenses.expense_categories.edit', compact('category'));
+    }
+
+    public function update(ExpenseCategoryUpdateRequest $request, $id)
+    {
+        try {
+            $category = ExpenseCategory::findOrFail($id);
+
+            $category->update([
+                'name' => $request->input('name'),
+                'description' => $request->input('description')
+            ]);
+
+            return redirect()->route('expense-category-index')->with('success', 'Category updated successfully!');
+        } catch (QueryException $e) {
+            // 一意性制約違反のエラーコードは "23000" です。
+            if ($e->getCode() === "23000") {
+                return redirect()->back()
+                    ->withErrors(['name' => trans('messages.category_name_taken')])
+                    ->withInput();
+            }
+            return redirect()->back()->withErrors(['error' => trans('messages.db_error')])->withInput();
+        }
+    }
 
     private function getCurrentTeamId()
     {

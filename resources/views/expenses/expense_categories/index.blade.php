@@ -22,6 +22,9 @@
                                         <span class="px-6 py-4 whitespace-no-wrap category-description">
                                             {{ $category->description }}
                                         </span>
+                                        <a href="{{ route('expense-category-edit', $category->id) }}"
+                                            class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">編集</a>
+
                                         <button
                                             onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
                                             class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">削除</button>
@@ -44,6 +47,9 @@
                                         <span class="px-6 py-4 whitespace-no-wrap category-description">
                                             {{ $category->description }}
                                         </span>
+                                        <a href="{{ route('expense-category-edit', $category->id) }}"
+                                            class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">編集</a>
+
                                         <button
                                             onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
                                             class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
