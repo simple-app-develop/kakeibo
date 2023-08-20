@@ -6,8 +6,8 @@ use App\Actions\Expenses\ExpenseCategory\CreateExpenseCategory;
 use App\Actions\Expenses\ExpenseCategory\GetExpenseCategoriesByTeam;
 use App\Actions\Expenses\ExpenseCategory\ReorderExpenseCategory;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
-use Illuminate\Http\Request;
 
 class ExpenseCategoryController extends Controller
 {
@@ -43,7 +43,7 @@ class ExpenseCategoryController extends Controller
         return view('expenses.expense_categories.index', compact('categories'));
     }
 
-    public function reorder(Request $request, ReorderExpenseCategory $reorderAction)
+    public function reorder(ExpenseCategoryReorderRequest $request, ReorderExpenseCategory $reorderAction)
     {
         $order = $request->input('order');
 

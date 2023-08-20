@@ -26,16 +26,21 @@ document.addEventListener("DOMContentLoaded", () => {
                         order: order,
                     }),
                 })
-                    .then((response) => response.json())
-                    .then((data) => {
-                        if (data.message === "Order updated successfully") {
-                            console.log("Order updated on backend");
-                        } else {
-                            alert(
-                                "Error updating order on backend:" +
-                                    data.message
-                            );
+                    .then((response) => {
+                        if (!response.ok) {
+                            // エラーレスポンスが返された場合、エラーメッセージをJSONとして解析します
+                            return response
+                                .json()
+                                .then((err) => Promise.reject(err));
                         }
+                        return response.json();
+                    })
+                    .then((data) => {
+                        console.log("Order updated on backend");
+                    })
+                    .catch((error) => {
+                        console.error("Error updating order on backend:");
+                        alert("Error updating order on backend");
                     });
             },
         });
