@@ -3,6 +3,7 @@
 namespace App\Actions\Expenses\ExpenseCategory;
 
 use App\Models\ExpenseCategory;
+use App\Services\Expenses\ExpenseCategoryService;
 use Illuminate\Database\QueryException;
 
 /**
@@ -12,6 +13,13 @@ use Illuminate\Database\QueryException;
  */
 class UpdateExpenseCategory
 {
+    protected $expenseCategoryService;
+
+    public function __construct(ExpenseCategoryService $expenseCategoryService)
+    {
+        $this->expenseCategoryService = $expenseCategoryService;
+    }
+
     /**
      * 指定されたIDの品目カテゴリを更新します。
      * 
@@ -23,8 +31,14 @@ class UpdateExpenseCategory
      * 
      * @return array 状態、エラーコード（存在する場合）、およびメッセージを含む配列
      */
-    public function update(int $id, array $data)
+    public function update(int $id, array $data, int $teamId)
     {
+        // Check permission before updating the category
+        if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
+            throw new \Exception('Access forbidden. You do not have permission to edit this category.');
+        }
+
+
         try {
             $category = ExpenseCategory::findOrFail($id);
 

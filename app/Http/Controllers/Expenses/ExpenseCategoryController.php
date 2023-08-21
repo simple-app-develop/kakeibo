@@ -136,15 +136,13 @@ class ExpenseCategoryController extends Controller
      */
     public function update(ExpenseCategoryUpdateRequest $request, $id)
     {
-        $result = $this->updateExpenseCategoryAction->update($id, $request->all());
-
-        if ($result['status']) {
-            return redirect()->route('expense-category-index')->with('success', $result['message']);
-        } elseif ($result['error'] === 'unique_constraint') {
-            return redirect()->back()->withErrors(['name' => $result['message']])->withInput();
-        } else {
-            return redirect()->back()->withErrors(['error' => $result['message']])->withInput();
+        try {
+            $result = $this->updateExpenseCategoryAction->update($id, $request->all(), $this->getCurrentTeamId());
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
         }
+
+        return redirect()->route('expense-category-index')->with('success', $result['message']);
     }
 
     /**
