@@ -153,6 +153,10 @@
     "Category created successfully!": "カテゴリを作成しました！",
     "Category updated successfully!": "カテゴリを更新しました！",
     "Category deleted successfully!": "カテゴリを削除しました！",
+    "You are not authorized to create categories on this team.": "このチームでカテゴリを作成する権限がありません",
+    "You do not have permission to delete categories for this team.": "このチームのカテゴリを削除する権限がありません",
+    "You do not have permission to edit categories on this team.": "このチームのカテゴリを編集する権限がありません。",
+    "You do not have permission to reorder categories for this team.": "このチームのカテゴリの並び替えをする権限がありません",
     "Delete Category": "カテゴリを削除",
     "Are you sure you want to delete this category? Once deleted, any data set to this category will be changed to [Uncategorized]. This action cannot be undone.": "このカテゴリを削除してもよろしいですか？削除すると、現在このカテゴリに設定されているデータは「未分類」に変更されます。この操作は取り消せません。",
     "Can edit item categories used by the team": "チームで使用されている品目カテゴリを編集できます"
