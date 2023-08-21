@@ -14,6 +14,9 @@ class GetExpenseCategoriesByTeam
     /**
      * 指定されたチームIDに関連する品目カテゴリを取得する
      *
+     * このメソッドは、指定されたチームIDに関連する品目カテゴリをデータベースから取得し、
+     * order_columnで昇順に並べ替えた結果をコレクションとして返します。
+     *
      * @param int $teamId 品目カテゴリを取得するチームのID
      * @return \Illuminate\Database\Eloquent\Collection 取得された品目カテゴリのコレクション
      */
