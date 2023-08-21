@@ -83,9 +83,14 @@ class ExpenseCategoryController extends Controller
      */
     public function index()
     {
-        // 現在のチームに関連するカテゴリの一覧を取得してビューを返す
-        $categories = $this->getExpenseCategoriesByTeamAction->getByTeam($this->getCurrentTeamId());
-        return view('expenses.expense_categories.index', compact('categories'));
+        // 現在のチームに関連するカテゴリの一覧と権限情報を取得
+        $result = $this->getExpenseCategoriesByTeamAction->getByTeam($this->getCurrentTeamId());
+
+        // ビューにデータを渡す
+        return view('expenses.expense_categories.index', [
+            'categories' => $result['categories'],
+            'isPermission' => $result['isPermission']
+        ]);
     }
 
     /**
