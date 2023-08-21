@@ -64,8 +64,11 @@ class ExpenseCategoryController extends Controller
     {
         $data = $request->all();
         $data['team_id'] = $this->getCurrentTeamId();
-
-        $this->createExpenseCategoryAction->create($data);
+        try {
+            $this->createExpenseCategoryAction->create($data);
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
 
         return redirect()->route('expense-category-index')->with('success', 'Category created successfully!');
     }

@@ -13,9 +13,8 @@ class ExpenseCategoryService
      * @param int $id Category ID
      * @return bool
      */
-    public function checkPermission(int $id): bool
+    public function checkPermission(int $id = null): bool
     {
-
         /** @var \App\Models\User|null */
         $user = auth()->user();
 
@@ -34,10 +33,14 @@ class ExpenseCategoryService
             return false;
         }
 
+        if ($id) {
+            // ここで $teamId を直接使用して、ExpenseCategory のチェックを行います
+            return ExpenseCategory::where('id', $id)
+                ->where('team_id', $teamId)
+                ->exists();
+        }
 
-        // ここで $teamId を直接使用して、ExpenseCategory のチェックを行います
-        return ExpenseCategory::where('id', $id)
-            ->where('team_id', $teamId)
-            ->exists();
+        // IDが指定されていない場合（新規作成の場合）は、trueを返す
+        return true;
     }
 }
