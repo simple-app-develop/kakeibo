@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
@@ -86,14 +87,18 @@ class ExpenseCategoryController extends Controller
      */
     public function reorder(ExpenseCategoryReorderRequest $request)
     {
-        $order = $request->input('order');
+        try {
+            $order = $request->input('order');
 
-        $result = $this->reorderExpenseCategoryAction->reorder($order);
+            $result = $this->reorderExpenseCategoryAction->reorder($order);
 
-        if ($result['status']) {
-            return response()->json(['message' => $result['message']]);
-        } else {
-            return response()->json(['message' => $result['message']], 400);
+            if ($result['status']) {
+                return response()->json(['message' => $result['message']]);
+            } else {
+                return response()->json(['message' => $result['message']], 400);
+            }
+        } catch (AuthorizationException $e) {
+            abort(403, $e->getMessage());
         }
     }
 

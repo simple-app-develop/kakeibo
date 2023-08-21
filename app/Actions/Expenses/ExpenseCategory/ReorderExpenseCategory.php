@@ -4,6 +4,7 @@ namespace App\Actions\Expenses\ExpenseCategory;
 
 use App\Models\ExpenseCategory;
 use App\Services\Expenses\ExpenseCategoryService;
+use Illuminate\Auth\Access\AuthorizationException;
 
 /**
  * 品目カテゴリの並べ替えアクション
@@ -37,12 +38,9 @@ class ReorderExpenseCategory
         }
 
         foreach ($order as $index => $id) {
-            // Check permission for each category
+            // 各カテゴリの権限を確認する
             if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
-                return [
-                    'status' => false,
-                    'message' => 'Access forbidden. You do not have permission to reorder some categories.'
-                ];
+                throw new AuthorizationException('Access forbidden. You do not have permission to reorder some categories.');
             }
 
             $category = ExpenseCategory::find($id);
