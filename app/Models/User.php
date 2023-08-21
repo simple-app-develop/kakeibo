@@ -16,6 +16,7 @@ use Laravel\Sanctum\HasApiTokens;
  * 
  * このモデルは、アプリケーション内のユーザーに関連するデータを表現し、
  * 認証や権限のチェック、プロフィール画像の取り扱いなどの機能を提供します。
+ * 
  */
 class User extends Authenticatable implements MustVerifyEmail
 {

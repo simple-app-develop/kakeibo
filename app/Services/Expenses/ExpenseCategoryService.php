@@ -15,6 +15,8 @@ class ExpenseCategoryService
      */
     public function checkPermission(int $id): bool
     {
+
+        /** @var \App\Models\User|null */
         $user = auth()->user();
 
         if (!$user) {
