@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Expenses\ExpenseCategoryController;
+use App\Http\Controllers\Expenses\PaymentMethodController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -19,4 +20,7 @@ Route::middleware([
 
     Route::get('/expense-category/', [ExpenseCategoryController::class, 'index'])->name('expense-category-index');
     Route::post('/expense-category/reorder', [ExpenseCategoryController::class, 'reorder'])->name('expense-category-reorder');
+
+    Route::get('/payment-method/create', [PaymentMethodController::class, 'create'])->name('payment-method-create');
+    Route::post('/payment-method/store', [PaymentMethodController::class, 'store'])->name('payment-method-store');
 });
