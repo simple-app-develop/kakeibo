@@ -19,16 +19,26 @@ class CreateExpenseCategory
         $this->expenseCategoryService = $expenseCategoryService;
     }
 
+
+    public function create()
+    {
+        // Check permission before fetching the category
+        if (!$this->expenseCategoryService->checkPermission()) {
+            throw new \Exception('Access forbidden. You do not have permission to edit this category.');
+        }
+
+        // 品目カテゴリ作成ビューを返す
+        return view('expenses.expense_categories.create');
+    }
+
     /**
      * 品目カテゴリを作成する
      *
      * @param array $data 作成する品目カテゴリのデータ
      * @return \App\Models\ExpenseCategory 作成された品目カテゴリモデルインスタンス
      */
-    public function create(array $data)
+    public function store(array $data)
     {
-        $teamId = auth()->user()->currentTeam->id;
-
         // Check permission before fetching the category
         if (!$this->expenseCategoryService->checkPermission()) {
             throw new \Exception('Access forbidden. You do not have permission to edit this category.');

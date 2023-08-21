@@ -51,8 +51,13 @@ class ExpenseCategoryController extends Controller
      */
     public function create()
     {
+        try {
+            $view = $this->createExpenseCategoryAction->create();
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
         // 品目カテゴリ作成ビューを返す
-        return view('expenses.expense_categories.create');
+        return $view;
     }
 
     /**
@@ -65,7 +70,7 @@ class ExpenseCategoryController extends Controller
         $data = $request->all();
         $data['team_id'] = $this->getCurrentTeamId();
         try {
-            $this->createExpenseCategoryAction->create($data);
+            $this->createExpenseCategoryAction->store($data);
         } catch (\Exception $e) {
             abort(403, $e->getMessage());
         }
