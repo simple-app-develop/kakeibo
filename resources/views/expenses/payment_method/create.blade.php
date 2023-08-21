@@ -19,6 +19,18 @@
                         <x-input-error for="name" class="mt-2" />
                     </div>
 
+                    <div class="col-span-6 sm:col-span-4 p-6">
+                        <x-label for="month_offset" value="{{ __('Select Payment Month Offset') }}" />
+                        <select id="month_offset" name="month_offset" class="mt-1 block w-full">
+                            <option value="0">This Month</option>
+                            <option value="1">Next Month</option>
+                            <option value="2">Month after Next</option>
+                            <option value="3">3 Months Later</option>
+                        </select>
+                        <x-input-error for="month_offset" class="mt-2" />
+                    </div>
+
+
                     <!-- Closing Date -->
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label for="closing_date" value="{{ __('Closing Date (Optional for cash)') }}" />

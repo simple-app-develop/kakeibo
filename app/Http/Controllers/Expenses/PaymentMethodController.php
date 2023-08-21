@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Expenses;
 
 use App\Http\Controllers\Controller;
+use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 
 class PaymentMethodController extends Controller
@@ -20,8 +21,24 @@ class PaymentMethodController extends Controller
 
     public function store(Request $request)
     {
-        // バリデーション、データの保存など
+        // バリデーション
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'closing_date' => 'nullable|integer|min:1|max:31',
+            'payment_date' => 'nullable|integer|min:1|max:31',
+            'month_offset' => 'required|integer|min:0|max:3',
+        ]);
+
+        $data = $request->all();
+        $data['team_id'] = auth()->user()->currentTeam->id;
+
+        // データの保存
+        PaymentMethod::create($data);
+
+        // リダイレクト
+        // return redirect()->route('payment-method.index')->with('success', 'Payment method registered successfully.');
     }
+
 
     public function edit($id)
     {
