@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const isSortableDisabled = !window.isPermission;
+
     const updateCategoryOrder = (elementId, reorderUrl) => {
         const categoryList = document.getElementById(elementId);
         if (!categoryList) return;
 
         Sortable.create(categoryList, {
             animation: 150,
+            disabled: isSortableDisabled,
             onEnd: function () {
                 const order = [];
                 categoryList

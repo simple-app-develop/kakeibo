@@ -44,7 +44,7 @@ class CreateExpenseCategory
     {
         // 権限を確認する
         if (!$this->expenseCategoryService->checkPermission()) {
-            throw new \Exception('Access forbidden. You are not authorized to create categories on this team.');
+            throw new \Exception('You are not authorized to create categories on this team.');
         }
 
         // 品目カテゴリ作成ビューを返す
@@ -62,7 +62,7 @@ class CreateExpenseCategory
     {
         // 権限を確認する
         if (!$this->expenseCategoryService->checkPermission()) {
-            throw new \Exception('Access forbidden. You are not authorized to create categories on this team.');
+            throw new \Exception('You are not authorized to create categories on this team.');
         }
 
         return ExpenseCategory::create($data);

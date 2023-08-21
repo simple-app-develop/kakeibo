@@ -48,7 +48,7 @@ class UpdateExpenseCategory
     {
         // 権限を確認する
         if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
-            throw new \Exception('Access forbidden. You do not have permission to edit categories on this team.');
+            throw new \Exception('You do not have permission to edit categories on this team.');
         }
 
         try {

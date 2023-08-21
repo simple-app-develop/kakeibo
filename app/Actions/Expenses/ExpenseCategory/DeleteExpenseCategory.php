@@ -45,7 +45,7 @@ class DeleteExpenseCategory
 
         // 権限を確認する
         if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
-            throw new AuthorizationException('Access forbidden. You do not have permission to delete categories for this team.');
+            throw new AuthorizationException('You do not have permission to delete categories for this team.');
         }
 
         try {

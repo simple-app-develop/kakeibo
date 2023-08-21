@@ -54,7 +54,7 @@ class ExpenseCategoryController extends Controller
         try {
             $view = $this->createExpenseCategoryAction->create();
         } catch (\Exception $e) {
-            abort(403, $e->getMessage());
+            return redirect()->route('expense-category-index')->with('failure', $e->getMessage());
         }
         // 品目カテゴリ作成ビューを返す
         return $view;
@@ -72,7 +72,7 @@ class ExpenseCategoryController extends Controller
         try {
             $this->createExpenseCategoryAction->store($data);
         } catch (\Exception $e) {
-            abort(403, $e->getMessage());
+            return redirect()->route('expense-category-index')->with('failure', $e->getMessage());
         }
 
         return redirect()->route('expense-category-index')->with('success', 'Category created successfully!');
@@ -83,9 +83,14 @@ class ExpenseCategoryController extends Controller
      */
     public function index()
     {
-        // 現在のチームに関連するカテゴリの一覧を取得してビューを返す
-        $categories = $this->getExpenseCategoriesByTeamAction->getByTeam($this->getCurrentTeamId());
-        return view('expenses.expense_categories.index', compact('categories'));
+        // 現在のチームに関連するカテゴリの一覧と権限情報を取得
+        $result = $this->getExpenseCategoriesByTeamAction->getByTeam($this->getCurrentTeamId());
+
+        // ビューにデータを渡す
+        return view('expenses.expense_categories.index', [
+            'categories' => $result['categories'],
+            'isPermission' => $result['isPermission']
+        ]);
     }
 
     /**
@@ -106,7 +111,7 @@ class ExpenseCategoryController extends Controller
                 return response()->json(['message' => $result['message']], 400);
             }
         } catch (AuthorizationException $e) {
-            abort(403, $e->getMessage());
+            return redirect()->route('expense-category-index')->with('failure', $e->getMessage());
         }
     }
 
@@ -120,7 +125,7 @@ class ExpenseCategoryController extends Controller
         try {
             $result = $this->deleteExpenseCategoryAction->delete($id);
         } catch (\Exception $e) {
-            abort(403, $e->getMessage());
+            return redirect()->route('expense-category-index')->with('failure', $e->getMessage());
         }
         if ($result['status']) {
             return redirect()->route('expense-category-index')->with('success', $result['message']);
@@ -139,7 +144,7 @@ class ExpenseCategoryController extends Controller
         try {
             $category = $this->editExpenseCategoryAction->get($id, $this->getCurrentTeamId());
         } catch (\Exception $e) {
-            abort(403, $e->getMessage());
+            return redirect()->route('expense-category-index')->with('failure', $e->getMessage());
         }
         return view('expenses.expense_categories.edit', compact('category'));
     }
@@ -155,7 +160,7 @@ class ExpenseCategoryController extends Controller
         try {
             $result = $this->updateExpenseCategoryAction->update($id, $request->all(), $this->getCurrentTeamId());
         } catch (\Exception $e) {
-            abort(403, $e->getMessage());
+            return redirect()->route('expense-category-index')->with('failure', $e->getMessage());
         }
 
         return redirect()->route('expense-category-index')->with('success', $result['message']);
