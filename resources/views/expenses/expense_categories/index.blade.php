@@ -103,6 +103,8 @@
     </div>
 
     <script>
+        window.isPermission = @json($isPermission);
+
         function toggleModal() {
             const modal = document.getElementById('deleteModal');
             if (modal.classList.contains('hidden')) {
