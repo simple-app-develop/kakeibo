@@ -163,7 +163,10 @@ class ExpenseCategoryController extends Controller
 
     /**
      * 現在のチームIDを取得
+     *
+     * @return int 現在のチームID
      */
+
     private function getCurrentTeamId()
     {
         // 認証済みのユーザーから現在のチームIDを取得して返す

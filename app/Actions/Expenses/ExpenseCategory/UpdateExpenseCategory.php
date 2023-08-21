@@ -13,8 +13,20 @@ use Illuminate\Database\QueryException;
  */
 class UpdateExpenseCategory
 {
+    /**
+     * 品目カテゴリサービス
+     *
+     * @var ExpenseCategoryService
+     */
     protected $expenseCategoryService;
 
+    /**
+     * UpdateExpenseCategory コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpenseCategoryService $expenseCategoryService 品目カテゴリサービス
+     */
     public function __construct(ExpenseCategoryService $expenseCategoryService)
     {
         $this->expenseCategoryService = $expenseCategoryService;
@@ -22,22 +34,22 @@ class UpdateExpenseCategory
 
     /**
      * 指定されたIDの品目カテゴリを更新します。
-     * 
+     *
      * このメソッドは、指定されたIDの品目カテゴリを探し、与えられたデータで更新を試みます。
      * 一意性制約違反やその他のデータベースエラーをハンドリングします。
      *
-     * @param int   $id   更新対象の品目カテゴリID
-     * @param array $data 更新データ
-     * 
+     * @param int   $id     更新対象の品目カテゴリID
+     * @param array $data   更新データ
+     * @param int   $teamId チームID
+     * @throws \Exception 権限がない場合に例外をスローします。
      * @return array 状態、エラーコード（存在する場合）、およびメッセージを含む配列
      */
     public function update(int $id, array $data, int $teamId)
     {
-        // Check permission before updating the category
+        // 権限を確認する
         if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
-            throw new \Exception('Access forbidden. You do not have permission to edit this category.');
+            throw new \Exception('Access forbidden. You do not have permission to edit categories on this team.');
         }
-
 
         try {
             $category = ExpenseCategory::findOrFail($id);

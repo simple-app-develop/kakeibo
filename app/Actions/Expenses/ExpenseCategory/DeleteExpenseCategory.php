@@ -13,8 +13,20 @@ use Illuminate\Auth\Access\AuthorizationException;
  */
 class DeleteExpenseCategory
 {
+    /**
+     * 品目カテゴリサービス
+     *
+     * @var ExpenseCategoryService
+     */
     protected $expenseCategoryService;
 
+    /**
+     * DeleteExpenseCategory コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpenseCategoryService $expenseCategoryService 品目カテゴリサービス
+     */
     public function __construct(ExpenseCategoryService $expenseCategoryService)
     {
         $this->expenseCategoryService = $expenseCategoryService;
@@ -24,6 +36,7 @@ class DeleteExpenseCategory
      * 指定されたIDの品目カテゴリを削除する
      *
      * @param int $id 削除する品目カテゴリのID
+     * @throws AuthorizationException 権限がない場合に例外をスローします。
      * @return array 削除操作の結果を示す連想配列。'status'キーで成功/失敗の状態を、'message'キーで結果メッセージを示す。
      */
     public function delete(int $id): array
@@ -32,8 +45,7 @@ class DeleteExpenseCategory
 
         // 権限を確認する
         if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
-            // 権限がない場合、403エラーをスローする
-            throw new AuthorizationException('Access forbidden. You do not have permission to delete this category.');
+            throw new AuthorizationException('Access forbidden. You do not have permission to delete categories for this team.');
         }
 
         try {
