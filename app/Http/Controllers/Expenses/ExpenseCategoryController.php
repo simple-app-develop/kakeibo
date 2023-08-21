@@ -109,8 +109,11 @@ class ExpenseCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $result = $this->deleteExpenseCategoryAction->delete($id);
-
+        try {
+            $result = $this->deleteExpenseCategoryAction->delete($id);
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
         if ($result['status']) {
             return redirect()->route('expense-category-index')->with('success', $result['message']);
         } else {
