@@ -12,6 +12,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * 品目カテゴリコントローラ
@@ -49,8 +51,13 @@ class ExpenseCategoryController extends Controller
      */
     public function create()
     {
+        try {
+            $view = $this->createExpenseCategoryAction->create();
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
         // 品目カテゴリ作成ビューを返す
-        return view('expenses.expense_categories.create');
+        return $view;
     }
 
     /**
@@ -62,8 +69,11 @@ class ExpenseCategoryController extends Controller
     {
         $data = $request->all();
         $data['team_id'] = $this->getCurrentTeamId();
-
-        $this->createExpenseCategoryAction->create($data);
+        try {
+            $this->createExpenseCategoryAction->store($data);
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
 
         return redirect()->route('expense-category-index')->with('success', 'Category created successfully!');
     }
@@ -85,14 +95,18 @@ class ExpenseCategoryController extends Controller
      */
     public function reorder(ExpenseCategoryReorderRequest $request)
     {
-        $order = $request->input('order');
+        try {
+            $order = $request->input('order');
 
-        $result = $this->reorderExpenseCategoryAction->reorder($order);
+            $result = $this->reorderExpenseCategoryAction->reorder($order);
 
-        if ($result['status']) {
-            return response()->json(['message' => $result['message']]);
-        } else {
-            return response()->json(['message' => $result['message']], 400);
+            if ($result['status']) {
+                return response()->json(['message' => $result['message']]);
+            } else {
+                return response()->json(['message' => $result['message']], 400);
+            }
+        } catch (AuthorizationException $e) {
+            abort(403, $e->getMessage());
         }
     }
 
@@ -103,8 +117,11 @@ class ExpenseCategoryController extends Controller
      */
     public function destroy($id)
     {
-        $result = $this->deleteExpenseCategoryAction->delete($id);
-
+        try {
+            $result = $this->deleteExpenseCategoryAction->delete($id);
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
         if ($result['status']) {
             return redirect()->route('expense-category-index')->with('success', $result['message']);
         } else {
@@ -119,7 +136,11 @@ class ExpenseCategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = $this->editExpenseCategoryAction->get($id);
+        try {
+            $category = $this->editExpenseCategoryAction->get($id, $this->getCurrentTeamId());
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
         return view('expenses.expense_categories.edit', compact('category'));
     }
 
@@ -131,20 +152,21 @@ class ExpenseCategoryController extends Controller
      */
     public function update(ExpenseCategoryUpdateRequest $request, $id)
     {
-        $result = $this->updateExpenseCategoryAction->update($id, $request->all());
-
-        if ($result['status']) {
-            return redirect()->route('expense-category-index')->with('success', $result['message']);
-        } elseif ($result['error'] === 'unique_constraint') {
-            return redirect()->back()->withErrors(['name' => $result['message']])->withInput();
-        } else {
-            return redirect()->back()->withErrors(['error' => $result['message']])->withInput();
+        try {
+            $result = $this->updateExpenseCategoryAction->update($id, $request->all(), $this->getCurrentTeamId());
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
         }
+
+        return redirect()->route('expense-category-index')->with('success', $result['message']);
     }
 
     /**
      * 現在のチームIDを取得
+     *
+     * @return int 現在のチームID
      */
+
     private function getCurrentTeamId()
     {
         // 認証済みのユーザーから現在のチームIDを取得して返す
