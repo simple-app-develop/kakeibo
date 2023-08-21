@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\ExpenseCategoryReorderRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryStoreRequest;
 use App\Http\Requests\Expenses\ExpenseCategoryUpdateRequest;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 /**
  * 品目カテゴリコントローラ
@@ -119,7 +120,11 @@ class ExpenseCategoryController extends Controller
      */
     public function edit($id)
     {
-        $category = $this->editExpenseCategoryAction->get($id);
+        try {
+            $category = $this->editExpenseCategoryAction->get($id, $this->getCurrentTeamId());
+        } catch (\Exception $e) {
+            abort(403, $e->getMessage());
+        }
         return view('expenses.expense_categories.edit', compact('category'));
     }
 
