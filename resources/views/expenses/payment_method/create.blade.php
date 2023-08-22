@@ -21,7 +21,6 @@
                             <x-input-error for="name" class="mt-2" />
                         </div>
 
-
                         <!-- Payment Type Selection -->
                         <div class="col-span-6 sm:col-span-4 p-6">
                             <x-label value="{{ __('Payment Type') }}" />
@@ -35,26 +34,27 @@
                         <div x-show="isCreditCard">
                             <!-- Closing Date -->
                             <div class="col-span-6 sm:col-span-4 p-6">
-                                <x-label for="closing_date" value="{{ __('Closing Date (Optional for cash)') }}" />
+                                <x-label for="closing_date" value="{{ __('Closing Date') }}" />
                                 <x-input id="closing_date" type="number" min="1" max="31"
                                     class="mt-1 block w-full" name="closing_date" :value="old('closing_date')" />
                                 <x-input-error for="closing_date" class="mt-2" />
                             </div>
 
+                            <!-- select Payment Month Offset -->
                             <div class="col-span-6 sm:col-span-4 p-6">
-                                <x-label for="month_offset" value="{{ __('Select Payment Month Offset') }}" />
+                                <x-label for="month_offset" :value="__('Select Payment Month Offset')" />
                                 <select id="month_offset" name="month_offset" class="mt-1 block w-full">
-                                    <option value="0">This Month</option>
-                                    <option value="1">Next Month</option>
-                                    <option value="2">Month after Next</option>
-                                    <option value="3">3 Months Later</option>
+                                    <option value="0">{{ __('This Month') }}</option>
+                                    <option value="1">{{ __('Next Month') }}</option>
+                                    <option value="2">{{ __('Month after Next') }}</option>
+                                    <option value="3">{{ __('3 Months Later') }}</option>
                                 </select>
                                 <x-input-error for="month_offset" class="mt-2" />
                             </div>
 
                             <!-- Payment Date -->
                             <div class="col-span-6 sm:col-span-4 p-6">
-                                <x-label for="payment_date" value="{{ __('Payment Date (Optional for cash)') }}" />
+                                <x-label for="payment_date" value="{{ __('Payment Date') }}" />
                                 <x-input id="payment_date" type="number" min="1" max="31"
                                     class="mt-1 block w-full" name="payment_date" :value="old('payment_date')" />
                                 <x-input-error for="payment_date" class="mt-2" />

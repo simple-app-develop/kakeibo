@@ -159,5 +159,15 @@
     "You do not have permission to reorder categories for this team.": "このチームのカテゴリの並び替えをする権限がありません",
     "Delete Category": "カテゴリを削除",
     "Are you sure you want to delete this category? Once deleted, any data set to this category will be changed to [Uncategorized]. This action cannot be undone.": "このカテゴリを削除してもよろしいですか？削除すると、現在このカテゴリに設定されているデータは「未分類」に変更されます。この操作は取り消せません。",
-    "Can edit item categories used by the team": "チームで使用されている品目カテゴリを編集できます"
+    "Can edit item categories used by the team": "チームで使用されている品目カテゴリを編集できます",
+    "Payment Method Name": "支払い方法名",
+    "Payment Type": "支払いタイプ",
+    "Credit Card": "クレジットカード",
+    "Closing Date": "締め日",
+    "Select Payment Month Offset": "支払い月のオフセットを選択",
+    "Payment Date": "支払日",
+    "This Month": "当月",
+    "Next Month": "翌月",
+    "Month after Next": "翌々月",
+    "3 Months Later": "3ヶ月後"
 }
