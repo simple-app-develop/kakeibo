@@ -7,6 +7,7 @@ use App\Models\Expense;
 use App\Models\PaymentMethod;
 use App\Models\ExpenseCategory;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class FinanceController extends Controller
 {
@@ -28,14 +29,28 @@ class FinanceController extends Controller
 
     public function store(Request $request)
     {
+        $teamId = auth()->user()->currentTeam->id;
+
         $validatedData = $request->validate([
             'transaction_type' => 'required|in:expense,income',
-            'payment_method' => 'required_if:transaction_type,expense|exists:payment_methods,id',
-            'category' => 'required|exists:expense_categories,id',
+            'payment_method' => [
+                'required_if:transaction_type,expense',
+                Rule::exists('payment_methods', 'id')->where(function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                }),
+            ],
+            'category' => [
+                'required',
+                Rule::exists('expense_categories', 'id')->where(function ($query) use ($teamId, $request) {
+                    $query->where('team_id', $teamId)
+                        ->where('type', $request->transaction_type);
+                }),
+            ],
             'amount' => 'required|numeric|between:0,99999999',
             'description' => 'nullable|string',
             'date' => 'required|date',
         ]);
+
 
         $financeData = [
             'team_id' => auth()->user()->currentTeam->id,
