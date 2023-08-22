@@ -7,7 +7,7 @@ use App\Models\ExpenseCategory;
 
 class CreateFinance
 {
-    public function run()
+    public function create()
     {
         $currentTeamId = auth()->user()->currentTeam->id;
 

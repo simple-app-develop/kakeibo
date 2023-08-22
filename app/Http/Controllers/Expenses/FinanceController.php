@@ -22,7 +22,7 @@ class FinanceController extends Controller
 
     public function create(CreateFinance $createView)
     {
-        return view('expenses.finance.create', $createView->run());
+        return view('expenses.finance.create', $createView->create());
     }
 
 
@@ -37,6 +37,13 @@ class FinanceController extends Controller
         return redirect()->route('finance.index')->with('success', 'success');
     }
 
+
+    public function edit(Expense $finance, EditFinance $editView)
+    {
+        return view('expenses.finance.edit', $editView->edit($finance));
+    }
+
+
     public function update(FinanceUpdateRequest $request, Expense $finance, UpdateFinance $updateFinance)
     {
         $validatedData = $request->validated();
@@ -50,17 +57,9 @@ class FinanceController extends Controller
 
 
 
-
-    public function edit(Expense $finance, EditFinance $editView)
-    {
-        return view('expenses.finance.edit', $editView->run($finance));
-    }
-
-
-
     public function destroy(Expense $finance, DeleteFinance $deleteAction)
     {
-        $deleteAction->run($finance);
+        $deleteAction->delete($finance);
         return redirect()->route('finance.index')->with('success', '家計簿データが削除されました。');
     }
 }

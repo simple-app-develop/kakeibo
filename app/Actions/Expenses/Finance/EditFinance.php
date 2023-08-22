@@ -7,7 +7,7 @@ use App\Models\ExpenseCategory;
 
 class EditFinance
 {
-    public function run($finance)
+    public function edit($finance)
     {
         $currentTeamId = auth()->user()->currentTeam->id;
 

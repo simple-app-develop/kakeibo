@@ -4,7 +4,7 @@ namespace App\Actions\Expenses\Finance;
 
 class DeleteFinance
 {
-    public function run($finance)
+    public function delete($finance)
     {
         $finance->delete();
     }
