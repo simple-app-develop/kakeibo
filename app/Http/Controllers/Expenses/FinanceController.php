@@ -128,6 +128,6 @@ class FinanceController extends Controller
         // 保存処理
         $finance = Expense::create($financeData);
 
-        // return redirect()->route('finance.index')->with('success', '家計簿のデータが正常に登録されました！');
+        return redirect()->route('finance.index')->with('success', 'success');
     }
 }
