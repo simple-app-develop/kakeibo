@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Expenses;
 
+use App\Actions\Expenses\Finance\CreateFinance;
+use App\Actions\Expenses\Finance\DeleteFinance;
+use App\Actions\Expenses\Finance\EditFinance;
 use App\Actions\Expenses\Finance\StoreFinance;
 use App\Actions\Expenses\Finance\UpdateFinance;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\FinanceStoreRequest;
 use App\Http\Requests\Expenses\FinanceUpdateRequest;
 use App\Models\Expense;
-use App\Models\PaymentMethod;
-use App\Models\ExpenseCategory;
 
 class FinanceController extends Controller
 {
@@ -19,20 +20,11 @@ class FinanceController extends Controller
         return view('expenses.finance.index');
     }
 
-    public function create()
+    public function create(CreateFinance $createView)
     {
-        $currentTeamId = auth()->user()->currentTeam->id;
-
-        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
-        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->orderBy('order_column', 'asc')->get();
-        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
-
-        return view('expenses.finance.create', [
-            'paymentMethods' => $paymentMethods,
-            'expenseCategories' => $expenseCategories,
-            'incomeCategories' => $incomeCategories,
-        ]);
+        return view('expenses.finance.create', $createView->run());
     }
+
 
     public function store(FinanceStoreRequest $request, StoreFinance $storeFinance)
     {
@@ -59,28 +51,16 @@ class FinanceController extends Controller
 
 
 
-    public function edit(Expense $finance)
+    public function edit(Expense $finance, EditFinance $editView)
     {
-        $currentTeamId = auth()->user()->currentTeam->id;
-
-        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
-        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->orderBy('order_column', 'asc')->get();
-        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
-
-        return view('expenses.finance.edit', [
-            'finance' => $finance,
-            'paymentMethods' => $paymentMethods,
-            'expenseCategories' => $expenseCategories,
-            'incomeCategories' => $incomeCategories,
-        ]);
+        return view('expenses.finance.edit', $editView->run($finance));
     }
 
 
 
-    public function destroy(Expense $finance)
+    public function destroy(Expense $finance, DeleteFinance $deleteAction)
     {
-        $finance->delete();
-
+        $deleteAction->run($finance);
         return redirect()->route('finance.index')->with('success', '家計簿データが削除されました。');
     }
 }
