@@ -84,36 +84,23 @@ class FinancesTable extends Component
 
     public function getTotalExpense()
     {
-        // 当月内で、計上日が当月かつ支払い方法がnullでない（支出）
+        // 計上日が今日までの支出を合計します。
         return Expense::where('team_id', auth()->user()->currentTeam->id)
-            ->whereYear('reflected_date', $this->year)
-            ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '<=', now())
             ->whereNotNull('payment_method_id')
-            ->sum('amount');
-    }
-
-    public function getScheduledIncome()
-    {
-        // 当月内で、計上日が未来かつ支払い方法がnull（収入）
-        return Expense::where('team_id', auth()->user()->currentTeam->id)
-            ->whereYear('date', $this->year)
-            ->whereMonth('date', $this->month)
-            ->where('reflected_date', '>', now())
-            ->whereNull('payment_method_id')
             ->sum('amount');
     }
 
     public function getScheduledExpense()
     {
-        // 当月内で、計上日が未来かつ支払い方法がnullでない（支出）
+        // `reflected_date` が当月、かつ、まだ未来のものを対象とします。
         return Expense::where('team_id', auth()->user()->currentTeam->id)
-            ->whereYear('date', $this->year)
-            ->whereMonth('date', $this->month)
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '>', now())
             ->whereNotNull('payment_method_id')
             ->sum('amount');
     }
-
 
     public function getOverallIncome()
     {
