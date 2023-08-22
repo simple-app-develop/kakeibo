@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Expenses\ExpenseCategoryController;
+use App\Http\Controllers\Expenses\FinanceController;
 use App\Http\Controllers\Expenses\PaymentMethodController;
 use Illuminate\Support\Facades\Route;
 
@@ -41,4 +42,17 @@ Route::middleware([
 
     // 支払い方法の並び替え
     Route::post('/payment-methods/reorder', [PaymentMethodController::class, 'reorder'])->name('payment-method.reorder');
+
+
+    Route::get('/finances', [FinanceController::class, 'index'])->name('finance.index');
+
+    // 家計簿のデータの新規登録フォーム表示
+    Route::get('/finance/create', [FinanceController::class, 'create'])->name('finance.create');
+
+    // 家計簿のデータの保存
+    Route::post('/finance/store', [FinanceController::class, 'store'])->name('finance.store');
+
+    // routes/web.php
+    Route::get('/finance/{finance}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
+    Route::put('/finance/{finance}', [FinanceController::class, 'update'])->name('finance.update');
 });
