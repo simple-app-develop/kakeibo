@@ -3,7 +3,7 @@
 namespace App\Actions\Expenses\ExpenseCategory;
 
 use App\Models\ExpenseCategory;
-use App\Services\Expenses\ExpenseCategoryService;
+use App\Services\Expenses\ExpensePermissionService;
 
 /**
  * チームごとの品目カテゴリ取得アクション
@@ -15,20 +15,20 @@ class GetExpenseCategoriesByTeam
     /**
      * 品目カテゴリサービス
      *
-     * @var ExpenseCategoryService
+     * @var ExpensePermissionService
      */
-    protected $expenseCategoryService;
+    protected $expensePermissionService;
 
     /**
      * GetExpenseCategoriesByTeam コンストラクタ
      *
      * 依存性を注入してプロパティを初期化します。
      *
-     * @param ExpenseCategoryService $expenseCategoryService 品目カテゴリサービス
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
      */
-    public function __construct(ExpenseCategoryService $expenseCategoryService)
+    public function __construct(ExpensePermissionService $expensePermissionService)
     {
-        $this->expenseCategoryService = $expenseCategoryService;
+        $this->expensePermissionService = $expensePermissionService;
     }
 
     /**
@@ -43,7 +43,7 @@ class GetExpenseCategoriesByTeam
     public function getByTeam(int $teamId)
     {
         // 権限を確認する
-        $isPermission = $this->expenseCategoryService->checkPermission();
+        $isPermission = $this->expensePermissionService->checkPermission('category');
 
 
         $categories = ExpenseCategory::where('team_id', $teamId)

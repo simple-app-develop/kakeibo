@@ -6,6 +6,7 @@ use App\Actions\Expenses\PaymentMethod\CreatePaymentMethod;
 use App\Actions\Expenses\PaymentMethod\GetPaymentMethods;
 use App\Actions\Expenses\PaymentMethod\UpdatePaymentMethod;
 use App\Actions\Expenses\PaymentMethod\DeletePaymentMethod;
+use App\Actions\Expenses\PaymentMethod\EditPaymentMethod;
 use App\Actions\Expenses\PaymentMethod\ReorderPaymentMethod;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
@@ -16,6 +17,7 @@ class PaymentMethodController extends Controller
 {
     private $createPaymentMethod;
     private $getPaymentMethods;
+    private $editPaymentMethod;
     private $updatePaymentMethod;
     private $deletePaymentMethod;
     private $reorderPaymentMethod;
@@ -23,12 +25,14 @@ class PaymentMethodController extends Controller
     public function __construct(
         CreatePaymentMethod $createPaymentMethod,
         GetPaymentMethods $getPaymentMethods,
+        EditPaymentMethod $editPaymentMethod,
         UpdatePaymentMethod $updatePaymentMethod,
         DeletePaymentMethod $deletePaymentMethod,
         ReorderPaymentMethod $reorderPaymentMethod
     ) {
         $this->createPaymentMethod = $createPaymentMethod;
         $this->getPaymentMethods = $getPaymentMethods;
+        $this->editPaymentMethod = $editPaymentMethod;
         $this->updatePaymentMethod = $updatePaymentMethod;
         $this->deletePaymentMethod = $deletePaymentMethod;
         $this->reorderPaymentMethod = $reorderPaymentMethod;
@@ -36,16 +40,23 @@ class PaymentMethodController extends Controller
 
     public function index()
     {
-        $paymentMethods = $this->getPaymentMethods->getByTeam(auth()->user()->currentTeam->id);
+        $result = $this->getPaymentMethods->getByTeam(auth()->user()->currentTeam->id);
+        // ビューにデータを渡す
         return view('expenses.payment_method.index', [
-            'paymentMethods' => $paymentMethods,
-            'isPermission' => true,  // TODO: 認可ロジックを追加すること
+            'paymentMethods' => $result['paymentMethods'],
+            'isPermission' => $result['isPermission']
         ]);
     }
 
     public function create()
     {
-        return view('expenses.payment_method.create');
+        try {
+            $view = $this->createPaymentMethod->create();
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
+        // 品目カテゴリ作成ビューを返す
+        return $view;
     }
 
     public function store(Request $request)
@@ -56,15 +67,21 @@ class PaymentMethodController extends Controller
 
         $data = $request->all();
         $data['team_id'] = auth()->user()->currentTeam->id;
-
-        $this->createPaymentMethod->create($data);
-
+        try {
+            $this->createPaymentMethod->store($data);
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
         return redirect()->route('payment-method.index')->with('success', 'Payment method registered successfully.');
     }
 
     public function edit($id)
     {
-        $paymentMethod = PaymentMethod::findOrFail($id);
+        try {
+            $paymentMethod = $this->editPaymentMethod->get($id, $this->getCurrentTeamId());
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
         return view('expenses.payment_method.edit', compact('paymentMethod'));
     }
 
@@ -87,21 +104,32 @@ class PaymentMethodController extends Controller
         $validatedData = $request->validate($rules);
 
         $data = $request->only(['name']);
-        $this->updatePaymentMethod->update($id, $data);
-
+        try {
+            $this->updatePaymentMethod->update($id, $data);
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
         return redirect()->route('payment-method.index')->with('success', 'Payment method updated successfully.');
     }
 
     public function destroy($id)
     {
-        $this->deletePaymentMethod->delete($id);
+        try {
+            $this->deletePaymentMethod->delete($id);
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
         return redirect()->route('payment-method.index')->with('success', 'Payment method deleted successfully.');
     }
 
     public function reorder(Request $request)
     {
         $order = $request->input('order');
-        $this->reorderPaymentMethod->reorder($order);
+        try {
+            $this->reorderPaymentMethod->reorder($order);
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
         return response()->json(['message' => 'Order updated successfully']);
     }
 
@@ -126,5 +154,17 @@ class PaymentMethodController extends Controller
         }
 
         return $rules;
+    }
+
+    /**
+     * 現在のチームIDを取得
+     *
+     * @return int 現在のチームID
+     */
+
+    private function getCurrentTeamId()
+    {
+        // 認証済みのユーザーから現在のチームIDを取得して返す
+        return auth()->user()->currentTeam->id;
     }
 }

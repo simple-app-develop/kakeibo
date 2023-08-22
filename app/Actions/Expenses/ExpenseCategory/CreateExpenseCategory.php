@@ -3,7 +3,7 @@
 namespace App\Actions\Expenses\ExpenseCategory;
 
 use App\Models\ExpenseCategory;
-use App\Services\Expenses\ExpenseCategoryService;
+use App\Services\Expenses\ExpensePermissionService;
 
 /**
  * 品目カテゴリ作成アクション
@@ -15,20 +15,20 @@ class CreateExpenseCategory
     /**
      * 品目カテゴリサービス
      *
-     * @var ExpenseCategoryService
+     * @var ExpensePermissionService
      */
-    protected $expenseCategoryService;
+    protected $expensePermissionService;
 
     /**
      * CreateExpenseCategory コンストラクタ
      *
      * 依存性を注入してプロパティを初期化します。
      *
-     * @param ExpenseCategoryService $expenseCategoryService 品目カテゴリサービス
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
      */
-    public function __construct(ExpenseCategoryService $expenseCategoryService)
+    public function __construct(ExpensePermissionService $expensePermissionService)
     {
-        $this->expenseCategoryService = $expenseCategoryService;
+        $this->expensePermissionService = $expensePermissionService;
     }
 
     /**
@@ -43,7 +43,7 @@ class CreateExpenseCategory
     public function create()
     {
         // 権限を確認する
-        if (!$this->expenseCategoryService->checkPermission()) {
+        if (!$this->expensePermissionService->checkPermission('category')) {
             throw new \Exception('You are not authorized to create categories on this team.');
         }
 
@@ -61,7 +61,7 @@ class CreateExpenseCategory
     public function store(array $data)
     {
         // 権限を確認する
-        if (!$this->expenseCategoryService->checkPermission()) {
+        if (!$this->expensePermissionService->checkPermission('category')) {
             throw new \Exception('You are not authorized to create categories on this team.');
         }
 

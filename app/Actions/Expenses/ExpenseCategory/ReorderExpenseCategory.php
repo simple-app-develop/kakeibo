@@ -3,7 +3,7 @@
 namespace App\Actions\Expenses\ExpenseCategory;
 
 use App\Models\ExpenseCategory;
-use App\Services\Expenses\ExpenseCategoryService;
+use App\Services\Expenses\ExpensePermissionService;
 use Illuminate\Auth\Access\AuthorizationException;
 
 /**
@@ -16,20 +16,20 @@ class ReorderExpenseCategory
     /**
      * 品目カテゴリサービス
      *
-     * @var ExpenseCategoryService
+     * @var ExpensePermissionService
      */
-    protected $expenseCategoryService;
+    protected $expensePermissionService;
 
     /**
      * ReorderExpenseCategory コンストラクタ
      *
      * 依存性を注入してプロパティを初期化します。
      *
-     * @param ExpenseCategoryService $expenseCategoryService 品目カテゴリサービス
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
      */
-    public function __construct(ExpenseCategoryService $expenseCategoryService)
+    public function __construct(ExpensePermissionService $expensePermissionService)
     {
-        $this->expenseCategoryService = $expenseCategoryService;
+        $this->expensePermissionService = $expensePermissionService;
     }
 
     /**
@@ -55,7 +55,7 @@ class ReorderExpenseCategory
 
         foreach ($order as $index => $id) {
             // 各カテゴリの権限を確認する
-            if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
+            if (!$this->expensePermissionService->checkPermission('paymentMethod', $id)) {
                 throw new AuthorizationException('You do not have permission to reorder categories for this team.');
             }
 
