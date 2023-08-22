@@ -43,9 +43,12 @@ Route::middleware([
     // 支払い方法の並び替え
     Route::post('/payment-methods/reorder', [PaymentMethodController::class, 'reorder'])->name('payment-method.reorder');
 
+
+    Route::get('/finances', [FinanceController::class, 'index'])->name('finance.index');
+
     // 家計簿のデータの新規登録フォーム表示
     Route::get('/finances/create', [FinanceController::class, 'create'])->name('finance.create');
 
     // 家計簿のデータの保存
-    Route::post('/finances', [FinanceController::class, 'store'])->name('finance.store');
+    Route::post('/finances/store', [FinanceController::class, 'store'])->name('finance.store');
 });

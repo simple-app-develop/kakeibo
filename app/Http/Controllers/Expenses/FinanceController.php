@@ -11,6 +11,16 @@ use Illuminate\Validation\Rule;
 
 class FinanceController extends Controller
 {
+    public function index()
+    {
+        $teamId = auth()->user()->currentTeam->id;
+
+        // 全ての家計簿のデータを取得
+        $finances = Expense::where('team_id', $teamId)->orderBy('date', 'desc')->get();
+
+        return view('expenses.finance.index', ['finances' => $finances]);
+    }
+
     public function create()
     {
         $currentTeamId = auth()->user()->currentTeam->id;
