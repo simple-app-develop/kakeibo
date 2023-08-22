@@ -21,13 +21,28 @@ class PaymentMethodController extends Controller
 
     public function store(Request $request)
     {
-        // バリデーション
-        $request->validate([
+        // 基本のバリデーションルール
+        $rules = [
             'name' => 'required|string|max:255',
-            'closing_date' => 'nullable|integer|min:1|max:31',
-            'payment_date' => 'nullable|integer|min:1|max:31',
-            'month_offset' => 'required|integer|min:0|max:3',
-        ]);
+            'isCreditCard' => 'required|in:0,1'
+        ];
+
+        if ($request->input('isCreditCard') == 0) {
+            // クレジットカードではない場合、フィールドの値をnullにセット
+
+            $data['closing_date'] = null;
+            $data['payment_date'] = null;
+            $data['month_offset'] = null;
+        } else {
+            // クレジットカードの場合のバリデーションルールを追加
+
+            $rules['closing_date'] = 'required|integer|min:1|max:31';
+            $rules['payment_date'] = 'required|integer|min:1|max:31';
+            $rules['month_offset'] = 'required|integer|min:0|max:3';
+        }
+
+        // バリデーションの実行
+        $request->validate($rules);
 
         $data = $request->all();
         $data['team_id'] = auth()->user()->currentTeam->id;
