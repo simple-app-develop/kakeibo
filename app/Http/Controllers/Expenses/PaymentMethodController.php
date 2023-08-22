@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Expenses;
 use App\Http\Controllers\Controller;
 use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PaymentMethodController extends Controller
 {
@@ -23,7 +24,14 @@ class PaymentMethodController extends Controller
     {
         // 基本のバリデーションルール
         $rules = [
-            'name' => 'required|string|max:255',
+            'name' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('payment_methods')->where(function ($query) use ($request) {
+                    return $query->where('team_id', $request->user()->currentTeam->id);
+                })
+            ],
             'isCreditCard' => 'required|in:0,1'
         ];
 
