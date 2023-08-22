@@ -176,5 +176,6 @@
     "This team is not authorized to create payment methods.": "このチームで支払い方法を作成する権限がありません",
     "This team does not have the authority to remove payment methods.": "このチームで支払い方法を削除する権限がありません",
     "This team is not authorized to update payment methods.": "このチームで支払い方法を更新する権限がありません",
-    "You do not have the authority to sort payment methods for this team.": "このチームで支払い方法を並び替える権限がありません"
+    "You do not have the authority to sort payment methods for this team.": "このチームで支払い方法を並び替える権限がありません",
+    "Can edit the payment method used by your team": "チームで使用されている支払い方法を編集できます"
 }
