@@ -3,7 +3,7 @@
 namespace App\Actions\Expenses\ExpenseCategory;
 
 use App\Models\ExpenseCategory;
-use App\Services\Expenses\ExpenseCategoryService;
+use App\Services\Expenses\ExpensePermissionService;
 use Illuminate\Database\QueryException;
 
 /**
@@ -16,20 +16,20 @@ class UpdateExpenseCategory
     /**
      * 品目カテゴリサービス
      *
-     * @var ExpenseCategoryService
+     * @var ExpensePermissionService
      */
-    protected $expenseCategoryService;
+    protected $expensePermissionService;
 
     /**
      * UpdateExpenseCategory コンストラクタ
      *
      * 依存性を注入してプロパティを初期化します。
      *
-     * @param ExpenseCategoryService $expenseCategoryService 品目カテゴリサービス
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
      */
-    public function __construct(ExpenseCategoryService $expenseCategoryService)
+    public function __construct(ExpensePermissionService $expensePermissionService)
     {
-        $this->expenseCategoryService = $expenseCategoryService;
+        $this->expensePermissionService = $expensePermissionService;
     }
 
     /**
@@ -47,8 +47,8 @@ class UpdateExpenseCategory
     public function update(int $id, array $data, int $teamId)
     {
         // 権限を確認する
-        if (!$this->expenseCategoryService->checkPermission($id, $teamId)) {
-            throw new \Exception('Access forbidden. You do not have permission to edit categories on this team.');
+        if (!$this->expensePermissionService->checkPermission('category', $id)) {
+            throw new \Exception('You do not have permission to edit categories on this team.');
         }
 
         try {

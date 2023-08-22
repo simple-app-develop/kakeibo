@@ -52,6 +52,43 @@ html {
     flex-grow: 1;
 }
 
+/* 支払い方法リストのスタイリング */
+.payment-method-item {
+    background-color: #f5f5f5;
+    cursor: grab;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    word-wrap: break-word;
+    padding: 16px;
+}
+
+/* リストの最後のアイテムのボーダーを削除 */
+#paymentMethodList .payment-method-item:last-child {
+    border-bottom: none;
+}
+
+/* ホバー時のスタイリング */
+.payment-method-item:hover {
+    background-color: #e0e0e0;
+}
+
+/* ドラッグ中のアイテムのスタイリング */
+.sortable-ghost {
+    opacity: 0.4;
+}
+
+/* 支払い方法名のスタイリング */
+.method-name {
+    padding: 0 8px;
+    white-space: normal;
+    word-wrap: break-word;
+    font-weight: bold;
+    flex-shrink: 0;
+    width: 160px;
+    overflow: hidden;
+}
+
 .fab {
     background-color: #ff4081;
     width: 56px;

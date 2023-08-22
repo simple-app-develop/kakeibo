@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     const isSortableDisabled = !window.isPermission;
 
-    const updateCategoryOrder = (elementId, reorderUrl) => {
-        const categoryList = document.getElementById(elementId);
-        if (!categoryList) return;
+    const updatePaymentMethodOrder = (elementId, reorderUrl) => {
+        const paymentMethodList = document.getElementById(elementId);
+        if (!paymentMethodList) return;
 
-        Sortable.create(categoryList, {
+        Sortable.create(paymentMethodList, {
             animation: 150,
             disabled: isSortableDisabled,
             onEnd: function () {
                 const order = [];
-                categoryList
+                paymentMethodList
                     .querySelectorAll("[data-id]")
                     .forEach(function (item) {
                         order.push(item.dataset.id);
@@ -29,26 +29,20 @@ document.addEventListener("DOMContentLoaded", () => {
                         order: order,
                     }),
                 })
-                    .then((response) => {
-                        if (!response.ok) {
-                            // エラーレスポンスが返された場合、エラーメッセージをJSONとして解析します
-                            return response
-                                .json()
-                                .then((err) => Promise.reject(err));
-                        }
-                        return response.json();
-                    })
+                    .then((response) => response.json())
                     .then((data) => {
                         console.log("Order updated on backend");
                     })
                     .catch((error) => {
-                        console.error("Error updating order on backend:");
+                        console.error(
+                            "Error updating order on backend:",
+                            error
+                        );
                         alert("Error updating order on backend");
                     });
             },
         });
     };
 
-    updateCategoryOrder("expenseCategoryList", "/expense-category/reorder");
-    updateCategoryOrder("incomeCategoryList", "/expense-category/reorder");
+    updatePaymentMethodOrder("paymentMethodList", "/payment-methods/reorder");
 });

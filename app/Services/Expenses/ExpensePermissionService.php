@@ -3,9 +3,9 @@
 namespace App\Services\Expenses;
 
 use App\Models\ExpenseCategory;
-use Laravel\Jetstream\HasTeams;
+use App\Models\PaymentMethod;
 
-class ExpenseCategoryService
+class ExpensePermissionService
 {
     /**
      * Check if the user has permission to edit the category
@@ -13,7 +13,7 @@ class ExpenseCategoryService
      * @param int $id Category ID
      * @return bool
      */
-    public function checkPermission(int $id = null): bool
+    public function checkPermission(string $modelType, int $id = null): bool
     {
         /** @var \App\Models\User|null */
         $user = auth()->user();
@@ -34,10 +34,16 @@ class ExpenseCategoryService
         }
 
         if ($id) {
-            // ここで $teamId を直接使用して、ExpenseCategory のチェックを行います
-            return ExpenseCategory::where('id', $id)
-                ->where('team_id', $teamId)
-                ->exists();
+            switch ($modelType) {
+                case 'category':
+                    return ExpenseCategory::where('id', $id)
+                        ->where('team_id', $teamId)
+                        ->exists();
+                case 'paymentMethod':
+                    return PaymentMethod::where('id', $id)
+                        ->where('team_id', $teamId)
+                        ->exists();
+            }
         }
 
         // IDが指定されていない場合（新規作成の場合）は、trueを返す
