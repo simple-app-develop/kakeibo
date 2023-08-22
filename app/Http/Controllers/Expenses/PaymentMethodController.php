@@ -2,88 +2,76 @@
 
 namespace App\Http\Controllers\Expenses;
 
+use App\Actions\Expenses\PaymentMethod\CreatePaymentMethod;
+use App\Actions\Expenses\PaymentMethod\GetPaymentMethods;
+use App\Actions\Expenses\PaymentMethod\UpdatePaymentMethod;
+use App\Actions\Expenses\PaymentMethod\DeletePaymentMethod;
+use App\Actions\Expenses\PaymentMethod\ReorderPaymentMethod;
 use App\Http\Controllers\Controller;
-use App\Models\PaymentMethod;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
+use App\Models\PaymentMethod;
 
 class PaymentMethodController extends Controller
 {
+    private $createPaymentMethod;
+    private $getPaymentMethods;
+    private $updatePaymentMethod;
+    private $deletePaymentMethod;
+    private $reorderPaymentMethod;
+
+    public function __construct(
+        CreatePaymentMethod $createPaymentMethod,
+        GetPaymentMethods $getPaymentMethods,
+        UpdatePaymentMethod $updatePaymentMethod,
+        DeletePaymentMethod $deletePaymentMethod,
+        ReorderPaymentMethod $reorderPaymentMethod
+    ) {
+        $this->createPaymentMethod = $createPaymentMethod;
+        $this->getPaymentMethods = $getPaymentMethods;
+        $this->updatePaymentMethod = $updatePaymentMethod;
+        $this->deletePaymentMethod = $deletePaymentMethod;
+        $this->reorderPaymentMethod = $reorderPaymentMethod;
+    }
+
     public function index()
     {
-        // 支払い方法の一覧を取得して表示
-        $paymentMethods = PaymentMethod::where('team_id', auth()->user()->currentTeam->id)
-            ->orderBy('order_column', 'asc')
-            ->get();
-
+        $paymentMethods = $this->getPaymentMethods->getByTeam(auth()->user()->currentTeam->id);
         return view('expenses.payment_method.index', [
             'paymentMethods' => $paymentMethods,
-            'isPermission' => true, // これは適切な認可ロジックに置き換えてください
+            'isPermission' => true,  // TODO: 認可ロジックを追加すること
         ]);
     }
 
     public function create()
     {
-        // 支払い方法の作成フォームを表示
         return view('expenses.payment_method.create');
     }
 
     public function store(Request $request)
     {
-        // 基本のバリデーションルール
-        $rules = [
-            'name' => [
-                'required',
-                'string',
-                'max:20',
-                Rule::unique('payment_methods')->where(function ($query) use ($request) {
-                    return $query->where('team_id', $request->user()->currentTeam->id);
-                })
-            ],
-            'isCreditCard' => 'required|in:0,1'
-        ];
+        $rules = $this->getValidationRules($request);
 
-        if ($request->input('isCreditCard') == 0) {
-            // クレジットカードではない場合、フィールドの値をnullにセット
-
-            $data['closing_date'] = null;
-            $data['payment_date'] = null;
-            $data['month_offset'] = null;
-        } else {
-            // クレジットカードの場合のバリデーションルールを追加
-
-            $rules['closing_date'] = 'required|integer|min:1|max:31';
-            $rules['payment_date'] = 'required|integer|min:1|max:31';
-            $rules['month_offset'] = 'required|integer|min:0|max:3';
-        }
-
-        // バリデーションの実行
-        $request->validate($rules);
+        $validatedData = $request->validate($rules);
 
         $data = $request->all();
         $data['team_id'] = auth()->user()->currentTeam->id;
 
-        // データの保存
-        PaymentMethod::create($data);
+        $this->createPaymentMethod->create($data);
 
-        // リダイレクト
         return redirect()->route('payment-method.index')->with('success', 'Payment method registered successfully.');
     }
-
 
     public function edit($id)
     {
         $paymentMethod = PaymentMethod::findOrFail($id);
-
         return view('expenses.payment_method.edit', compact('paymentMethod'));
     }
 
-
     public function update(Request $request, $id)
     {
-        $method = PaymentMethod::find($id);
+        $method = PaymentMethod::findOrFail($id);
 
-        // Validation rules
         $rules = [
             'name' => [
                 'required',
@@ -96,35 +84,47 @@ class PaymentMethodController extends Controller
             ],
         ];
 
-        // バリデーションの実行
-        $request->validate($rules);
+        $validatedData = $request->validate($rules);
 
         $data = $request->only(['name']);
-
-        $method->update($data);
+        $this->updatePaymentMethod->update($id, $data);
 
         return redirect()->route('payment-method.index')->with('success', 'Payment method updated successfully.');
     }
 
-
     public function destroy($id)
     {
-        $method = PaymentMethod::find($id);
-        $method->delete();
-
+        $this->deletePaymentMethod->delete($id);
         return redirect()->route('payment-method.index')->with('success', 'Payment method deleted successfully.');
     }
 
     public function reorder(Request $request)
     {
         $order = $request->input('order');
+        $this->reorderPaymentMethod->reorder($order);
+        return response()->json(['message' => 'Order updated successfully']);
+    }
 
-        foreach ($order as $index => $id) {
-            $method = PaymentMethod::find($id);
-            $method->order_column = $index;
-            $method->save();
+    private function getValidationRules(Request $request)
+    {
+        $rules = [
+            'name' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('payment_methods')->where(function ($query) use ($request) {
+                    return $query->where('team_id', $request->user()->currentTeam->id);
+                })
+            ],
+            'isCreditCard' => 'required|in:0,1'
+        ];
+
+        if ($request->input('isCreditCard') == 1) {
+            $rules['closing_date'] = 'required|integer|min:1|max:31';
+            $rules['payment_date'] = 'required|integer|min:1|max:31';
+            $rules['month_offset'] = 'required|integer|min:0|max:3';
         }
 
-        return response()->json(['message' => 'Order updated successfully']);
+        return $rules;
     }
 }
