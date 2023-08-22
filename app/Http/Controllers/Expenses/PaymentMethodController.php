@@ -83,15 +83,29 @@ class PaymentMethodController extends Controller
     {
         $method = PaymentMethod::find($id);
 
-        // Validation rules...
-        // ... (ここに更新時のバリデーションルールを記述)
+        // Validation rules
+        $rules = [
+            'name' => [
+                'required',
+                'string',
+                'max:20',
+                Rule::unique('payment_methods')
+                    ->where(function ($query) use ($request) {
+                        return $query->where('team_id', $request->user()->currentTeam->id);
+                    })->ignore($method->id)
+            ],
+        ];
 
-        $data = $request->all();
+        // バリデーションの実行
+        $request->validate($rules);
+
+        $data = $request->only(['name']);
 
         $method->update($data);
 
         return redirect()->route('payment-method.index')->with('success', 'Payment method updated successfully.');
     }
+
 
     public function destroy($id)
     {
