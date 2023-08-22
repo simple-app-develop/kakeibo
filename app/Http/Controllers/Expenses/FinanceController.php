@@ -103,6 +103,9 @@ class FinanceController extends Controller
                 // 資金データの反映日を日の始まり（0時0分0秒）に設定
                 $financeData['reflected_date'] = $reflectedDate->startOfDay();
             }
+        } elseif ($validatedData['transaction_type'] === 'income') {
+            // 収入の場合の反映日のロジックをここに書く
+            $financeData['reflected_date'] = \Carbon\Carbon::parse($validatedData['date']);
         }
 
         /* NOTE:

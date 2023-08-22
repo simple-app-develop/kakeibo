@@ -46,7 +46,34 @@
         </tbody>
     </table>
 
-    <div class="mt-4">
-        <span class="text-lg font-semibold">今月の合計: {{ number_format($this->totalAmount) }}円</span>
+    <div class="my-4">
+        <table class="min-w-full bg-white table-auto mt-8">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-2 px-6 text-left">項目</th>
+                    <th class="py-2 px-6 text-left">金額</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                <tr>
+                    <td class="py-2 px-6">今月の収入合計</td>
+                    <td class="py-2 px-6">{{ number_format($this->getTotalIncome()) }}円</td>
+                </tr>
+                <tr>
+                    <td class="py-2 px-6">今月の支出合計</td>
+                    <td class="py-2 px-6">{{ number_format($this->getTotalExpense()) }}円</td>
+                </tr>
+                <tr>
+                    <td class="py-2 px-6">今月の予定支出</td>
+                    <td class="py-2 px-6">{{ number_format($this->getScheduledExpense()) }}円</td>
+                </tr>
+                <tr class="font-semibold">
+                    <td class="py-2 px-6">全体合計</td>
+                    <td class="py-2 px-6">
+                        {{ number_format($this->getOverallTotal()) }}円
+                    </td>
+                </tr>
+            </tbody>
+        </table>
     </div>
 </div>

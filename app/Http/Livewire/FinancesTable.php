@@ -71,4 +71,70 @@ class FinancesTable extends Component
     {
         return \Carbon\Carbon::parse($date)->isPast();
     }
+
+    public function getTotalIncome()
+    {
+        // 当月内で、計上日が当月かつ支払い方法がnull（収入）
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
+            ->whereNull('payment_method_id')
+            ->sum('amount');
+    }
+
+    public function getTotalExpense()
+    {
+        // 当月内で、計上日が当月かつ支払い方法がnullでない（支出）
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
+            ->whereNotNull('payment_method_id')
+            ->sum('amount');
+    }
+
+    public function getScheduledIncome()
+    {
+        // 当月内で、計上日が未来かつ支払い方法がnull（収入）
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('date', $this->year)
+            ->whereMonth('date', $this->month)
+            ->where('reflected_date', '>', now())
+            ->whereNull('payment_method_id')
+            ->sum('amount');
+    }
+
+    public function getScheduledExpense()
+    {
+        // 当月内で、計上日が未来かつ支払い方法がnullでない（支出）
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('date', $this->year)
+            ->whereMonth('date', $this->month)
+            ->where('reflected_date', '>', now())
+            ->whereNotNull('payment_method_id')
+            ->sum('amount');
+    }
+
+
+    public function getOverallIncome()
+    {
+        // 今日以前の計上日で収入を合計
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->where('reflected_date', '<=', now())
+            ->whereNull('payment_method_id')
+            ->sum('amount');
+    }
+
+    public function getOverallExpense()
+    {
+        // 今日以前の計上日で支出を合計
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->where('reflected_date', '<=', now())
+            ->whereNotNull('payment_method_id')
+            ->sum('amount');
+    }
+
+    public function getOverallTotal()
+    {
+        return $this->getOverallIncome() - $this->getOverallExpense();
+    }
 }
