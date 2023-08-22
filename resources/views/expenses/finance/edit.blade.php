@@ -12,17 +12,20 @@
                     @csrf
                     @method('PUT')
 
-                    <div x-data="{ transactionType: 'expense', category: $refs.categorySelect }">
+                    <div x-data="{ transactionType: '{{ is_null($finance->payment_method_id) ? 'income' : 'expense' }}', category: $refs.categorySelect }">
 
                         <!-- Transaction Type Selection -->
                         <div class="col-span-6 sm:col-span-4 p-6">
                             <x-label value="{{ __('取引のタイプ') }}" />
                             <input type="radio" x-model="transactionType" value="expense" name="transaction_type"
                                 x-on:click="setCategory('expense')"
-                                {{ is_null($finance->payment_method_id) ? '' : 'checked' }}>{{ __('支出') }}
+                                {{ $finance->payment_method_id ? 'checked' : '' }}>{{ __('支出') }}
+
                             <input type="radio" x-model="transactionType" value="income" name="transaction_type"
                                 x-on:click="setCategory('income')"
                                 {{ is_null($finance->payment_method_id) ? 'checked' : '' }}>{{ __('収入') }}
+
+
                             <x-input-error for="transaction_type" class="mt-2" />
                         </div>
 
