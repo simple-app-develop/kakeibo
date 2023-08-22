@@ -61,6 +61,15 @@
                             <x-input-error for="amount" class="mt-2" />
                         </div>
 
+                        <!-- Date Input -->
+                        <div class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="date" value="{{ __('日付') }}" />
+                            <x-input id="date" type="date" class="mt-1 block w-full" name="date"
+                                value="{{ now()->toDateString() }}" required />
+                            <x-input-error for="date" class="mt-2" />
+                        </div>
+
+
                         <div class="p-6">
                             <x-button type="submit">
                                 {{ __('登録') }}
