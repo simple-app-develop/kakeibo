@@ -70,5 +70,5 @@
         }
     </script>
 
-    <a href="{{ route('finance.create') }}" class="fab">+</a>
+    <a href="{{ route('finance.create') }}" class="create_fab">+</a>
 </x-app-layout>

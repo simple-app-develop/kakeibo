@@ -70,7 +70,7 @@
 
     <!-- FABボタンの追加 -->
     @if ($isPermission)
-        <a href="{{ route('expense-category-create') }}" class="fab">+</a>
+        <a href="{{ route('expense-category-create') }}" class="create_fab">+</a>
     @endif
 
     <!-- 削除確認モーダル -->
