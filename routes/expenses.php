@@ -34,7 +34,7 @@ Route::middleware([
     Route::get('/payment-methods/{id}/edit', [PaymentMethodController::class, 'edit'])->name('payment-method.edit');
 
     // 支払い方法の更新
-    Route::put('/payment-methods/{id}', [PaymentMethodController::class, 'update'])->name('payment-method.update');
+    Route::patch('/payment-methods/{id}', [PaymentMethodController::class, 'update'])->name('payment-method.update');
 
     // 支払い方法の削除
     Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy'])->name('payment-method.destroy');

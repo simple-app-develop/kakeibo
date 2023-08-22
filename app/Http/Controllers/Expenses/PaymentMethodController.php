@@ -73,17 +73,32 @@ class PaymentMethodController extends Controller
 
     public function edit($id)
     {
-        // 指定されたIDの支払い方法を取得して編集フォームを表示
+        $paymentMethod = PaymentMethod::findOrFail($id);
+
+        return view('expenses.payment_method.edit', compact('paymentMethod'));
     }
+
 
     public function update(Request $request, $id)
     {
-        // 指定されたIDの支払い方法を更新
+        $method = PaymentMethod::find($id);
+
+        // Validation rules...
+        // ... (ここに更新時のバリデーションルールを記述)
+
+        $data = $request->all();
+
+        $method->update($data);
+
+        return redirect()->route('payment-method.index')->with('success', 'Payment method updated successfully.');
     }
 
     public function destroy($id)
     {
-        // 指定されたIDの支払い方法を削除
+        $method = PaymentMethod::find($id);
+        $method->delete();
+
+        return redirect()->route('payment-method.index')->with('success', 'Payment method deleted successfully.');
     }
 
     public function reorder(Request $request)
