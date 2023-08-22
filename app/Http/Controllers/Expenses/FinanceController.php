@@ -63,8 +63,34 @@ class FinanceController extends Controller
 
         if ($validatedData['transaction_type'] === 'expense') {
             $financeData['payment_method_id'] = $validatedData['payment_method'];
-            // reflected_dateの計算ロジックをここに追加する
+            // reflected_dateの計算ロジック
+            $paymentMethod = PaymentMethod::find($validatedData['payment_method']);
+            $inputDate = \Carbon\Carbon::parse($validatedData['date']);
+
+            if (is_null($paymentMethod->closing_date)) {
+                // 現金の場合
+                $financeData['reflected_date'] = $inputDate;
+            } else {
+                if ($inputDate->day <= $paymentMethod->closing_date) {
+                    // 入力日が締め日以前の場合
+                    $financeData['reflected_date'] = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset)->day($paymentMethod->payment_date)->startOfDay();
+                } else {
+                    // 入力日が締め日より後の場合
+                    $financeData['reflected_date'] = $inputDate->copy()->addMonths($paymentMethod->month_offset + 1)->startOfMonth()->day($paymentMethod->payment_date)->startOfDay();
+                }
+            }
         }
+
+
+        // 以下のddを追加して、関連するすべての情報を一度に確認します
+        // dd([
+        //     'input_date' => $inputDate,
+        //     'closing_date' => $paymentMethod->closing_date,
+        //     'month_offset' => $paymentMethod->month_offset,
+        //     'payment_date' => $paymentMethod->payment_date,
+        //     'calculated_reflected_date' => $financeData['reflected_date'],
+        // ]);
+        dd($financeData['reflected_date']);
 
         // 保存処理
         $finance = Expense::create($financeData);
