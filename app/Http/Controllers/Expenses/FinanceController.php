@@ -222,6 +222,9 @@ class FinanceController extends Controller
                 $financeData['reflected_date'] = $reflectedDate->startOfDay();
             }
         } elseif ($validatedData['transaction_type'] === 'income') {
+            // 収入の場合、支払い方法をnullに設定
+            $financeData['payment_method_id'] = null;
+
             // 収入の場合の反映日のロジックをここに書く
             $financeData['reflected_date'] = \Carbon\Carbon::parse($validatedData['date']);
         }
