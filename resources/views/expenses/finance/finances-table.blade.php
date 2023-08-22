@@ -11,7 +11,6 @@
             class="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm">
             {{ __('finances.next_month') }}
         </button>
-
     </div>
 
     <table class="min-w-full bg-white table-auto">
@@ -28,7 +27,8 @@
         <tbody class="text-gray-600 text-sm font-light">
             @if ($finances->count() > 0)
                 @foreach ($finances as $finance)
-                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <tr
+                        class="border-b border-gray-200 hover:bg-gray-100 {{ !$this->isPastReflectedDate($finance->reflected_date) ? 'opacity-50' : '' }}">
                         <td class="py-2 px-6">{{ $finance->date->format('Y-m-d') }}</td>
                         <td class="py-2 px-6">{{ optional($finance->expense_category)->name }}</td>
                         <td class="py-2 px-6">{{ number_format($finance->amount) }}円</td>
@@ -45,4 +45,8 @@
             @endif
         </tbody>
     </table>
+
+    <div class="mt-4">
+        <span class="text-lg font-semibold">今月の合計: {{ number_format($this->totalAmount) }}円</span>
+    </div>
 </div>
