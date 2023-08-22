@@ -13,20 +13,53 @@
                 @else
                     <div class="min-w-full divide-y divide-gray-200" id="paymentMethodList">
                         @foreach ($paymentMethods as $method)
-                            <div class="payment-method-item" data-id="{{ $method->id }}">
-                                <span class="px-6 py-4 whitespace-no-wrap method-name">
-                                    {{ $method->name }}
-                                </span>
-                                @if ($isPermission)
-                                    <a href="{{ route('payment-method.edit', $method->id) }}"
-                                        class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+                            <div class="payment-method-item flex justify-between items-center"
+                                data-id="{{ $method->id }}">
+                                <div>
+                                    <span class="px-6 py-4 whitespace-no-wrap method-name">
+                                        {{ $method->name }}
+                                    </span>
+                                    @if ($method->closing_date !== null)
+                                        <div class="flex flex-col px-6">
+                                            <span>{{ __('Closing Date') . $method->closing_date }}:</span>
+                                            <span>{{ __('Payment Date') . $method->payment_date }}:</span>
+                                            <span>
+                                                {{ __('Payment Month Offset') }}:
+                                                @switch($method->month_offset)
+                                                    @case(0)
+                                                        {{ __('This Month') }}
+                                                    @break
 
-                                    <button
-                                        onclick="showDeleteModal('{{ route('payment-method.destroy', $method->id) }}')"
-                                        class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                                    @case(1)
+                                                        {{ __('Next Month') }}
+                                                    @break
+
+                                                    @case(2)
+                                                        {{ __('Month after Next') }}
+                                                    @break
+
+                                                    @case(3)
+                                                        {{ __('3 Months Later') }}
+                                                    @break
+                                                @endswitch
+                                            </span>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                @if ($isPermission)
+                                    <div class="actions">
+                                        <a href="{{ route('payment-method.edit', $method->id) }}"
+                                            class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+
+                                        <button
+                                            onclick="showDeleteModal('{{ route('payment-method.destroy', $method->id) }}')"
+                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                    </div>
                                 @endif
                             </div>
                         @endforeach
+
                     </div>
                 @endif
             </div>
