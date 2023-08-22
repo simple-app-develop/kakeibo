@@ -25,16 +25,23 @@
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
-            @foreach ($finances as $finance)
-                <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <td class="py-2 px-6">{{ $finance->date->format('Y-m-d') }}</td>
-                    <td class="py-2 px-6">{{ optional($finance->expense_category)->name }}</td>
-                    <td class="py-2 px-6">{{ number_format($finance->amount) }}円</td>
-                    <td class="py-2 px-6">{{ $finance->description }}</td>
-                    <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
-                    <td class="py-2 px-6">{{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
+            @if ($finances->count() > 0)
+                @foreach ($finances as $finance)
+                    <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <td class="py-2 px-6">{{ $finance->date->format('Y-m-d') }}</td>
+                        <td class="py-2 px-6">{{ optional($finance->expense_category)->name }}</td>
+                        <td class="py-2 px-6">{{ number_format($finance->amount) }}円</td>
+                        <td class="py-2 px-6">{{ $finance->description }}</td>
+                        <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
+                        <td class="py-2 px-6">{{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}
+                        </td>
+                    </tr>
+                @endforeach
+            @else
+                <tr>
+                    <td colspan="6" class="py-2 px-6 text-center">データなし</td>
                 </tr>
-            @endforeach
+            @endif
         </tbody>
     </table>
 </div>
