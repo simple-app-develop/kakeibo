@@ -233,4 +233,11 @@ class FinanceController extends Controller
 
         return redirect()->route('finance.index')->with('success', '更新に成功しました！');
     }
+
+    public function destroy(Expense $finance)
+    {
+        $finance->delete();
+
+        return redirect()->route('finance.index')->with('success', '家計簿データが削除されました。');
+    }
 }
