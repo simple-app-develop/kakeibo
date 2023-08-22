@@ -26,20 +26,26 @@
                         </div>
 
                         <!-- Category Selection -->
+                        <!-- Category Selection -->
                         <div class="col-span-6 sm:col-span-4 p-6">
                             <x-label for="category" value="{{ __('カテゴリ') }}" />
                             <select id="category" x-ref="categorySelect" class="mt-1 block w-full" name="category">
                                 @foreach ($expenseCategories as $index => $category)
-                                    <option x-show="transactionType === 'expense'" value="{{ $category->id }}">
+                                    <option x-bind:disabled="transactionType !== 'expense'"
+                                        x-bind:class="transactionType !== 'expense' ? 'hidden' : 'block'"
+                                        value="{{ $category->id }}">
                                         {{ $category->name }}</option>
                                 @endforeach
                                 @foreach ($incomeCategories as $index => $category)
-                                    <option x-show="transactionType === 'income'" value="{{ $category->id }}">
+                                    <option x-bind:disabled="transactionType !== 'income'"
+                                        x-bind:class="transactionType !== 'income' ? 'hidden' : 'block'"
+                                        value="{{ $category->id }}">
                                         {{ $category->name }}</option>
                                 @endforeach
                             </select>
                             <x-input-error for="category" class="mt-2" />
                         </div>
+
 
 
                         <!-- Payment Method Selection for Expenses -->
