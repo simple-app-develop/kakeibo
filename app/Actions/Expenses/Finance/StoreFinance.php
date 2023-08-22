@@ -7,8 +7,19 @@ use App\Models\PaymentMethod;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * 家計簿データ保存アクション
+ * 
+ * このクラスは家計簿データの保存に関連するアクションを管理します。
+ */
 class StoreFinance
 {
+    /**
+     * 提供されたデータをもとに新しい家計簿データのエントリーをデータベースに保存します。
+     *
+     * @param array $data 保存する家計簿データのデータ
+     * @return Expense 保存された家計簿データのモデルインスタンス
+     */
     public function store(array $data): Expense
     {
         $teamId = Auth::user()->currentTeam->id;

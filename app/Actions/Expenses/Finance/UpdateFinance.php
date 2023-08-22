@@ -7,8 +7,19 @@ use App\Models\PaymentMethod;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
+/**
+ * 家計簿データ更新アクション
+ * 
+ * このクラスは家計簿データの更新に関連するアクションを管理します。
+ */
 class UpdateFinance
 {
+    /**
+     * 既存の家計簿データエントリーを提供されたデータで更新します。
+     *
+     * @param Expense $expense 更新する家計簿データのエントリー
+     * @param array $data 家計簿データデータの更新
+     */
     public function update(Expense $expense, array $data)
     {
         $teamId = Auth::user()->currentTeam->id;
