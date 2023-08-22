@@ -8,7 +8,7 @@
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-xl sm:rounded-lg">
-                <form method="POST" action="{{ route('payment-method-store') }}">
+                <form method="POST" action="{{ route('payment-method.store') }}">
                     @csrf
 
                     <div x-data="{ isCreditCard: '{{ old('isCreditCard') }}' === '1' ? true : false }">

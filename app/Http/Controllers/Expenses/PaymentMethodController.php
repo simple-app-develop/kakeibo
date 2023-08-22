@@ -12,6 +12,14 @@ class PaymentMethodController extends Controller
     public function index()
     {
         // 支払い方法の一覧を取得して表示
+        $paymentMethods = PaymentMethod::where('team_id', auth()->user()->currentTeam->id)
+            ->orderBy('order_column', 'asc')
+            ->get();
+
+        return view('expenses.payment_method.index', [
+            'paymentMethods' => $paymentMethods,
+            'isPermission' => true, // これは適切な認可ロジックに置き換えてください
+        ]);
     }
 
     public function create()
@@ -59,7 +67,7 @@ class PaymentMethodController extends Controller
         PaymentMethod::create($data);
 
         // リダイレクト
-        // return redirect()->route('payment-method.index')->with('success', 'Payment method registered successfully.');
+        return redirect()->route('payment-method.index')->with('success', 'Payment method registered successfully.');
     }
 
 
@@ -76,5 +84,18 @@ class PaymentMethodController extends Controller
     public function destroy($id)
     {
         // 指定されたIDの支払い方法を削除
+    }
+
+    public function reorder(Request $request)
+    {
+        $order = $request->input('order');
+
+        foreach ($order as $index => $id) {
+            $method = PaymentMethod::find($id);
+            $method->order_column = $index;
+            $method->save();
+        }
+
+        return response()->json(['message' => 'Order updated successfully']);
     }
 }
