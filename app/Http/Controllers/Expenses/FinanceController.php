@@ -63,7 +63,7 @@ class FinanceController extends Controller
 
         if ($validatedData['transaction_type'] === 'expense') {
             $financeData['payment_method_id'] = $validatedData['payment_method'];
-            // reflected_dateの計算ロジック
+
             $paymentMethod = PaymentMethod::find($validatedData['payment_method']);
             $inputDate = \Carbon\Carbon::parse($validatedData['date']);
 
@@ -73,13 +73,22 @@ class FinanceController extends Controller
             } else {
                 if ($inputDate->day <= $paymentMethod->closing_date) {
                     // 入力日が締め日以前の場合
-                    $financeData['reflected_date'] = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset)->day($paymentMethod->payment_date)->startOfDay();
+                    $reflectedDate = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset);
                 } else {
                     // 入力日が締め日より後の場合
-                    $financeData['reflected_date'] = $inputDate->copy()->addMonths($paymentMethod->month_offset + 1)->startOfMonth()->day($paymentMethod->payment_date)->startOfDay();
+                    $reflectedDate = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset + 1);
                 }
+
+                if ($paymentMethod->payment_date > $reflectedDate->daysInMonth) {
+                    $reflectedDate->endOfMonth();
+                } else {
+                    $reflectedDate->day($paymentMethod->payment_date);
+                }
+
+                $financeData['reflected_date'] = $reflectedDate->startOfDay();
             }
         }
+
 
 
         // 以下のddを追加して、関連するすべての情報を一度に確認します
@@ -90,7 +99,7 @@ class FinanceController extends Controller
         //     'payment_date' => $paymentMethod->payment_date,
         //     'calculated_reflected_date' => $financeData['reflected_date'],
         // ]);
-        dd($financeData['reflected_date']);
+        // dd($financeData['reflected_date']->toDateTimeString());
 
         // 保存処理
         $finance = Expense::create($financeData);
