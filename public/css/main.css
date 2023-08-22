@@ -97,7 +97,7 @@ html {
     overflow: hidden;
 }
 
-.fab {
+.create_fab {
     background-color: #ff4081;
     width: 56px;
     height: 56px;
@@ -116,6 +116,6 @@ html {
     z-index: 1000;
 }
 
-.fab:hover {
+.create_fab:hover {
     background-color: #e91e63;
 }

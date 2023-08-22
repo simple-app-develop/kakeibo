@@ -68,7 +68,7 @@
 
     <!-- FABボタンの追加 -->
     @if ($isPermission)
-        <a href="{{ route('payment-method.create') }}" class="fab">+</a>
+        <a href="{{ route('payment-method.create') }}" class="create_fab">+</a>
     @endif
 
     <!-- 削除確認モーダル -->

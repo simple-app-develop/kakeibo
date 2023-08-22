@@ -55,4 +55,6 @@ Route::middleware([
     // routes/web.php
     Route::get('/finance/{finance}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
     Route::put('/finance/{finance}', [FinanceController::class, 'update'])->name('finance.update');
+
+    Route::delete('/finance/{finance}', [FinanceController::class, 'destroy'])->name('finance.destroy');
 });
