@@ -62,43 +62,61 @@ class FinanceController extends Controller
         ];
 
         if ($validatedData['transaction_type'] === 'expense') {
+            // 資金データの支払方法IDを設定
             $financeData['payment_method_id'] = $validatedData['payment_method'];
 
+            // 支払方法の詳細をデータベースから取得
             $paymentMethod = PaymentMethod::find($validatedData['payment_method']);
+
+            // 入力された日付をCarbonインスタンスに変換
             $inputDate = \Carbon\Carbon::parse($validatedData['date']);
 
+            // 支払方法に締め日が設定されていない場合（現金の場合など）
             if (is_null($paymentMethod->closing_date)) {
-                // 現金の場合
+                // 現金の場合は、反映日として入力日をそのまま使用
                 $financeData['reflected_date'] = $inputDate;
             } else {
+                // 入力日が締め日以前の場合
                 if ($inputDate->day <= $paymentMethod->closing_date) {
-                    // 入力日が締め日以前の場合
+                    // 月の初めに設定し、オフセット月を追加して反映日を計算
                     $reflectedDate = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset);
                 } else {
                     // 入力日が締め日より後の場合
+                    // 月の初めに設定し、オフセット月 + 1を追加して反映日を計算
                     $reflectedDate = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset + 1);
                 }
 
+                // 設定された支払日がその月の最大日数を超える場合、その月の最後の日を支払日として使用
                 if ($paymentMethod->payment_date > $reflectedDate->daysInMonth) {
                     $reflectedDate->endOfMonth();
                 } else {
+                    // その月の指定された支払日に設定
                     $reflectedDate->day($paymentMethod->payment_date);
                 }
 
+                // 資金データの反映日を日の始まり（0時0分0秒）に設定
                 $financeData['reflected_date'] = $reflectedDate->startOfDay();
             }
         }
 
+        /* NOTE:
+            $inputDate->copy()  ：入力日付のコピーを作成します。
+                                    これにより、元の入力日付の値は変更されずに新しい日付を操作できます。
 
+            startOfMonth()      ：日付をその月の初日に設定します。
+                                    例えば、2023-08-31を2023-08-01に変更します。
+                                    これは、その後の月の加算で問題を回避するために行います。
+                                    具体的には、8月31日に1か月を加算すると、9月31日となってしまいますが、
+                                    9月31日は存在しないため、結果が10月1日となってしまいます。
+                                    これを避けるために、まず月の初日に戻してから月を加算することで、
+                                    正確な月の加算を行います。
 
-        // 以下のddを追加して、関連するすべての情報を一度に確認します
-        // dd([
-        //     'input_date' => $inputDate,
-        //     'closing_date' => $paymentMethod->closing_date,
-        //     'month_offset' => $paymentMethod->month_offset,
-        //     'payment_date' => $paymentMethod->payment_date,
-        //     'calculated_reflected_date' => $financeData['reflected_date'],
-        // ]);
+            addMonths($paymentMethod->month_offset)：
+                                　オフセットとして指定された月数を追加します。
+                                    この例では、支払いが翌月である場合、$paymentMethod->month_offsetは
+                                    1になるため、1か月が追加されます。
+        */
+
         // dd($financeData['reflected_date']->toDateTimeString());
 
         // 保存処理
