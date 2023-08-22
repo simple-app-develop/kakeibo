@@ -86,12 +86,15 @@ class FinancesTable extends Component
 
     public function getTotalExpense()
     {
-        // 計上日が今日までの支出を合計します。
+        // 計上日が当月で、かつ、今日より前のものを対象として合計
         return Expense::where('team_id', auth()->user()->currentTeam->id)
-            ->where('reflected_date', '<=', now())
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '<', now()) // 今日の日付より前のもののみ
             ->whereNotNull('payment_method_id')
             ->sum('amount');
     }
+
 
     public function getScheduledExpense()
     {
@@ -99,10 +102,11 @@ class FinancesTable extends Component
         return Expense::where('team_id', auth()->user()->currentTeam->id)
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
-            ->where('reflected_date', '>', now())
+            ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
             ->whereNotNull('payment_method_id')
             ->sum('amount');
     }
+
 
     public function getOverallIncome()
     {
