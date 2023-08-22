@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Expenses\ExpenseCategoryController;
+use App\Http\Controllers\Expenses\PaymentMethodController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -19,4 +20,25 @@ Route::middleware([
 
     Route::get('/expense-category/', [ExpenseCategoryController::class, 'index'])->name('expense-category-index');
     Route::post('/expense-category/reorder', [ExpenseCategoryController::class, 'reorder'])->name('expense-category-reorder');
+
+    // 支払い方法の一覧表示
+    Route::get('/payment-methods', [PaymentMethodController::class, 'index'])->name('payment-method.index');
+
+    // 支払い方法の新規登録フォーム表示
+    Route::get('/payment-methods/create', [PaymentMethodController::class, 'create'])->name('payment-method.create');
+
+    // 支払い方法の保存
+    Route::post('/payment-methods', [PaymentMethodController::class, 'store'])->name('payment-method.store');
+
+    // 支払い方法の編集フォーム表示
+    Route::get('/payment-methods/{id}/edit', [PaymentMethodController::class, 'edit'])->name('payment-method.edit');
+
+    // 支払い方法の更新
+    Route::patch('/payment-methods/{id}', [PaymentMethodController::class, 'update'])->name('payment-method.update');
+
+    // 支払い方法の削除
+    Route::delete('/payment-methods/{id}', [PaymentMethodController::class, 'destroy'])->name('payment-method.destroy');
+
+    // 支払い方法の並び替え
+    Route::post('/payment-methods/reorder', [PaymentMethodController::class, 'reorder'])->name('payment-method.reorder');
 });

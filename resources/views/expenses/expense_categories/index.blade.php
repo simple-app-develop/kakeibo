@@ -129,5 +129,6 @@
             toggleModal();
         }
     </script>
+    <script src="{{ asset('script/expense-category-sotable.js') }}"></script>
 
 </x-app-layout>
