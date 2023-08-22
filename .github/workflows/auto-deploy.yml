@@ -1,17 +1,19 @@
 on:
   push:
     branches:
-      - main
+      - master
+name: Deploy
 jobs:
-  deploy:
+  FTP-Deploy-Action:
+    name: FTP-Deploy-Action
     runs-on: ubuntu-latest
     steps:
-      - name: ssh
+      - uses: actions/checkout@master
+      - name: FTP-Deploy-Action
+        uses: SamKirkland/FTP-Deploy-Action@2.0.0
         env:
-          SECRET_KEY: ${{ secrets.SECRET_KEY }}
-          USER: ${{ secrets.USER }}
-          HOST: ${{ secrets.HOST }}
-        run: | 
-            echo "$SECRET_KEY" > secret_key
-            chmod 600 secret_key
-            ssh -oStrictHostKeyChecking=no ${USER}@${HOST} -i secret_key "cd /home/webappserver/kakeibo.group/kakeibo && sh ./.github/workflows/deploy.sh"
+          FTP_SERVER: ${{ secrets.FTP_SERVER }}
+          FTP_USERNAME: ${{ secrets.FTP_USERNAME }}
+          FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
+          LOCAL_DIR: ./
+          REMOTE_DIR: /home/webappserver/kakeibo.group/public_html
