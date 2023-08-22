@@ -5,14 +5,18 @@ namespace App\Actions\Expenses\Finance;
 use App\Models\Expense;
 use App\Models\PaymentMethod;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class StoreFinance
 {
-    public function run(array $data): Expense
+    public function store(array $data): Expense
     {
+        $teamId = Auth::user()->currentTeam->id;
+        $userId = Auth::id();
+
         $financeData = [
-            'team_id' => $data['team_id'],
-            'user_id' => $data['user_id'],
+            'team_id' => $teamId,
+            'user_id' => $userId,
             'expense_category_id' => $data['category'],
             'amount' => $data['amount'],
             'description' => $data['description'] ?? null,

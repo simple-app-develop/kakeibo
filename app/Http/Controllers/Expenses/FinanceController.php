@@ -29,10 +29,8 @@ class FinanceController extends Controller
     public function store(FinanceStoreRequest $request, StoreFinance $storeFinance)
     {
         $validatedData = $request->validated();
-        $validatedData['team_id'] = auth()->user()->currentTeam->id;
-        $validatedData['user_id'] = auth()->id();
 
-        $storeFinance->run($validatedData);
+        $storeFinance->store($validatedData);
 
         return redirect()->route('finance.index')->with('success', 'success');
     }
@@ -47,10 +45,8 @@ class FinanceController extends Controller
     public function update(FinanceUpdateRequest $request, Expense $finance, UpdateFinance $updateFinance)
     {
         $validatedData = $request->validated();
-        $validatedData['team_id'] = auth()->user()->currentTeam->id;
-        $validatedData['user_id'] = auth()->id();
 
-        $updateFinance->run($finance, $validatedData);
+        $updateFinance->update($finance, $validatedData);
 
         return redirect()->route('finance.index')->with('success', '更新に成功しました！');
     }
