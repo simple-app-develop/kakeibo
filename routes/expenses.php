@@ -47,8 +47,12 @@ Route::middleware([
     Route::get('/finances', [FinanceController::class, 'index'])->name('finance.index');
 
     // 家計簿のデータの新規登録フォーム表示
-    Route::get('/finances/create', [FinanceController::class, 'create'])->name('finance.create');
+    Route::get('/finance/create', [FinanceController::class, 'create'])->name('finance.create');
 
     // 家計簿のデータの保存
-    Route::post('/finances/store', [FinanceController::class, 'store'])->name('finance.store');
+    Route::post('/finance/store', [FinanceController::class, 'store'])->name('finance.store');
+
+    // routes/web.php
+    Route::get('/finance/{finance}/edit', [FinanceController::class, 'edit'])->name('finance.edit');
+    Route::put('/finance/{finance}', [FinanceController::class, 'update'])->name('finance.update');
 });

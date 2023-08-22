@@ -133,4 +133,101 @@ class FinanceController extends Controller
 
         return redirect()->route('finance.index')->with('success', 'success');
     }
+
+    public function edit(Expense $finance)
+    {
+        $currentTeamId = auth()->user()->currentTeam->id;
+
+        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->get();
+        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->get();
+        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->get();
+
+        return view('expenses.finance.edit', [
+            'finance' => $finance,
+            'paymentMethods' => $paymentMethods,
+            'expenseCategories' => $expenseCategories,
+            'incomeCategories' => $incomeCategories,
+        ]);
+    }
+
+
+    public function update(Request $request, Expense $finance)
+    {
+        $teamId = auth()->user()->currentTeam->id;
+
+        $validatedData = $request->validate([
+            'transaction_type' => 'required|in:expense,income',
+            'payment_method' => [
+                'required_if:transaction_type,expense',
+                Rule::exists('payment_methods', 'id')->where(function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                }),
+            ],
+            'category' => [
+                'required',
+                Rule::exists('expense_categories', 'id')->where(function ($query) use ($teamId, $request) {
+                    $query->where('team_id', $teamId)
+                        ->where('type', $request->transaction_type);
+                }),
+            ],
+            'amount' => 'required|numeric|between:0,99999999',
+            'description' => 'nullable|string',
+            'date' => 'required|date',
+        ]);
+
+
+        $financeData = [
+            'team_id' => auth()->user()->currentTeam->id,
+            'user_id' => auth()->id(),
+            'expense_category_id' => $validatedData['category'],
+            'amount' => $validatedData['amount'],
+            'description' => $validatedData['description'] ?? null,
+            'date' => $validatedData['date'],
+        ];
+
+        if ($validatedData['transaction_type'] === 'expense') {
+            // 資金データの支払方法IDを設定
+            $financeData['payment_method_id'] = $validatedData['payment_method'];
+
+            // 支払方法の詳細をデータベースから取得
+            $paymentMethod = PaymentMethod::find($validatedData['payment_method']);
+
+            // 入力された日付をCarbonインスタンスに変換
+            $inputDate = \Carbon\Carbon::parse($validatedData['date']);
+
+            // 支払方法に締め日が設定されていない場合（現金の場合など）
+            if (is_null($paymentMethod->closing_date)) {
+                // 現金の場合は、反映日として入力日をそのまま使用
+                $financeData['reflected_date'] = $inputDate;
+            } else {
+                // 入力日が締め日以前の場合
+                if ($inputDate->day <= $paymentMethod->closing_date) {
+                    // 月の初めに設定し、オフセット月を追加して反映日を計算
+                    $reflectedDate = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset);
+                } else {
+                    // 入力日が締め日より後の場合
+                    // 月の初めに設定し、オフセット月 + 1を追加して反映日を計算
+                    $reflectedDate = $inputDate->copy()->startOfMonth()->addMonths($paymentMethod->month_offset + 1);
+                }
+
+                // 設定された支払日がその月の最大日数を超える場合、その月の最後の日を支払日として使用
+                if ($paymentMethod->payment_date > $reflectedDate->daysInMonth) {
+                    $reflectedDate->endOfMonth();
+                } else {
+                    // その月の指定された支払日に設定
+                    $reflectedDate->day($paymentMethod->payment_date);
+                }
+
+                // 資金データの反映日を日の始まり（0時0分0秒）に設定
+                $financeData['reflected_date'] = $reflectedDate->startOfDay();
+            }
+        } elseif ($validatedData['transaction_type'] === 'income') {
+            // 収入の場合の反映日のロジックをここに書く
+            $financeData['reflected_date'] = \Carbon\Carbon::parse($validatedData['date']);
+        }
+
+        $finance->update($financeData);
+
+        return redirect()->route('finance.index')->with('success', '更新に成功しました！');
+    }
 }

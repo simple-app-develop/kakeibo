@@ -22,6 +22,7 @@
                 <th class="py-2 px-6 text-left">{{ __('Description') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Payment Method') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Reflected Date') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
@@ -35,6 +36,12 @@
                         <td class="py-2 px-6">{{ $finance->description }}</td>
                         <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
                         <td class="py-2 px-6">{{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}
+                        </td>
+                        <td class="py-2 px-6">
+                            <a href="{{ route('finance.edit', $finance->id) }}" title="{{ __('Edit') }}"
+                                class="text-blue-500 hover:text-blue-700">
+                                <i class="fas fa-pen"></i>
+                            </a>
                         </td>
                     </tr>
                 @endforeach
