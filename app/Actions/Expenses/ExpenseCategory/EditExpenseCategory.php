@@ -45,7 +45,7 @@ class EditExpenseCategory
     public function get(int $id, int $teamId): ExpenseCategory
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod', $id)) {
+        if (!$this->expensePermissionService->checkPermission('category', $id)) {
             throw new \Exception('You do not have permission to edit categories on this team.');
         }
 
