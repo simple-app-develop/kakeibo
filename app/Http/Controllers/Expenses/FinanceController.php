@@ -21,9 +21,9 @@ class FinanceController extends Controller
     {
         $currentTeamId = auth()->user()->currentTeam->id;
 
-        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->get();
-        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->get();
-        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->get();
+        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
+        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->orderBy('order_column', 'asc')->get();
+        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
 
         return view('expenses.finance.create', [
             'paymentMethods' => $paymentMethods,
@@ -138,9 +138,9 @@ class FinanceController extends Controller
     {
         $currentTeamId = auth()->user()->currentTeam->id;
 
-        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->get();
-        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->get();
-        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->get();
+        $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
+        $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->orderBy('order_column', 'asc')->get();
+        $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
 
         return view('expenses.finance.edit', [
             'finance' => $finance,

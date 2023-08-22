@@ -25,9 +25,11 @@ class FinancesTable extends Component
         $endDate = $startDate->copy()->endOfMonth();
 
         $finances = Expense::with(['expense_category', 'payment_method'])
-            ->where('team_id', Auth::user()->currentTeam->id)  // <-- ここでteam_idを指定してデータをフィルタリング
+            ->where('team_id', Auth::user()->currentTeam->id)
             ->whereYear('date', $this->year)
             ->whereMonth('date', $this->month)
+            ->orderBy('date', 'desc')
+            ->orderBy('created_at', 'desc')
             ->get();
 
         // 計算処理をコンポーネント内で実行
