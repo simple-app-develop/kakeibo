@@ -2,26 +2,27 @@
     <div class="flex justify-between items-center mb-4">
         <button wire:click="decrementMonth"
             class="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm">
-            前の月
+            {{ __('finances.previous_month') }}
         </button>
 
         <span class="text-lg font-semibold">{{ $this->getCurrentMonthYear() }}</span>
 
         <button wire:click="incrementMonth"
             class="px-4 py-2 text-white bg-blue-500 hover:bg-blue-600 rounded-md shadow-sm">
-            次の月
+            {{ __('finances.next_month') }}
         </button>
+
     </div>
 
     <table class="min-w-full bg-white table-auto">
         <thead>
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th class="py-2 px-6 text-left">日付</th>
-                <th class="py-2 px-6 text-left">カテゴリ</th>
-                <th class="py-2 px-6 text-left">金額</th>
-                <th class="py-2 px-6 text-left">説明</th>
-                <th class="py-2 px-6 text-left">支払方法</th>
-                <th class="py-2 px-6 text-left">計上日</th>
+                <th class="py-2 px-6 text-left">{{ __('Date') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Category') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Amount') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Description') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Payment Method') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Reflected Date') }}</th>
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
@@ -39,7 +40,7 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="6" class="py-2 px-6 text-center">データなし</td>
+                    <td colspan="6" class="py-2 px-6 text-center">@lang('finances.no_data')</td>
                 </tr>
             @endif
         </tbody>
