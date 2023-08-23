@@ -19,51 +19,77 @@
                 <th class="py-2 px-6 text-left fixed-width">{{ __('Date') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Category') }}</th>
                 <th class="py-2 px-6 text-right fixed-width">{{ __('Amount') }}</th>
-                <th class="py-2 px-6 text-left">{{ __('Description') }}</th>
-                <th class="py-2 px-6 text-left fixed-width">{{ __('Payment Method') }}</th>
-                <th class="py-2 px-6 text-left fixed-width">{{ __('Reflected Date') }}</th>
-                @if ($hasFinancePermission)
-                    <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
-                @endif
+                <th class="py-2 px-6 text-left hidden md:table-cell">{{ __('Description') }}</th>
+                <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Payment Method') }}</th>
+                <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Reflected Date') }}</th>
+                <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
-            @if ($finances->count() > 0)
-                @foreach ($finances as $finance)
-                    <tr
-                        class="border-b border-gray-200 hover:bg-gray-100 {{ !$this->isPastReflectedDate($finance->reflected_date) ? 'opacity-50' : '' }}">
-                        <td class="py-2 px-6 text-left fixed-width">{{ $finance->date->format('Y-m-d') }}</td>
-                        <td class="py-2 px-6 text-left">{{ optional($finance->expense_category)->name }}</td>
-                        <td class="py-2 px-6 text-right fixed-width">
-                            {{ number_format($finance->amount) }}{{ __('yen') }}</td>
-                        <td class="py-2 px-6 text-left">{{ $finance->description }}</td>
-                        <td class="py-2 px-6 text-left fixed-width">{{ optional($finance->payment_method)->name }}</td>
-                        <td class="py-2 px-6 text-left fixed-width">
-                            {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
+            @foreach ($finances as $finance)
+                <tr class="border-b border-gray-200 hover:bg-gray-100">
+                    <!-- The rest of your table cells for each record -->
+                    <td class="py-2 px-6 text-left">{{ $finance->date->format('Y-m-d') }}</td>
+                    <td class="py-2 px-6 text-left">{{ optional($finance->expense_category)->name }}</td>
+                    <td class="py-2 px-6 text-right">{{ number_format($finance->amount) }}{{ __('yen') }}</td>
+                    <td class="py-2 px-6 text-left hidden md:table-cell">{{ $finance->description }}</td>
+                    <td class="py-2 px-6 text-left fixed-width hidden md:table-cell">
+                        {{ optional($finance->payment_method)->name }}</td>
+                    <td class="py-2 px-6 text-left fixed-width hidden md:table-cell">
+                        {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
+
+                    <!-- Action Button -->
+                    <td class="py-2 px-6 text-left">
+                        <div class="md:hidden">
+                            <button class="text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">
+                                Details
+                            </button>
+                        </div>
+
                         @if ($hasFinancePermission)
-                            <td class="py-2 px-6 text-left">
-                                <a href="{{ route('finance.edit', $finance->id) }}" title="{{ __('Edit') }}"
-                                    class="text-blue-500 hover:text-blue-700">
+                            <!-- This will be visible only on desktop -->
+                            <div class="flex items-center space-x-4">
+                                <a href="{{ route('finance.edit', $finance->id) }}"
+                                    class="text-blue-500 hover:text-blue-700 md:block hidden">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <button
                                     onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                    class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
-                            </td>
+                                    class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700 md:block hidden">
+                                    {{ __('Delete') }}
+                                </button>
+                            </div>
                         @endif
-                    </tr>
-                @endforeach
-            @else
-                <tr>
-                    @if ($hasFinancePermission)
-                        <td colspan="7" class="py-2 px-6 text-center">@lang('finances.no_data')</td>
-                    @else
-                        <td colspan="6" class="py-2 px-6 text-center">@lang('finances.no_data')</td>
-                    @endif
+                    </td>
                 </tr>
-            @endif
+                <!-- Details Section for Mobile -->
+                <tr class="details-section hidden md:hidden">
+                    <td colspan="8">
+                        <ul>
+                            <li>{{ __('Description') }}: {{ $finance->description }}</li>
+                            <li>{{ __('Payment Method') }}: {{ optional($finance->payment_method)->name }}</li>
+                            <li>{{ __('Reflected Date') }}:
+                                {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</li>
+                            @if ($hasFinancePermission)
+                                <li>
+                                    <a href="{{ route('finance.edit', $finance->id) }}"
+                                        class="text-blue-500 hover:text-blue-700">
+                                        Edit
+                                    </a>
+                                    <button
+                                        onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
+                                        class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">
+                                        Delete
+                                    </button>
+                                </li>
+                            @endif
+                        </ul>
+                    </td>
+                </tr>
+            @endforeach
         </tbody>
     </table>
+
 
     <div class="my-4">
         <table class="min-w-full bg-white table-auto mt-8">
@@ -117,4 +143,26 @@
             </tbody>
         </table>
     </div>
+
+    <script>
+        function toggleDetails(button) {
+            const detailsSection = button.closest('tr').nextElementSibling;
+            if (detailsSection.classList.contains('details-section')) {
+                if (detailsSection.style.display === 'none' || detailsSection.style.display === '') {
+                    detailsSection.style.display = 'table-row';
+                } else {
+                    detailsSection.style.display = 'none';
+                }
+            }
+        }
+
+        window.addEventListener('resize', () => {
+            if (window.innerWidth >= 768) {
+                document.querySelectorAll('.details-section').forEach(section => {
+                    section.style.display = 'none';
+                });
+            }
+        });
+    </script>
+
 </div>
