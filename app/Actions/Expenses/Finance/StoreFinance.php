@@ -4,6 +4,7 @@ namespace App\Actions\Expenses\Finance;
 
 use App\Models\Expense;
 use App\Models\PaymentMethod;
+use App\Services\Expenses\ExpensePermissionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,25 @@ use Illuminate\Support\Facades\Auth;
 class StoreFinance
 {
     /**
+     * Permissionサービス
+     *
+     * @var ExpensePermissionService
+     */
+    protected $expensePermissionService;
+
+    /**
+     * StoreFinance コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
+     */
+    public function __construct(ExpensePermissionService $expensePermissionService)
+    {
+        $this->expensePermissionService = $expensePermissionService;
+    }
+
+    /**
      * 提供されたデータをもとに新しい家計簿データのエントリーをデータベースに保存します。
      *
      * @param array $data 保存する家計簿データのデータ
@@ -22,6 +42,11 @@ class StoreFinance
      */
     public function store(array $data): Expense
     {
+        // 権限を確認する
+        if (!$this->expensePermissionService->checkPermission('finance')) {
+            throw new \Exception('This team is not authorized to create household data.');
+        }
+
         $teamId = Auth::user()->currentTeam->id;
         $userId = Auth::id();
 

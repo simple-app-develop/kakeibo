@@ -13,7 +13,7 @@ use App\Services\Expenses\ExpensePermissionService;
 class EditExpenseCategory
 {
     /**
-     * 品目カテゴリサービス
+     * Permissionサービス
      *
      * @var ExpensePermissionService
      */

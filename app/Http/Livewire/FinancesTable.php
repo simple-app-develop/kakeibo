@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Expense;
+use App\Services\Expenses\ExpensePermissionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -21,13 +22,21 @@ class FinancesTable extends Component
     /** @var float $totalAmount 月の合計金額 */
     public $totalAmount = 0;
 
+    // 
+    public $hasFinancePermission = false;
+
     /**
      * コンポーネントのマウント時の処理
+     *
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
      */
-    public function mount()
+    public function mount(ExpensePermissionService $expensePermissionService)
     {
         $this->month = Carbon::now()->month;
         $this->year = Carbon::now()->year;
+
+        // 権限を確認する
+        $this->hasFinancePermission = $expensePermissionService->checkPermission('finance');
     }
 
     /**

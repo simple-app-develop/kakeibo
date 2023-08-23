@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Expenses;
 use App\Actions\Expenses\Finance\CreateFinance;
 use App\Actions\Expenses\Finance\DeleteFinance;
 use App\Actions\Expenses\Finance\EditFinance;
+use App\Actions\Expenses\Finance\GetFinance;
 use App\Actions\Expenses\Finance\StoreFinance;
 use App\Actions\Expenses\Finance\UpdateFinance;
 use App\Http\Controllers\Controller;
@@ -22,10 +23,15 @@ class FinanceController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(GetFinance $getFinance)
     {
-        return view('expenses.finance.index');
+        $result = $getFinance->index();
+
+        return view('expenses.finance.index', [
+            'isPermission' => $result['isPermission']
+        ]);
     }
+
 
     /**
      * 家計簿のデータの作成画面を表示
@@ -35,7 +41,11 @@ class FinanceController extends Controller
      */
     public function create(CreateFinance $createView)
     {
-        return view('expenses.finance.create', $createView->create());
+        try {
+            return view('expenses.finance.create', $createView->create());
+        } catch (\Exception $e) {
+            return redirect()->route('finance.index')->with('failure', $e->getMessage());
+        }
     }
 
     /**
@@ -48,8 +58,11 @@ class FinanceController extends Controller
     public function store(FinanceStoreRequest $request, StoreFinance $storeFinance)
     {
         $validatedData = $request->validated();
-
-        $storeFinance->store($validatedData);
+        try {
+            $storeFinance->store($validatedData);
+        } catch (\Exception $e) {
+            return redirect()->route('finance.index')->with('failure', $e->getMessage());
+        }
 
         return redirect()->route('finance.index')->with('success', 'success');
     }
@@ -63,7 +76,11 @@ class FinanceController extends Controller
      */
     public function edit(Expense $finance, EditFinance $editView)
     {
-        return view('expenses.finance.edit', $editView->edit($finance));
+        try {
+            return view('expenses.finance.edit', $editView->edit($finance));
+        } catch (\Exception $e) {
+            return redirect()->route('finance.index')->with('failure', $e->getMessage());
+        }
     }
 
     /**
@@ -77,8 +94,11 @@ class FinanceController extends Controller
     public function update(FinanceUpdateRequest $request, Expense $finance, UpdateFinance $updateFinance)
     {
         $validatedData = $request->validated();
-
-        $updateFinance->update($finance, $validatedData);
+        try {
+            $updateFinance->update($finance, $validatedData);
+        } catch (\Exception $e) {
+            return redirect()->route('finance.index')->with('failure', $e->getMessage());
+        }
 
         return redirect()->route('finance.index')->with('success', '更新に成功しました！');
     }
@@ -92,7 +112,11 @@ class FinanceController extends Controller
      */
     public function destroy(Expense $finance, DeleteFinance $deleteAction)
     {
-        $deleteAction->delete($finance);
+        try {
+            $deleteAction->delete($finance);
+        } catch (\Exception $e) {
+            return redirect()->route('finance.index')->with('failure', $e->getMessage());
+        }
         return redirect()->route('finance.index')->with('success', '家計簿データが削除されました。');
     }
 }
