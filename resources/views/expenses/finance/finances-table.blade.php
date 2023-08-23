@@ -34,10 +34,14 @@
                         class="border-b border-gray-200 hover:bg-gray-100 {{ !$this->isPastReflectedDate($finance->reflected_date) ? 'opacity-50' : '' }}">
                         <td class="py-2 px-6">{{ $finance->date->format('Y-m-d') }}</td>
                         <td class="py-2 px-6">{{ optional($finance->expense_category)->name }}</td>
-                        <td class="py-2 px-6">{{ number_format($finance->amount) }}円</td>
+                        <td
+                            class="py-2 px-6 {{ is_null($finance->payment_method) ? 'text-green-700 font-bold"' : '' }}">
+                            {{ number_format($finance->amount) }}円
+                        </td>
                         <td class="py-2 px-6">{{ $finance->description }}</td>
                         <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
-                        <td class="py-2 px-6">{{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}
+                        <td class="py-2 px-6">
+                            {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}
                         </td>
                         @if ($hasFinancePermission)
                             <td class="py-2 px-6">
@@ -70,12 +74,16 @@
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 <tr>
-                    <td class="py-2 px-6">今月の収入合計</td>
-                    <td class="py-2 px-6">{{ number_format($this->getTotalIncome()) }}円</td>
+                    <td class="py-2 px-6 flex items-center">
+                        今月の収入合計
+                    </td>
+                    <td class="py-2 px-6 text-green-700 font-bold">{{ number_format($this->getTotalIncome()) }}円</td>
                 </tr>
                 <tr>
-                    <td class="py-2 px-6">今月の支出合計</td>
-                    <td class="py-2 px-6">{{ number_format($this->getTotalExpense()) }}円</td>
+                    <td class="py-2 px-6 flex items-center">
+                        今月の支出合計
+                    </td>
+                    <td class="py-2 px-6 text-red-700 font-bold">{{ number_format($this->getTotalExpense()) }}円</td>
                 </tr>
                 <tr>
                     <td class="py-2 px-6">今月の予定支出</td>
@@ -83,11 +91,10 @@
                 </tr>
                 <tr class="font-semibold">
                     <td class="py-2 px-6">全体合計</td>
-                    <td class="py-2 px-6">
-                        {{ number_format($this->getOverallTotal()) }}円
-                    </td>
+                    <td class="py-2 px-6">{{ number_format($this->getOverallTotal()) }}円</td>
                 </tr>
             </tbody>
+
         </table>
     </div>
 
