@@ -44,7 +44,7 @@
                     <td class="py-2 px-6 text-left @if (!$hasFinancePermission) md:hidden @endif">
                         <div class="md:hidden">
                             <button class="text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">
-                                Details
+                                <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
 
@@ -65,9 +65,9 @@
                     </td>
                 </tr>
                 <!-- Details Section for Mobile -->
-                <tr class="details-section hidden md:hidden">
+                <tr class="details-section hidden md:hidden bg-gray-100">
                     <td colspan="8">
-                        <ul>
+                        <ul class="px-4 py-2 border rounded-md shadow-sm">
                             <li>{{ __('Description') }}: {{ $finance->description }}</li>
                             <li>{{ __('Payment Method') }}: {{ optional($finance->payment_method)->name }}</li>
                             <li>{{ __('Reflected Date') }}:
