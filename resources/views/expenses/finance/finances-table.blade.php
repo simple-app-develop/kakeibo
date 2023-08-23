@@ -36,7 +36,7 @@
                         <td class="py-2 px-6">{{ optional($finance->expense_category)->name }}</td>
                         <td
                             class="py-2 px-6 {{ is_null($finance->payment_method) ? 'text-green-700 font-bold"' : '' }}">
-                            {{ number_format($finance->amount) }}円
+                            {{ number_format($finance->amount) }}{{ __('yen') }}
                         </td>
                         <td class="py-2 px-6">{{ $finance->description }}</td>
                         <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
@@ -68,30 +68,32 @@
         <table class="min-w-full bg-white table-auto mt-8">
             <thead>
                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                    <th class="py-2 px-6 text-left">項目</th>
-                    <th class="py-2 px-6 text-left">金額</th>
+                    <th class="py-2 px-6 text-left">{{ __('Item') }}</th>
+                    <th class="py-2 px-6 text-left">{{ __('Amount') }}</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 <tr>
                     <td class="py-2 px-6 flex items-center">
-                        今月の収入合計
+                        {{ __('Total income for the month') }}
                     </td>
-                    <td class="py-2 px-6 text-green-700 font-bold">{{ number_format($this->getTotalIncome()) }}円</td>
+                    <td class="py-2 px-6 text-green-700 font-bold">
+                        {{ number_format($this->getTotalIncome()) }}{{ __('yen') }}</td>
                 </tr>
                 <tr>
                     <td class="py-2 px-6 flex items-center">
-                        今月の支出合計
+                        {{ __('Total Expenditures for the Month') }}
                     </td>
-                    <td class="py-2 px-6 text-red-700 font-bold">{{ number_format($this->getTotalExpense()) }}円</td>
+                    <td class="py-2 px-6 text-red-700 font-bold">
+                        {{ number_format($this->getTotalExpense()) }}{{ __('yen') }}</td>
                 </tr>
                 <tr>
-                    <td class="py-2 px-6">今月の予定支出</td>
-                    <td class="py-2 px-6">{{ number_format($this->getScheduledExpense()) }}円</td>
+                    <td class="py-2 px-6">{{ __('Planned Expenditures for the Month') }}</td>
+                    <td class="py-2 px-6">{{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}</td>
                 </tr>
                 <tr class="font-semibold">
-                    <td class="py-2 px-6">全体合計</td>
-                    <td class="py-2 px-6">{{ number_format($this->getOverallTotal()) }}円</td>
+                    <td class="py-2 px-6">{{ __('Entire total') }}</td>
+                    <td class="py-2 px-6">{{ number_format($this->getOverallTotal()) }}{{ __('yen') }}</td>
                 </tr>
             </tbody>
 
