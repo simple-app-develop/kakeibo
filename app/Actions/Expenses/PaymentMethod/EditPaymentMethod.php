@@ -29,7 +29,7 @@ class EditPaymentMethod
     {
         // 権限を確認する
         if (!$this->expensePermissionService->checkPermission('paymentMethod', $id)) {
-            throw new \Exception('This team is not authorized to update payment methods.');
+            throw new \Exception('This team is not authorized to edit payment methods.');
         }
 
         return PaymentMethod::findOrFail($id);
