@@ -57,8 +57,8 @@
                                 </a>
                                 <button
                                     onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                    class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700 md:block hidden">
-                                    {{ __('Delete') }}
+                                    class="px-4 py-2 ml-4 text-red-500 hover:text-red-700 md:block hidden">
+                                    <i class="fas fa-trash"></i>
                                 </button>
                             </div>
                         @endif
@@ -76,12 +76,12 @@
                                 <li>
                                     <a href="{{ route('finance.edit', $finance->id) }}"
                                         class="text-blue-500 hover:text-blue-700">
-                                        Edit
+                                        <i class="fas fa-pen"></i>
                                     </a>
                                     <button
                                         onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                        class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">
-                                        Delete
+                                        class="px-4 py-2 ml-4 text-red-500  hover:text-red-700">
+                                        <i class="fas fa-trash"></i>
                                     </button>
                                 </li>
                             @endif
