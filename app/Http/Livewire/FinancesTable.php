@@ -234,7 +234,9 @@ class FinancesTable extends Component
      */
     public function getOverallTotal()
     {
-        return $this->getOverallIncome() - $this->getOverallExpense();
+        $initialBalances = Wallet::where('team_id', Auth::user()->currentTeam->id)->sum('balance');
+
+        return $initialBalances + $this->getOverallIncome() - $this->getOverallExpense();
     }
 
 

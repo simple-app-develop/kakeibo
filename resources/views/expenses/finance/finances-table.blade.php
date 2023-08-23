@@ -167,11 +167,6 @@
                         </tr>
                     @endif
                 @endif
-                <tr class="font-semibold">
-                    <td class="py-2 px-6 text-left">{{ __('Entire total') }}</td>
-                    <td class="py-2 px-6 text-right fixed-width">
-                        {{ number_format($this->getOverallTotal()) }}{{ __('yen') }}</td>
-                </tr>
             </tbody>
         </table>
     </div>
@@ -195,6 +190,12 @@
                         </td>
                     </tr>
                 @endforeach
+
+                <tr class="font-semibold">
+                    <td class="py-2 px-6 text-left">{{ __('Entire total') }}</td>
+                    <td class="py-2 px-6 text-right fixed-width">
+                        {{ number_format($this->getOverallTotal()) }}{{ __('yen') }}</td>
+                </tr>
             </tbody>
         </table>
     </div>
