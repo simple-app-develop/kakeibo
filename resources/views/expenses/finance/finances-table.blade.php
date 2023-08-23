@@ -16,12 +16,12 @@
     <table class="min-w-full bg-white table-auto">
         <thead>
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                <th class="py-2 px-6 text-left">{{ __('Date') }}</th>
+                <th class="py-2 px-6 text-left fixed-width">{{ __('Date') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Category') }}</th>
-                <th class="py-2 px-6 text-left">{{ __('Amount') }}</th>
+                <th class="py-2 px-6 text-right fixed-width">{{ __('Amount') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Description') }}</th>
-                <th class="py-2 px-6 text-left">{{ __('Payment Method') }}</th>
-                <th class="py-2 px-6 text-left">{{ __('Reflected Date') }}</th>
+                <th class="py-2 px-6 text-left fixed-width">{{ __('Payment Method') }}</th>
+                <th class="py-2 px-6 text-left fixed-width">{{ __('Reflected Date') }}</th>
                 @if ($hasFinancePermission)
                     <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
                 @endif
@@ -32,19 +32,16 @@
                 @foreach ($finances as $finance)
                     <tr
                         class="border-b border-gray-200 hover:bg-gray-100 {{ !$this->isPastReflectedDate($finance->reflected_date) ? 'opacity-50' : '' }}">
-                        <td class="py-2 px-6">{{ $finance->date->format('Y-m-d') }}</td>
-                        <td class="py-2 px-6">{{ optional($finance->expense_category)->name }}</td>
-                        <td
-                            class="py-2 px-6 {{ is_null($finance->payment_method) ? 'text-green-700 font-bold"' : '' }}">
-                            {{ number_format($finance->amount) }}{{ __('yen') }}
-                        </td>
-                        <td class="py-2 px-6">{{ $finance->description }}</td>
-                        <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
-                        <td class="py-2 px-6">
-                            {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}
-                        </td>
+                        <td class="py-2 px-6 text-left fixed-width">{{ $finance->date->format('Y-m-d') }}</td>
+                        <td class="py-2 px-6 text-left">{{ optional($finance->expense_category)->name }}</td>
+                        <td class="py-2 px-6 text-right fixed-width">
+                            {{ number_format($finance->amount) }}{{ __('yen') }}</td>
+                        <td class="py-2 px-6 text-left">{{ $finance->description }}</td>
+                        <td class="py-2 px-6 text-left fixed-width">{{ optional($finance->payment_method)->name }}</td>
+                        <td class="py-2 px-6 text-left fixed-width">
+                            {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
                         @if ($hasFinancePermission)
-                            <td class="py-2 px-6">
+                            <td class="py-2 px-6 text-left">
                                 <a href="{{ route('finance.edit', $finance->id) }}" title="{{ __('Edit') }}"
                                     class="text-blue-500 hover:text-blue-700">
                                     <i class="fas fa-pen"></i>
@@ -52,8 +49,8 @@
                                 <button
                                     onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
                                     class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                            </td>
                         @endif
-                        </td>
                     </tr>
                 @endforeach
             @else
@@ -69,33 +66,26 @@
             <thead>
                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                     <th class="py-2 px-6 text-left">{{ __('Item') }}</th>
-                    <th class="py-2 px-6 text-left">{{ __('Amount') }}</th>
+                    <th class="py-2 px-6 text-right fixed-width">{{ __('Amount') }}</th>
                 </tr>
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 <tr>
-                    <td class="py-2 px-6 flex items-center">
-                        {{ __('Total income for the month') }}
-                    </td>
-                    <td class="py-2 px-6 text-green-700 font-bold">
+                    <td class="py-2 px-6 text-left">{{ __('Total income for the month') }}</td>
+                    <td class="py-2 px-6 text-right fixed-width">
                         {{ number_format($this->getTotalIncome()) }}{{ __('yen') }}</td>
                 </tr>
                 <tr>
-                    <td class="py-2 px-6 flex items-center">
-                        {{ __('Total Expenditures for the Month') }}
-                    </td>
-                    <td class="py-2 px-6 text-red-700 font-bold">
+                    <td class="py-2 px-6 text-left">{{ __('Total Expenditures for the Month') }}</td>
+                    <td class="py-2 px-6 text-right fixed-width">
                         {{ number_format($this->getTotalExpense()) }}{{ __('yen') }}</td>
                 </tr>
                 @if ($this->getScheduledExpense() > 0)
                     <tr>
-                        <td class="py-2 px-6">{{ __('Planned Expenditures for the Month') }}</td>
-                        <td class="py-2 px-6">
+                        <td class="py-2 px-6 text-left">{{ __('Planned Expenditures for the Month') }}</td>
+                        <td class="py-2 px-6 text-right fixed-width">
                             {{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}
-                            <!-- Toggle Button -->
-                            <button wire:click="toggleScheduledExpenseDetails">
-                                {{ __('See more...') }}
-                            </button>
+                            <button wire:click="toggleScheduledExpenseDetails">{{ __('See more...') }}</button>
                         </td>
                     </tr>
                     @if ($showScheduledExpenseDetails)
@@ -116,13 +106,11 @@
                     @endif
                 @endif
                 <tr class="font-semibold">
-                    <td class="py-2 px-6">{{ __('Entire total') }}</td>
-                    <td class="py-2 px-6">{{ number_format($this->getOverallTotal()) }}{{ __('yen') }}</td>
+                    <td class="py-2 px-6 text-left">{{ __('Entire total') }}</td>
+                    <td class="py-2 px-6 text-right fixed-width">
+                        {{ number_format($this->getOverallTotal()) }}{{ __('yen') }}</td>
                 </tr>
             </tbody>
-
         </table>
     </div>
-
-
 </div>
