@@ -88,9 +88,16 @@
                             <x-input-error for="date" class="mt-2" />
                         </div>
 
+                        <!-- Description Textarea -->
+                        <div class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="description" value="{{ __('詳細') }}" />
+                            <textarea id="description" class="mt-1 block w-full form-input rounded-md shadow-sm" name="description">{{ old('description', $finance->description) }}</textarea>
+                            <x-input-error for="description" class="mt-2" />
+                        </div>
+
                         <div class="p-6">
                             <x-button type="submit">
-                                {{ __('更新') }}
+                                {{ __('Update') }}
                             </x-button>
                         </div>
                     </div>

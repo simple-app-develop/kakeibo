@@ -33,7 +33,7 @@ class FinanceUpdateRequest extends FormRequest
                 }),
             ],
             'amount' => 'required|numeric|between:0,99999999',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:100',
             'date' => 'required|date',
         ];
     }
