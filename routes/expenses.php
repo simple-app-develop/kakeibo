@@ -3,6 +3,7 @@
 use App\Http\Controllers\Expenses\ExpenseCategoryController;
 use App\Http\Controllers\Expenses\FinanceController;
 use App\Http\Controllers\Expenses\PaymentMethodController;
+use App\Http\Controllers\Expenses\WalletController;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware([
@@ -57,4 +58,7 @@ Route::middleware([
     Route::put('/finance/{finance}', [FinanceController::class, 'update'])->name('finance.update');
 
     Route::delete('/finance/{finance}', [FinanceController::class, 'destroy'])->name('finance.destroy');
+
+    Route::get('/wallet/create', [WalletController::class, 'create'])->name('wallet.create');
+    Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
 });
