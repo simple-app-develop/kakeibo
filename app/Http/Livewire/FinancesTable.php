@@ -87,12 +87,17 @@ class FinancesTable extends Component
         $total = 0;
         foreach ($finances as $finance) {
             $isFuture = \Carbon\Carbon::parse($finance->reflected_date)->isFuture();
-            if (!$isFuture && $finance->payment_method_id !== null) {
-                $total += $finance->amount;
+            if (!$isFuture) {
+                if ($finance->type == 'expense') {
+                    $total -= $finance->amount;
+                } else {
+                    $total += $finance->amount;
+                }
             }
         }
         return $total;
     }
+
 
     /**
      * 月を増やす
@@ -146,7 +151,7 @@ class FinancesTable extends Component
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '<', now()) // 今日の日付より前のもののみ
-            ->whereNull('payment_method_id')
+            ->where('type', 'income')
             ->sum('amount');
     }
 
@@ -177,7 +182,7 @@ class FinancesTable extends Component
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '<', now()) // 今日の日付より前のもののみ
-            ->whereNotNull('payment_method_id')
+            ->where('type', 'expense')
             ->sum('amount');
     }
 
@@ -325,25 +330,30 @@ class FinancesTable extends Component
         $wallets = Wallet::where('team_id', $teamId)->get();
 
         $balances = [];
-
         foreach ($wallets as $wallet) {
-            $expensesWithWallets = Expense::whereHas('payment_method', function ($query) use ($wallet) {
-                $query->where('wallet_id', $wallet->id);
-            })
-                ->where('team_id', $teamId)
+            $incomes = Expense::where('team_id', $teamId)
+                ->where('wallet_id', $wallet->id)
                 ->whereDate('reflected_date', '<=', now())
+                ->where('type', 'income')
                 ->get();
 
+            $expenses = Expense::where('team_id', $teamId)
+                ->whereHas('payment_method', function ($query) use ($wallet) {
+                    $query->where('wallet_id', $wallet->id);
+                })
+                ->whereDate('reflected_date', '<=', now())
+                ->where('type', 'expense')
+                ->get();
 
             // 初期残高をセット
-            $balance = $wallet->balance ?? 0;
+            $balance = $wallet->balance;
 
-            foreach ($expensesWithWallets as $expense) {
-                if ($expense->payment_method_id !== null) { // 支払い方法が登録されている場合のみ
-                    $balance -= $expense->amount; // 支出を減算
-                } else {
-                    $balance += $expense->amount; // 収入を加算
-                }
+            foreach ($incomes as $income) {
+                $balance += $income->amount;
+            }
+
+            foreach ($expenses as $expense) {
+                $balance -= $expense->amount;
             }
 
             $balances[$wallet->name] = $balance;
