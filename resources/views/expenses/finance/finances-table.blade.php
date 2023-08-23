@@ -22,7 +22,9 @@
                 <th class="py-2 px-6 text-left">{{ __('Description') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Payment Method') }}</th>
                 <th class="py-2 px-6 text-left">{{ __('Reflected Date') }}</th>
-                <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
+                @if ($hasFinancePermission)
+                    <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
+                @endif
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
@@ -37,14 +39,16 @@
                         <td class="py-2 px-6">{{ optional($finance->payment_method)->name }}</td>
                         <td class="py-2 px-6">{{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}
                         </td>
-                        <td class="py-2 px-6">
-                            <a href="{{ route('finance.edit', $finance->id) }}" title="{{ __('Edit') }}"
-                                class="text-blue-500 hover:text-blue-700">
-                                <i class="fas fa-pen"></i>
-                            </a>
-                            <button onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
-
+                        @if ($hasFinancePermission)
+                            <td class="py-2 px-6">
+                                <a href="{{ route('finance.edit', $finance->id) }}" title="{{ __('Edit') }}"
+                                    class="text-blue-500 hover:text-blue-700">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                                <button
+                                    onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
+                                    class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                        @endif
                         </td>
                     </tr>
                 @endforeach

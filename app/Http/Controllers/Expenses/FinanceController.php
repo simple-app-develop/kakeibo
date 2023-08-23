@@ -5,13 +5,13 @@ namespace App\Http\Controllers\Expenses;
 use App\Actions\Expenses\Finance\CreateFinance;
 use App\Actions\Expenses\Finance\DeleteFinance;
 use App\Actions\Expenses\Finance\EditFinance;
+use App\Actions\Expenses\Finance\GetFinance;
 use App\Actions\Expenses\Finance\StoreFinance;
 use App\Actions\Expenses\Finance\UpdateFinance;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Expenses\FinanceStoreRequest;
 use App\Http\Requests\Expenses\FinanceUpdateRequest;
 use App\Models\Expense;
-use Nette\Schema\Expect;
 
 /**
  * 家計簿のデータを扱うコントローラー
@@ -23,10 +23,15 @@ class FinanceController extends Controller
      *
      * @return \Illuminate\View\View
      */
-    public function index()
+    public function index(GetFinance $getFinance)
     {
-        return view('expenses.finance.index');
+        $result = $getFinance->index();
+
+        return view('expenses.finance.index', [
+            'isPermission' => $result['isPermission']
+        ]);
     }
+
 
     /**
      * 家計簿のデータの作成画面を表示
