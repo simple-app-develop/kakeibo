@@ -50,6 +50,7 @@ class PaymentMethodController extends Controller
 
     public function create()
     {
+
         try {
             $view = $this->createPaymentMethod->create();
         } catch (\Exception $e) {
@@ -78,12 +79,16 @@ class PaymentMethodController extends Controller
     public function edit($id)
     {
         try {
-            $paymentMethod = $this->editPaymentMethod->get($id, $this->getCurrentTeamId());
+            $data = $this->editPaymentMethod->get($id, $this->getCurrentTeamId());
         } catch (\Exception $e) {
             return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
         }
-        return view('expenses.payment_method.edit', compact('paymentMethod'));
+        return view('expenses.payment_method.edit', [
+            'paymentMethod' => $data['paymentMethod'],
+            'wallets' => $data['wallets']
+        ]);
     }
+
 
     public function update(Request $request, $id)
     {
@@ -144,7 +149,8 @@ class PaymentMethodController extends Controller
                     return $query->where('team_id', $request->user()->currentTeam->id);
                 })
             ],
-            'isCreditCard' => 'required|in:0,1'
+            'isCreditCard' => 'required|in:0,1',
+            'wallet_id' => 'required|exists:wallets,id'
         ];
 
         if ($request->input('isCreditCard') == 1) {

@@ -17,7 +17,9 @@ class Expense extends Model
         'amount',
         'description',
         'date',
-        'reflected_date'
+        'reflected_date',
+        'type',
+        'wallet_id'
     ];
 
     protected $casts = [
@@ -32,5 +34,11 @@ class Expense extends Model
     public function payment_method()
     {
         return $this->belongsTo(PaymentMethod::class, 'payment_method_id');
+    }
+
+    // 新しく追加されたwalletリレーション
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class, 'wallet_id');
     }
 }

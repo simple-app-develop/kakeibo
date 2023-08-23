@@ -57,6 +57,7 @@ class StoreFinance
             'amount' => $data['amount'],
             'description' => $data['description'] ?? null,
             'date' => $data['date'],
+            'type' => $data['transaction_type'],
         ];
 
         if ($data['transaction_type'] === 'expense') {
@@ -80,10 +81,14 @@ class StoreFinance
                 }
 
                 $financeData['reflected_date'] = $reflectedDate->startOfDay();
+                $financeData['wallet_id'] = null;
             }
         } elseif ($data['transaction_type'] === 'income') {
+            $financeData['wallet_id'] = $data['wallet_id'] ?? null; // null合体演算子を使用
             $financeData['reflected_date'] = Carbon::parse($data['date']);
+            $financeData['payment_method_id'] = null;
         }
+
 
         return Expense::create($financeData);
     }

@@ -33,8 +33,11 @@ class CreatePaymentMethod
             throw new \Exception('This team is not authorized to create payment methods.');
         }
 
+        $teamId = auth()->user()->currentTeam->id;
+        $wallets = \App\Models\Wallet::where('team_id', $teamId)->get();
+
         // 作成ビューを返す
-        return view('expenses.payment_method.create');
+        return view('expenses.payment_method.create', compact('wallets'));
     }
 
     public function store(array $data)

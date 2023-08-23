@@ -4,6 +4,7 @@ namespace App\Actions\Expenses\Finance;
 
 use App\Models\PaymentMethod;
 use App\Models\ExpenseCategory;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 use Illuminate\Support\Facades\Auth;
 
@@ -54,10 +55,14 @@ class CreateFinance
         $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->orderBy('order_column', 'asc')->get();
         $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
 
+        // 財布を取得
+        $wallets = Wallet::where('team_id', $currentTeamId)->get();
+
         return [
             'paymentMethods' => $paymentMethods,
             'expenseCategories' => $expenseCategories,
             'incomeCategories' => $incomeCategories,
+            'wallets' => $wallets,
         ];
     }
 }

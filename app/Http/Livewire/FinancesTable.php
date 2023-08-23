@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Expense;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -30,6 +31,12 @@ class FinancesTable extends Component
 
     //
     public $showScheduledExpenseDetails = false;
+
+    //  
+    public $showScheduledIncomeDetails = false;
+
+    //
+    public $scheduledIncomeDetails = [];
 
     /**
      * コンポーネントのマウント時の処理
@@ -80,12 +87,17 @@ class FinancesTable extends Component
         $total = 0;
         foreach ($finances as $finance) {
             $isFuture = \Carbon\Carbon::parse($finance->reflected_date)->isFuture();
-            if (!$isFuture && $finance->payment_method_id !== null) {
-                $total += $finance->amount;
+            if (!$isFuture) {
+                if ($finance->type == 'expense') {
+                    $total -= $finance->amount;
+                } else {
+                    $total += $finance->amount;
+                }
             }
         }
         return $total;
     }
+
 
     /**
      * 月を増やす
@@ -138,9 +150,26 @@ class FinancesTable extends Component
         return Expense::where('team_id', auth()->user()->currentTeam->id)
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '<', now()) // 今日の日付より前のもののみ
+            ->where('type', 'income')
+            ->sum('amount');
+    }
+
+    /**
+     * 予定された月の収入合計を取得
+     * 
+     * @return float
+     */
+    public function getScheduledIncome()
+    {
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
             ->whereNull('payment_method_id')
             ->sum('amount');
     }
+
 
     /**
      * 月の支出合計を取得
@@ -153,7 +182,7 @@ class FinancesTable extends Component
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '<', now()) // 今日の日付より前のもののみ
-            ->whereNotNull('payment_method_id')
+            ->where('type', 'expense')
             ->sum('amount');
     }
 
@@ -237,5 +266,99 @@ class FinancesTable extends Component
             ->whereNotNull('payment_method_id')
             ->with('expense_category') // <--- 項目名を取得するためのリレーション
             ->get();
+    }
+
+    public function toggleScheduledIncomeDetails()
+    {
+        if (!$this->showScheduledIncomeDetails) {
+            $this->scheduledIncomeDetails = Expense::where('team_id', auth()->user()->currentTeam->id)
+                ->whereYear('reflected_date', $this->year)
+                ->whereMonth('reflected_date', $this->month)
+                ->where('reflected_date', '>=', now())
+                ->whereNull('payment_method_id')
+                ->get();
+        }
+        $this->showScheduledIncomeDetails = !$this->showScheduledIncomeDetails;
+    }
+
+    /**
+     * 対象の家計簿データに基づいてテキストの色を取得します。
+     * 
+     * @param \App\Models\Expense $finance
+     * @return string
+     */
+    public function getTextColor($finance): string
+    {
+        $currentViewMonth = Carbon::parse($this->getCurrentMonthYearForCarbon())->format('m');
+        $textColor = 'font-bold';
+
+        if ($finance->type == 'income') {
+            if (Carbon::parse($finance->date)->greaterThan(now()) && Carbon::parse($finance->date)->format('m') == $currentViewMonth) {
+                $textColor = 'text-green-300 font-semibold';
+            } else {
+                $textColor = 'text-green-700 font-bold';
+            }
+        } elseif (Carbon::parse($finance->reflected_date)->format('m') == $currentViewMonth && Carbon::parse($finance->reflected_date)->greaterThan(now())) {
+            $textColor = 'text-gray-400 font-semibold';
+        } elseif (Carbon::parse($finance->reflected_date)->month != $currentViewMonth) {
+            $textColor = 'text-gray-400 font-light italic';
+        }
+
+        return $textColor;
+    }
+
+    /**
+     * 現在の年と月をCarbonフォーマットで取得
+     * 
+     * @return string
+     */
+    public function getCurrentMonthYearForCarbon(): string
+    {
+        return str_replace('年', '-', str_replace('月', '', $this->getCurrentMonthYear()));
+    }
+
+    /**
+     * それぞれの財布の残高を取得
+     *
+     * @return array
+     */
+    public function getWalletBalances()
+    {
+        $teamId = Auth::user()->currentTeam->id;
+
+        // チームに関連する財布のみを取得
+        $wallets = Wallet::where('team_id', $teamId)->get();
+
+        $balances = [];
+        foreach ($wallets as $wallet) {
+            $incomes = Expense::where('team_id', $teamId)
+                ->where('wallet_id', $wallet->id)
+                ->whereDate('reflected_date', '<=', now())
+                ->where('type', 'income')
+                ->get();
+
+            $expenses = Expense::where('team_id', $teamId)
+                ->whereHas('payment_method', function ($query) use ($wallet) {
+                    $query->where('wallet_id', $wallet->id);
+                })
+                ->whereDate('reflected_date', '<=', now())
+                ->where('type', 'expense')
+                ->get();
+
+            // 初期残高をセット
+            $balance = $wallet->balance;
+
+            foreach ($incomes as $income) {
+                $balance += $income->amount;
+            }
+
+            foreach ($expenses as $expense) {
+                $balance -= $expense->amount;
+            }
+
+            $balances[$wallet->name] = $balance;
+        }
+
+        return $balances;
     }
 }

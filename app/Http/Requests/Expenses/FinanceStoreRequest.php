@@ -25,6 +25,12 @@ class FinanceStoreRequest extends FormRequest
                     $query->where('team_id', $teamId);
                 }),
             ],
+            'wallet_id' => [
+                'required_if:transaction_type,income',
+                Rule::exists('wallets', 'id')->where(function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                }),
+            ],
             'category' => [
                 'nullable',
                 Rule::exists('expense_categories', 'id')->where(function ($query) use ($teamId) {
