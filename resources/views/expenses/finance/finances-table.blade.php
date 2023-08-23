@@ -55,7 +55,11 @@
                 @endforeach
             @else
                 <tr>
-                    <td colspan="6" class="py-2 px-6 text-center">@lang('finances.no_data')</td>
+                    @if ($hasFinancePermission)
+                        <td colspan="7" class="py-2 px-6 text-center">@lang('finances.no_data')</td>
+                    @else
+                        <td colspan="6" class="py-2 px-6 text-center">@lang('finances.no_data')</td>
+                    @endif
                 </tr>
             @endif
         </tbody>
