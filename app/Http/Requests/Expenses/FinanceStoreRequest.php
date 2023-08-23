@@ -26,7 +26,7 @@ class FinanceStoreRequest extends FormRequest
                 }),
             ],
             'category' => [
-                'required',
+                'nullable',
                 Rule::exists('expense_categories', 'id')->where(function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 }),
