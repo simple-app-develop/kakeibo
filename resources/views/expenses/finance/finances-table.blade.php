@@ -43,7 +43,7 @@
                     <!-- Action Button -->
                     <td class="py-2 px-6 text-left @if (!$hasFinancePermission) md:hidden @endif">
                         <div class="md:hidden">
-                            <button class="text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">
+                            <button class="action_btn text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
@@ -52,12 +52,12 @@
                             <!-- This will be visible only on desktop -->
                             <div class="flex items-center space-x-4">
                                 <a href="{{ route('finance.edit', $finance->id) }}"
-                                    class="text-blue-500 hover:text-blue-700 md:block hidden">
+                                    class="action_btn text-blue-500 hover:text-blue-700 md:block hidden">
                                     <i class="fas fa-pen"></i>
                                 </a>
                                 <button
                                     onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                    class="px-4 py-2 ml-4 text-red-500 hover:text-red-700 md:block hidden">
+                                    class="action_btn text-red-500 hover:text-red-700 md:block hidden">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </div>
@@ -75,12 +75,12 @@
                             @if ($hasFinancePermission)
                                 <li>
                                     <a href="{{ route('finance.edit', $finance->id) }}"
-                                        class="text-blue-500 hover:text-blue-700">
+                                        class="action_btn text-blue-500 hover:text-blue-700">
                                         <i class="fas fa-pen"></i>
                                     </a>
                                     <button
                                         onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                        class="px-4 py-2 ml-4 text-red-500  hover:text-red-700">
+                                        class="action_btn text-red-500  hover:text-red-700">
                                         <i class="fas fa-trash"></i>
                                     </button>
                                 </li>
