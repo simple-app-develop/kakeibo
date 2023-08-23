@@ -30,38 +30,10 @@
         <tbody class="text-gray-600 text-sm font-light">
             @foreach ($finances as $finance)
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
-
-                    @php
-                        if (!function_exists('convertToCarbonFormat')) {
-                            function convertToCarbonFormat($date)
-                            {
-                                return str_replace('年', '-', str_replace('月', '', $date));
-                            }
-                        }
-                        $currentViewMonth = \Carbon\Carbon::parse(convertToCarbonFormat($this->getCurrentMonthYear()))->format('m');
-                        
-                        $textColor = 'font-bold';
-                        
-                        if (is_null($finance->payment_method)) {
-                            if (\Carbon\Carbon::parse($finance->date)->greaterThan(now()) && \Carbon\Carbon::parse($finance->date)->format('m') == $currentViewMonth) {
-                                $textColor = 'text-green-300 font-semibold';
-                            } else {
-                                $textColor = 'text-green-700 font-bold';
-                            }
-                        } elseif (\Carbon\Carbon::parse($finance->reflected_date)->format('m') == $currentViewMonth && \Carbon\Carbon::parse($finance->reflected_date)->greaterThan(now())) {
-                            $textColor = 'text-gray-400 font-semibold';
-                        } elseif (\Carbon\Carbon::parse($finance->reflected_date)->month != $currentViewMonth) {
-                            $textColor = 'text-gray-400 font-light italic';
-                        }
-                    @endphp
-
-
-
-
                     <td class="py-2 px-6 text-left">{{ $finance->date->format('Y-m-d') }}</td>
                     <td class="py-2 px-6 text-left">{{ optional($finance->expense_category)->name }}</td>
 
-                    <td class="py-2 px-6 text-right {{ $textColor }}">
+                    <td class="py-2 px-6 text-right {{ $this->getTextColor($finance) }}">
                         {{ number_format($finance->amount) }}{{ __('yen') }}
                     </td>
 

@@ -274,4 +274,40 @@ class FinancesTable extends Component
         }
         $this->showScheduledIncomeDetails = !$this->showScheduledIncomeDetails;
     }
+
+    /**
+     * 対象の家計簿データに基づいてテキストの色を取得します。
+     * 
+     * @param \App\Models\Expense $finance
+     * @return string
+     */
+    public function getTextColor($finance): string
+    {
+        $currentViewMonth = Carbon::parse($this->getCurrentMonthYearForCarbon())->format('m');
+        $textColor = 'font-bold';
+
+        if (is_null($finance->payment_method)) {
+            if (Carbon::parse($finance->date)->greaterThan(now()) && Carbon::parse($finance->date)->format('m') == $currentViewMonth) {
+                $textColor = 'text-green-300 font-semibold';
+            } else {
+                $textColor = 'text-green-700 font-bold';
+            }
+        } elseif (Carbon::parse($finance->reflected_date)->format('m') == $currentViewMonth && Carbon::parse($finance->reflected_date)->greaterThan(now())) {
+            $textColor = 'text-gray-400 font-semibold';
+        } elseif (Carbon::parse($finance->reflected_date)->month != $currentViewMonth) {
+            $textColor = 'text-gray-400 font-light italic';
+        }
+
+        return $textColor;
+    }
+
+    /**
+     * 現在の年と月をCarbonフォーマットで取得
+     * 
+     * @return string
+     */
+    public function getCurrentMonthYearForCarbon(): string
+    {
+        return str_replace('年', '-', str_replace('月', '', $this->getCurrentMonthYear()));
+    }
 }
