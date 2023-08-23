@@ -79,12 +79,16 @@ class PaymentMethodController extends Controller
     public function edit($id)
     {
         try {
-            $paymentMethod = $this->editPaymentMethod->get($id, $this->getCurrentTeamId());
+            $data = $this->editPaymentMethod->get($id, $this->getCurrentTeamId());
         } catch (\Exception $e) {
             return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
         }
-        return view('expenses.payment_method.edit', compact('paymentMethod'));
+        return view('expenses.payment_method.edit', [
+            'paymentMethod' => $data['paymentMethod'],
+            'wallets' => $data['wallets']
+        ]);
     }
+
 
     public function update(Request $request, $id)
     {

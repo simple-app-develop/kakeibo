@@ -4,6 +4,7 @@ namespace App\Actions\Expenses\PaymentMethod;
 
 use App\Models\ExpenseCategory;
 use App\Models\PaymentMethod;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 
 
@@ -25,13 +26,19 @@ class EditPaymentMethod
     }
 
 
-    public function get(int $id, int $teamId): PaymentMethod
+    public function get(int $id, int $teamId)
     {
         // 権限を確認する
         if (!$this->expensePermissionService->checkPermission('paymentMethod', $id)) {
             throw new \Exception('This team is not authorized to edit payment methods.');
         }
 
-        return PaymentMethod::findOrFail($id);
+        $wallets = PaymentMethod::with('wallet')->findOrFail($id);
+        $paymentMethod = PaymentMethod::findOrFail($id);
+
+        return [
+            'paymentMethod' => $paymentMethod,
+            'wallets' => $wallets
+        ];
     }
 }

@@ -22,4 +22,9 @@ class PaymentMethod extends Model
     {
         return $this->hasMany(Expense::class);
     }
+
+    public function wallet()
+    {
+        return $this->belongsTo(Wallet::class);
+    }
 }
