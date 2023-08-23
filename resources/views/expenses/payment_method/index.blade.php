@@ -82,7 +82,7 @@
 
             <div class="mt-3">
                 <p class="text-sm text-gray-500">
-                    {{ __('delete') }}
+                    {{ __('Do you really want to remove your payment method?') }}
                 </p>
             </div>
 
