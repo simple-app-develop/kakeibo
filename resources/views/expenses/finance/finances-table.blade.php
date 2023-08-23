@@ -90,7 +90,29 @@
                 @if ($this->getScheduledExpense() > 0)
                     <tr>
                         <td class="py-2 px-6">{{ __('Planned Expenditures for the Month') }}</td>
-                        <td class="py-2 px-6">{{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}
+                        <td class="py-2 px-6">
+                            {{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}
+                            <!-- Toggle Button -->
+                            <button wire:click="toggleScheduledExpenseDetails">
+                                …
+                            </button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="py-2 px-6">
+                        </td>
+                        <td class="py-2 px-6">
+                            <!-- Toggle Details Area -->
+                            @if ($showScheduledExpenseDetails)
+                                @foreach ($scheduledExpenseDetails as $detail)
+                                    <div>
+                                        {{ $detail->date->format('Y-m-d') }}
+                                        {{ optional($detail->expense_category)->name }}:
+                                        {{ number_format($detail->amount) }}{{ __('yen') }}
+                                        {{ $detail->reflected_date }}
+                                    </div>
+                                @endforeach
+                            @endif
                         </td>
                     </tr>
                 @endif
