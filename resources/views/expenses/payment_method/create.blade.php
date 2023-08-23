@@ -43,12 +43,19 @@
                             <!-- select Payment Month Offset -->
                             <div class="col-span-6 sm:col-span-4 p-6">
                                 <x-label for="month_offset" :value="__('Select Payment Month Offset')" />
-                                <select id="month_offset" name="month_offset" class="mt-1 block w-full">
-                                    <option value="0">{{ __('This Month') }}</option>
-                                    <option value="1">{{ __('Next Month') }}</option>
-                                    <option value="2">{{ __('Month after Next') }}</option>
-                                    <option value="3">{{ __('3 Months Later') }}</option>
-                                </select>
+
+                                <x-select-input id="month_offset" name="month_offset">
+                                    <option value="0" {{ old('month_offset') == '0' ? 'selected' : '' }}>
+                                        {{ __('This Month') }}</option>
+                                    <option value="1" {{ old('month_offset') == '1' ? 'selected' : '' }}>
+                                        {{ __('Next Month') }}</option>
+                                    <option value="2" {{ old('month_offset') == '2' ? 'selected' : '' }}>
+                                        {{ __('Month after Next') }}</option>
+                                    <option value="3" {{ old('month_offset') == '3' ? 'selected' : '' }}>
+                                        {{ __('3 Months Later') }}</option>
+                                </x-select-input>
+
+
                                 <x-input-error for="month_offset" class="mt-2" />
                             </div>
 
