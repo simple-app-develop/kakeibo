@@ -67,6 +67,21 @@
                             <x-input-error for="payment_method" class="mt-2" />
                         </div>
 
+                        <!-- Wallet Selection for Income -->
+                        <div x-show="transactionType === 'income'" class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="wallet" value="{{ __('Wallet') }}" />
+                            <x-select-input id="wallet" name="wallet_id">
+                                @foreach ($wallets as $wallet)
+                                    <option value="{{ $wallet->id }}"
+                                        {{ old('wallet_id') == $wallet->id ? 'selected' : '' }}>
+                                        {{ $wallet->name }}
+                                    </option>
+                                @endforeach
+                            </x-select-input>
+                            <x-input-error for="wallet_id" class="mt-2" />
+                        </div>
+
+
                         <!-- Amount -->
                         <div class="col-span-6 sm:col-span-4 p-6">
                             <x-label for="amount" value="{{ __('Amount') }}" />
