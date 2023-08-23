@@ -82,9 +82,11 @@ class UpdateFinance
                 $financeData['reflected_date'] = $reflectedDate->startOfDay();
             }
         } elseif ($data['transaction_type'] === 'income') {
+            $financeData['wallet_id'] = $data['wallet_id']; // Ensure this key exists in the provided $data array.
             $financeData['reflected_date'] = Carbon::parse($data['date']);
             $financeData['payment_method_id'] = null;
         }
+
         $expense->update($financeData);
     }
 }
