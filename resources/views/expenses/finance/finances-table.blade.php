@@ -176,6 +176,30 @@
         </table>
     </div>
 
+    <div class="my-4">
+        <table class="min-w-full bg-white table-auto mt-4">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    <th class="py-2 px-6 text-left">{{ __('Wallet') }}</th>
+                    <th class="py-2 px-6 text-right fixed-width">{{ __('Balance') }}</th>
+                </tr>
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                @php
+                    $walletBalances = $this->getWalletBalances();
+                @endphp
+                @foreach ($walletBalances as $walletName => $balance)
+                    <tr>
+                        <td class="py-2 px-6 text-left">{{ $walletName }}</td>
+                        <td class="py-2 px-6 text-right fixed-width">{{ number_format($balance) }}{{ __('yen') }}
+                        </td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+
+
     <script>
         function toggleDetails(button) {
             const detailsSection = button.closest('tr').nextElementSibling;

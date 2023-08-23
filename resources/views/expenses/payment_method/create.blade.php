@@ -21,6 +21,17 @@
                             <x-input-error for="name" class="mt-2" />
                         </div>
 
+                        <div class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="wallet" value="{{ __('Wallet') }}" />
+                            <select id="wallet" name="wallet_id">
+                                @foreach ($wallets as $wallet)
+                                    <option value="{{ $wallet->id }}">{{ $wallet->name }}</option>
+                                @endforeach
+                            </select>
+                            <x-input-error for="wallet_id" class="mt-2" />
+                        </div>
+
+
                         <!-- Payment Type Selection -->
                         <div class="col-span-6 sm:col-span-4 p-6">
                             <x-label value="{{ __('Payment Type') }}" />

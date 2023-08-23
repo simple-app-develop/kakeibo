@@ -20,6 +20,15 @@
                         <x-input-error for="name" class="mt-2" />
                     </div>
 
+                    <!-- Wallet Selection -->
+                    <div class="col-span-6 sm:col-span-4 p-6">
+                        <x-label for="wallet_id" value="{{ __('Wallet') }}" />
+                        <div class="mt-1 block w-full">
+                            {{ $paymentMethod->wallet->name ?? '-' }}
+                        </div>
+                    </div>
+
+
                     <!-- Payment Type Display -->
                     <div class="col-span-6 sm:col-span-4 p-6">
                         <x-label value="{{ __('Payment Type') }}" />
