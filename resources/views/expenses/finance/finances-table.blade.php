@@ -30,10 +30,13 @@
         <tbody class="text-gray-600 text-sm font-light">
             @foreach ($finances as $finance)
                 <tr class="border-b border-gray-200 hover:bg-gray-100">
-                    <!-- The rest of your table cells for each record -->
                     <td class="py-2 px-6 text-left">{{ $finance->date->format('Y-m-d') }}</td>
                     <td class="py-2 px-6 text-left">{{ optional($finance->expense_category)->name }}</td>
-                    <td class="py-2 px-6 text-right">{{ number_format($finance->amount) }}{{ __('yen') }}</td>
+
+                    <td class="py-2 px-6 text-right {{ $this->getTextColor($finance) }}">
+                        {{ number_format($finance->amount) }}{{ __('yen') }}
+                    </td>
+
                     <td class="py-2 px-6 text-left hidden md:table-cell">{{ $finance->description }}</td>
                     <td class="py-2 px-6 text-left fixed-width hidden md:table-cell">
                         {{ optional($finance->payment_method)->name }}</td>
@@ -104,12 +107,39 @@
             <tbody class="text-gray-600 text-sm font-light">
                 <tr>
                     <td class="py-2 px-6 text-left">{{ __('Total income for the month') }}</td>
-                    <td class="py-2 px-6 text-right fixed-width">
+                    <td class="py-2 px-6 text-right fixed-width text-green-500 ">
                         {{ number_format($this->getTotalIncome()) }}{{ __('yen') }}</td>
                 </tr>
+
+                @if ($this->getScheduledIncome() > 0)
+                    <tr>
+                        <td class="py-2 px-6 text-left">{{ __('Planned Income for the Month') }}</td>
+                        <td class="py-2 px-6 text-right fixed-widt">
+                            {{ number_format($this->getScheduledIncome()) }}{{ __('yen') }}
+                            <button wire:click="toggleScheduledIncomeDetails">{{ __('See more...') }}</button>
+                        </td>
+                    </tr>
+                    @if ($showScheduledIncomeDetails)
+                        <tr>
+                            <td class="py-2 px-6" colspan="2">
+                                @foreach ($scheduledIncomeDetails as $detail)
+                                    <ul>
+                                        <li>
+                                            {{ $detail->date->format('Y-m-d') }}
+                                            {{ optional($detail->expense_category)->name }}:
+                                            {{ number_format($detail->amount) }}{{ __('yen') }}
+                                            {{ $detail->reflected_date }}
+                                        </li>
+                                    </ul>
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
+                @endif
+
                 <tr>
                     <td class="py-2 px-6 text-left">{{ __('Total Expenditures for the Month') }}</td>
-                    <td class="py-2 px-6 text-right fixed-width">
+                    <td class="py-2 px-6 text-right fixed-width text-red-500">
                         {{ number_format($this->getTotalExpense()) }}{{ __('yen') }}</td>
                 </tr>
                 @if ($this->getScheduledExpense() > 0)
