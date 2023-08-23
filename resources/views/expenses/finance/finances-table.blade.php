@@ -87,10 +87,13 @@
                     <td class="py-2 px-6 text-red-700 font-bold">
                         {{ number_format($this->getTotalExpense()) }}{{ __('yen') }}</td>
                 </tr>
-                <tr>
-                    <td class="py-2 px-6">{{ __('Planned Expenditures for the Month') }}</td>
-                    <td class="py-2 px-6">{{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}</td>
-                </tr>
+                @if ($this->getScheduledExpense() > 0)
+                    <tr>
+                        <td class="py-2 px-6">{{ __('Planned Expenditures for the Month') }}</td>
+                        <td class="py-2 px-6">{{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}
+                        </td>
+                    </tr>
+                @endif
                 <tr class="font-semibold">
                     <td class="py-2 px-6">{{ __('Entire total') }}</td>
                     <td class="py-2 px-6">{{ number_format($this->getOverallTotal()) }}{{ __('yen') }}</td>
