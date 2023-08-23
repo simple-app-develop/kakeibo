@@ -83,6 +83,7 @@ class UpdateFinance
             }
         } elseif ($data['transaction_type'] === 'income') {
             $financeData['reflected_date'] = Carbon::parse($data['date']);
+            $financeData['payment_method_id'] = null;
         }
         $expense->update($financeData);
     }
