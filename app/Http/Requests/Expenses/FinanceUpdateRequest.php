@@ -27,13 +27,13 @@ class FinanceUpdateRequest extends FormRequest
                 }),
             ],
             'category' => [
-                'required',
+                'nullable',
                 Rule::exists('expense_categories', 'id')->where(function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 }),
             ],
             'amount' => 'required|numeric|between:0,99999999',
-            'description' => 'nullable|string',
+            'description' => 'nullable|string|max:100',
             'date' => 'required|date',
         ];
     }

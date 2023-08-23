@@ -25,6 +25,12 @@ class FinancesTable extends Component
     // 
     public $hasFinancePermission = false;
 
+    //
+    public $scheduledExpenseDetails = [];
+
+    //
+    public $showScheduledExpenseDetails = false;
+
     /**
      * コンポーネントのマウント時の処理
      *
@@ -200,5 +206,36 @@ class FinancesTable extends Component
     public function getOverallTotal()
     {
         return $this->getOverallIncome() - $this->getOverallExpense();
+    }
+
+
+    // トグル表示を制御するメソッド
+    public function toggleScheduledExpenseDetails()
+    {
+        if (!$this->showScheduledExpenseDetails) {
+            $this->scheduledExpenseDetails = Expense::where('team_id', auth()->user()->currentTeam->id)
+                ->whereYear('reflected_date', $this->year)
+                ->whereMonth('reflected_date', $this->month)
+                ->where('reflected_date', '>=', now())
+                ->whereNotNull('payment_method_id')
+                ->get();
+        }
+        $this->showScheduledExpenseDetails = !$this->showScheduledExpenseDetails;
+    }
+
+    /**
+     * 予定された支出の詳細を取得
+     *
+     * @return \Illuminate\Support\Collection
+     */
+    public function getScheduledExpenseDetails()
+    {
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
+            ->whereNotNull('payment_method_id')
+            ->with('expense_category') // <--- 項目名を取得するためのリレーション
+            ->get();
     }
 }

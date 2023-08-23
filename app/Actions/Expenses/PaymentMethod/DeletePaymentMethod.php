@@ -34,6 +34,13 @@ class DeletePaymentMethod
         }
 
         $method = PaymentMethod::findOrFail($id);
+
+        // ここで支払い方法が使用されているかどうかを確認します。
+        if ($method->expenses->count() > 0) {
+            throw new \Exception('This payment method is already being used and cannot be deleted.');
+        }
+
+
         $method->delete();
     }
 }

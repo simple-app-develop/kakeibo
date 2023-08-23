@@ -119,3 +119,15 @@ html {
 .create_fab:hover {
     background-color: #e91e63;
 }
+
+.action_btn {
+    transition: all 0.3s;
+    border-radius: 4px;
+    padding: 4px 8px;
+    background-color: transparent;
+}
+
+.action_btn:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+    border-radius: 12px;
+}
