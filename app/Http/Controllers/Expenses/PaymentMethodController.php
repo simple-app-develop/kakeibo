@@ -50,6 +50,7 @@ class PaymentMethodController extends Controller
 
     public function create()
     {
+
         try {
             $view = $this->createPaymentMethod->create();
         } catch (\Exception $e) {
@@ -144,7 +145,8 @@ class PaymentMethodController extends Controller
                     return $query->where('team_id', $request->user()->currentTeam->id);
                 })
             ],
-            'isCreditCard' => 'required|in:0,1'
+            'isCreditCard' => 'required|in:0,1',
+            'wallet_id' => 'required|exists:wallets,id'
         ];
 
         if ($request->input('isCreditCard') == 1) {

@@ -14,7 +14,8 @@ class PaymentMethod extends Model
         'name',
         'closing_date',
         'payment_date',
-        'month_offset'
+        'month_offset',
+        "wallet_id"
     ];
 
     public function expenses()
