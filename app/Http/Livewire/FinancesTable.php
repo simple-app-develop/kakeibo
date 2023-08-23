@@ -292,22 +292,32 @@ class FinancesTable extends Component
     public function getTextColor($finance): string
     {
         $currentViewMonth = Carbon::parse($this->getCurrentMonthYearForCarbon())->format('m');
-        $textColor = 'font-bold';
 
         if ($finance->type == 'income') {
-            if (Carbon::parse($finance->date)->greaterThan(now()) && Carbon::parse($finance->date)->format('m') == $currentViewMonth) {
-                $textColor = 'text-green-300 font-semibold';
-            } else {
-                $textColor = 'text-green-700 font-bold';
+            if (Carbon::parse($finance->date)->isFuture()) {
+                return 'text-green-400 font-light';  // 未来の収入は薄い緑に
+            } elseif (Carbon::parse($finance->date)->format('m') == $currentViewMonth) {
+                return 'text-green-700 font-semibold'; // 現在の月の収入は濃い緑に
             }
-        } elseif (Carbon::parse($finance->reflected_date)->format('m') == $currentViewMonth && Carbon::parse($finance->reflected_date)->greaterThan(now())) {
-            $textColor = 'text-gray-400 font-semibold';
-        } elseif (Carbon::parse($finance->reflected_date)->month != $currentViewMonth) {
-            $textColor = 'text-gray-400 font-light italic';
+            // 過去の月の収入は---に
         }
 
-        return $textColor;
+
+
+        if ($finance->type == 'expense') {
+            if (Carbon::parse($finance->reflected_date)->isFuture() && Carbon::parse($finance->reflected_date)->format('m') == $currentViewMonth) {
+                return 'text-gray-400 font-semibold'; // 未来の反映日で、現在の月のもの
+            }
+            if (Carbon::parse($finance->reflected_date)->format('m') != $currentViewMonth) {
+                return 'text-gray-300 '; // 現在の月外のもの
+            }
+            return 'font-bold'; // それ以外
+        }
+
+
+        return 'font-bold';
     }
+
 
     /**
      * 現在の年と月をCarbonフォーマットで取得
