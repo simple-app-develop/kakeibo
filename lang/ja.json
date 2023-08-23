@@ -196,6 +196,11 @@
     "This team is not authorized to edit payment methods.": "このチームで支払い方法を編集する権限がありません",
     "You do not have the authority to sort payment methods for this team.": "このチームで支払い方法を並び替える権限がありません",
     "Can edit the payment method used by your team": "チームで使用されている支払い方法を編集できます",
+    "Delete Finance Data": "家計簿データを削除",
+    "Are you sure you want to delete this finance data? This action cannot be undone.": "この家計簿データを削除してもよろしいですか？この操作は取り消せません。",
+    "Saved household data.": "家計データを保存しました",
+    "Edited household data.": "家計データを編集しました",
+    "Deleted household data.": "家計データを削除しました",
     "This team is not authorized to create household data.": "このチームで家計データを作成する権限がありません",
     "This team is not authorized to delete household data.": "このチームで家計データを削除する権限がありません",
     "This team is not authorized to edit household data.": "このチームで家計データを編集する権限がありません"
