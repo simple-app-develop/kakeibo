@@ -94,27 +94,26 @@
                             {{ number_format($this->getScheduledExpense()) }}{{ __('yen') }}
                             <!-- Toggle Button -->
                             <button wire:click="toggleScheduledExpenseDetails">
-                                …
+                                {{ __('See more...') }}
                             </button>
                         </td>
                     </tr>
-                    <tr>
-                        <td class="py-2 px-6">
-                        </td>
-                        <td class="py-2 px-6">
-                            <!-- Toggle Details Area -->
-                            @if ($showScheduledExpenseDetails)
+                    @if ($showScheduledExpenseDetails)
+                        <tr>
+                            <td class="py-2 px-6" colspan="2">
                                 @foreach ($scheduledExpenseDetails as $detail)
-                                    <div>
-                                        {{ $detail->date->format('Y-m-d') }}
-                                        {{ optional($detail->expense_category)->name }}:
-                                        {{ number_format($detail->amount) }}{{ __('yen') }}
-                                        {{ $detail->reflected_date }}
-                                    </div>
+                                    <ul>
+                                        <li>
+                                            {{ $detail->date->format('Y-m-d') }}
+                                            {{ optional($detail->expense_category)->name }}:
+                                            {{ number_format($detail->amount) }}{{ __('yen') }}
+                                            {{ $detail->reflected_date }}
+                                        </li>
+                                    </ul>
                                 @endforeach
-                            @endif
-                        </td>
-                    </tr>
+                            </td>
+                        </tr>
+                    @endif
                 @endif
                 <tr class="font-semibold">
                     <td class="py-2 px-6">{{ __('Entire total') }}</td>
