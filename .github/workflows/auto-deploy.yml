@@ -17,4 +17,4 @@ jobs:
           FTP_PASSWORD: ${{ secrets.FTP_PASSWORD }}
           LOCAL_DIR: ./
           # 接続先ディレクトリ：/home/webappserver/kakeibo.group/
-          REMOTE_DIR: ./  
+          REMOTE_DIR: ./kakeibo
