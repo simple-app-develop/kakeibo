@@ -143,8 +143,26 @@
                     <tr>
                         <td class="py-2 px-6 text-left">{{ __('Planned Income for the Month') }}</td>
                         <td class="py-2 px-6 text-right fixed-widt">
-                            {{ number_format($this->getScheduledIncome()) }}{{ __('yen') }}</td>
+                            {{ number_format($this->getScheduledIncome()) }}{{ __('yen') }}
+                            <button wire:click="toggleScheduledIncomeDetails">{{ __('See more...') }}</button>
+                        </td>
                     </tr>
+                    @if ($showScheduledIncomeDetails)
+                        <tr>
+                            <td class="py-2 px-6" colspan="2">
+                                @foreach ($scheduledIncomeDetails as $detail)
+                                    <ul>
+                                        <li>
+                                            {{ $detail->date->format('Y-m-d') }}
+                                            {{ optional($detail->expense_category)->name }}:
+                                            {{ number_format($detail->amount) }}{{ __('yen') }}
+                                            {{ $detail->reflected_date }}
+                                        </li>
+                                    </ul>
+                                @endforeach
+                            </td>
+                        </tr>
+                    @endif
                 @endif
 
                 <tr>

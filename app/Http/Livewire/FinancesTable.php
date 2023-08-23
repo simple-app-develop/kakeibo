@@ -31,6 +31,12 @@ class FinancesTable extends Component
     //
     public $showScheduledExpenseDetails = false;
 
+    //  
+    public $showScheduledIncomeDetails = false;
+
+    //
+    public $scheduledIncomeDetails = [];
+
     /**
      * コンポーネントのマウント時の処理
      *
@@ -254,5 +260,18 @@ class FinancesTable extends Component
             ->whereNotNull('payment_method_id')
             ->with('expense_category') // <--- 項目名を取得するためのリレーション
             ->get();
+    }
+
+    public function toggleScheduledIncomeDetails()
+    {
+        if (!$this->showScheduledIncomeDetails) {
+            $this->scheduledIncomeDetails = Expense::where('team_id', auth()->user()->currentTeam->id)
+                ->whereYear('reflected_date', $this->year)
+                ->whereMonth('reflected_date', $this->month)
+                ->where('reflected_date', '>=', now())
+                ->whereNull('payment_method_id')
+                ->get();
+        }
+        $this->showScheduledIncomeDetails = !$this->showScheduledIncomeDetails;
     }
 }
