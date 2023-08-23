@@ -287,7 +287,7 @@ class FinancesTable extends Component
         $currentViewMonth = Carbon::parse($this->getCurrentMonthYearForCarbon())->format('m');
         $textColor = 'font-bold';
 
-        if (is_null($finance->payment_method)) {
+        if ($finance->type == 'income') {
             if (Carbon::parse($finance->date)->greaterThan(now()) && Carbon::parse($finance->date)->format('m') == $currentViewMonth) {
                 $textColor = 'text-green-300 font-semibold';
             } else {
