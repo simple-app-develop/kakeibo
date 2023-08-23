@@ -70,5 +70,7 @@
         }
     </script>
 
-    <a href="{{ route('finance.create') }}" class="create_fab">+</a>
+    @if ($isPermission)
+        <a href="{{ route('finance.create') }}" class="create_fab">+</a>
+    @endif
 </x-app-layout>

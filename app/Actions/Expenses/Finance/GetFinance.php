@@ -1,19 +1,20 @@
 <?php
 
-namespace App\Actions\Expenses\PaymentMethod;
+namespace App\Actions\Expenses\Finance;
 
-use App\Models\ExpenseCategory;
-use App\Models\PaymentMethod;
 use App\Services\Expenses\ExpensePermissionService;
 
-
-class EditPaymentMethod
+class GetFinance
 {
-
+    /**
+     * Permissionサービス
+     *
+     * @var ExpensePermissionService
+     */
     protected $expensePermissionService;
 
     /**
-     * EditExpenseCategory コンストラクタ
+     * GetFinance コンストラクタ
      *
      * 依存性を注入してプロパティを初期化します。
      *
@@ -25,13 +26,13 @@ class EditPaymentMethod
     }
 
 
-    public function get(int $id, int $teamId): PaymentMethod
+    public function index()
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod', $id)) {
-            throw new \Exception('This team is not authorized to edit payment methods.');
-        }
+        $isPermission = $this->expensePermissionService->checkPermission('finance');
 
-        return PaymentMethod::findOrFail($id);
+        return [
+            'isPermission' => $isPermission
+        ];
     }
 }
