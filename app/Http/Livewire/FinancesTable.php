@@ -138,9 +138,26 @@ class FinancesTable extends Component
         return Expense::where('team_id', auth()->user()->currentTeam->id)
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '<', now()) // 今日の日付より前のもののみ
             ->whereNull('payment_method_id')
             ->sum('amount');
     }
+
+    /**
+     * 予定された月の収入合計を取得
+     * 
+     * @return float
+     */
+    public function getScheduledIncome()
+    {
+        return Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->whereYear('reflected_date', $this->year)
+            ->whereMonth('reflected_date', $this->month)
+            ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
+            ->whereNull('payment_method_id')
+            ->sum('amount');
+    }
+
 
     /**
      * 月の支出合計を取得

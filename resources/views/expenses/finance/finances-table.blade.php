@@ -138,6 +138,15 @@
                     <td class="py-2 px-6 text-right fixed-width text-green-500 ">
                         {{ number_format($this->getTotalIncome()) }}{{ __('yen') }}</td>
                 </tr>
+
+                @if ($this->getScheduledIncome() > 0)
+                    <tr>
+                        <td class="py-2 px-6 text-left">{{ __('Planned Income for the Month') }}</td>
+                        <td class="py-2 px-6 text-right fixed-widt">
+                            {{ number_format($this->getScheduledIncome()) }}{{ __('yen') }}</td>
+                    </tr>
+                @endif
+
                 <tr>
                     <td class="py-2 px-6 text-left">{{ __('Total Expenditures for the Month') }}</td>
                     <td class="py-2 px-6 text-right fixed-width text-red-500">
