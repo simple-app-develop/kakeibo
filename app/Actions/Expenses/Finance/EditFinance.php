@@ -5,6 +5,7 @@ namespace App\Actions\Expenses\Finance;
 use App\Models\Expense;
 use App\Models\PaymentMethod;
 use App\Models\ExpenseCategory;
+use App\Services\Expenses\ExpensePermissionService;
 
 /**
  * 家計簿データ編集アクション
@@ -13,6 +14,25 @@ use App\Models\ExpenseCategory;
  */
 class EditFinance
 {
+    /**
+     * Permissionサービス
+     *
+     * @var ExpensePermissionService
+     */
+    protected $expensePermissionService;
+
+    /**
+     * EditFinance コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
+     */
+    public function __construct(ExpensePermissionService $expensePermissionService)
+    {
+        $this->expensePermissionService = $expensePermissionService;
+    }
+
     /**
      * 家計簿データを編集するための準備を行い、関連データを取得します。
      *
@@ -24,6 +44,11 @@ class EditFinance
      */
     public function edit(Expense $finance)
     {
+        // 権限を確認する
+        if (!$this->expensePermissionService->checkPermission('finance')) {
+            throw new \Exception('This team is not authorized to edit household data.');
+        }
+
         $currentTeamId = auth()->user()->currentTeam->id;
 
         $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();

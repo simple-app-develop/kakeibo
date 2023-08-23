@@ -14,7 +14,7 @@ use Illuminate\Database\QueryException;
 class UpdateExpenseCategory
 {
     /**
-     * 品目カテゴリサービス
+     * Permissionサービス
      *
      * @var ExpensePermissionService
      */

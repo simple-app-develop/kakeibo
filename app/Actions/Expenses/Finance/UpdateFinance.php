@@ -4,6 +4,7 @@ namespace App\Actions\Expenses\Finance;
 
 use App\Models\Expense;
 use App\Models\PaymentMethod;
+use App\Services\Expenses\ExpensePermissionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
@@ -15,6 +16,25 @@ use Illuminate\Support\Facades\Auth;
 class UpdateFinance
 {
     /**
+     * Permissionサービス
+     *
+     * @var ExpensePermissionService
+     */
+    protected $expensePermissionService;
+
+    /**
+     * UpdateFinance コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
+     */
+    public function __construct(ExpensePermissionService $expensePermissionService)
+    {
+        $this->expensePermissionService = $expensePermissionService;
+    }
+
+    /**
      * 既存の家計簿データエントリーを提供されたデータで更新します。
      *
      * @param Expense $expense 更新する家計簿データのエントリー
@@ -22,6 +42,11 @@ class UpdateFinance
      */
     public function update(Expense $expense, array $data)
     {
+        // 権限を確認する
+        if (!$this->expensePermissionService->checkPermission('finance')) {
+            throw new \Exception('This team is not authorized to edit household data.');
+        }
+
         $teamId = Auth::user()->currentTeam->id;
         $userId = Auth::id();
 

@@ -14,7 +14,7 @@ use Illuminate\Auth\Access\AuthorizationException;
 class DeleteExpenseCategory
 {
     /**
-     * 品目カテゴリサービス
+     * Permissionサービス
      *
      * @var ExpensePermissionService
      */

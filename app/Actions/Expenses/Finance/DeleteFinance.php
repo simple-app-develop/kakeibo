@@ -3,6 +3,7 @@
 namespace App\Actions\Expenses\Finance;
 
 use App\Models\Expense;
+use App\Services\Expenses\ExpensePermissionService;
 
 /**
  * 家計簿データ削除アクション
@@ -11,6 +12,25 @@ use App\Models\Expense;
  */
 class DeleteFinance
 {
+    /**
+     * Permissionサービス
+     *
+     * @var ExpensePermissionService
+     */
+    protected $expensePermissionService;
+
+    /**
+     * DeleteFinance コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
+     */
+    public function __construct(ExpensePermissionService $expensePermissionService)
+    {
+        $this->expensePermissionService = $expensePermissionService;
+    }
+
     /**
      * 家計簿データデータを削除する
      *
@@ -21,6 +41,11 @@ class DeleteFinance
      */
     public function delete(Expense $finance)
     {
+        // 権限を確認する
+        if (!$this->expensePermissionService->checkPermission('finance')) {
+            throw new \Exception('This team is not authorized to delete household data.');
+        }
+
         $finance->delete();
     }
 }
