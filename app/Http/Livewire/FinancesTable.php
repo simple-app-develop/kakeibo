@@ -4,6 +4,7 @@ namespace App\Http\Livewire;
 
 use Livewire\Component;
 use App\Models\Expense;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -309,5 +310,45 @@ class FinancesTable extends Component
     public function getCurrentMonthYearForCarbon(): string
     {
         return str_replace('年', '-', str_replace('月', '', $this->getCurrentMonthYear()));
+    }
+
+    /**
+     * それぞれの財布の残高を取得
+     *
+     * @return array
+     */
+    public function getWalletBalances()
+    {
+        $teamId = Auth::user()->currentTeam->id;
+
+        // チームに関連する財布のみを取得
+        $wallets = Wallet::where('team_id', $teamId)->get();
+
+        $balances = [];
+
+        foreach ($wallets as $wallet) {
+            $expensesWithWallets = Expense::whereHas('payment_method', function ($query) use ($wallet) {
+                $query->where('wallet_id', $wallet->id);
+            })
+                ->where('team_id', $teamId)
+                ->whereDate('reflected_date', '<=', now())
+                ->get();
+
+
+            // 初期残高をセット
+            $balance = $wallet->balance ?? 0;
+
+            foreach ($expensesWithWallets as $expense) {
+                if ($expense->payment_method_id !== null) { // 支払い方法が登録されている場合のみ
+                    $balance -= $expense->amount; // 支出を減算
+                } else {
+                    $balance += $expense->amount; // 収入を加算
+                }
+            }
+
+            $balances[$wallet->name] = $balance;
+        }
+
+        return $balances;
     }
 }
