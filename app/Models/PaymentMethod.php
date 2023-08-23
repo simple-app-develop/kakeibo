@@ -16,4 +16,9 @@ class PaymentMethod extends Model
         'payment_date',
         'month_offset'
     ];
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

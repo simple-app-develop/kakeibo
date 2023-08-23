@@ -64,7 +64,7 @@ class FinanceController extends Controller
             return redirect()->route('finance.index')->with('failure', $e->getMessage());
         }
 
-        return redirect()->route('finance.index')->with('success', 'success');
+        return redirect()->route('finance.index')->with('success', 'Saved household data.');
     }
 
     /**
@@ -100,7 +100,7 @@ class FinanceController extends Controller
             return redirect()->route('finance.index')->with('failure', $e->getMessage());
         }
 
-        return redirect()->route('finance.index')->with('success', '更新に成功しました！');
+        return redirect()->route('finance.index')->with('success', 'Edited household data.');
     }
 
     /**
@@ -117,6 +117,6 @@ class FinanceController extends Controller
         } catch (\Exception $e) {
             return redirect()->route('finance.index')->with('failure', $e->getMessage());
         }
-        return redirect()->route('finance.index')->with('success', '家計簿データが削除されました。');
+        return redirect()->route('finance.index')->with('success', 'Deleted household data.');
     }
 }
