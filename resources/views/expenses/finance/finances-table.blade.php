@@ -22,7 +22,9 @@
                 <th class="py-2 px-6 text-left hidden md:table-cell">{{ __('Description') }}</th>
                 <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Payment Method') }}</th>
                 <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Reflected Date') }}</th>
-                <th class="py-2 px-6 text-left">{{ __('Action') }}</th>
+                <th class="py-2 px-6 text-left @if (!$hasFinancePermission) md:hidden @endif">
+                    {{ __('Action') }}
+                </th>
             </tr>
         </thead>
         <tbody class="text-gray-600 text-sm font-light">
@@ -39,7 +41,7 @@
                         {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
 
                     <!-- Action Button -->
-                    <td class="py-2 px-6 text-left">
+                    <td class="py-2 px-6 text-left @if (!$hasFinancePermission) md:hidden @endif">
                         <div class="md:hidden">
                             <button class="text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">
                                 Details
