@@ -26,6 +26,12 @@ class WalletController extends Controller
         $wallet->balance = $request->balance;
         $wallet->save();
 
-        // return redirect()->route('dashboard')->with('success', 'Wallet successfully created.');
+        return redirect()->route('wallet.index')->with('success', 'Wallet successfully created.');
+    }
+
+    public function index()
+    {
+        $wallets = Wallet::where('team_id', auth()->user()->currentTeam->id)->get();
+        return view('expenses.wallet.index', compact('wallets'));
     }
 }

@@ -61,4 +61,5 @@ Route::middleware([
 
     Route::get('/wallet/create', [WalletController::class, 'create'])->name('wallet.create');
     Route::post('/wallet/store', [WalletController::class, 'store'])->name('wallet.store');
+    Route::get('/wallets', [WalletController::class, 'index'])->name('wallet.index');
 });
