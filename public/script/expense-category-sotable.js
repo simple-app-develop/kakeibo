@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const isSortableDisabled = !window.isPermission;
+    const isSortableDisabled = !window.canCreatePermission;
 
     const updateCategoryOrder = (elementId, reorderUrl) => {
         const categoryList = document.getElementById(elementId);

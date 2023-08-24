@@ -55,7 +55,8 @@ class ReorderExpenseCategory
 
         foreach ($order as $index => $id) {
             // 各カテゴリの権限を確認する
-            if (!$this->expensePermissionService->checkPermission('category', $id)) {
+            $isPermission = $this->expensePermissionService->checkPermission('category', 'create', $id);
+            if (!$isPermission) {
                 throw new AuthorizationException('You do not have permission to reorder categories for this team.');
             }
 
