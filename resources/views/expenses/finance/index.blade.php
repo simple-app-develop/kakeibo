@@ -67,18 +67,17 @@
                     <li>・{{ __('Categories to set up') }}: <span
                             id="categoriesCountDisplay">{{ $settingCounts['categoriesCount'] }}</span></li>
 
-                    <li>・{{ __('Payment Methods to set up') }}: <span
-                            id="paymentMethodsCountDisplay">{{ $settingCounts['paymentMethodsCount'] }}</span></li>
-                    @if ($settingCounts['paymentMethodsCount'] < 1)
-                        <span class="text-red-500">{{ __('(At least one payment method is required)') }}</span>
-                    @endif
-
                     <li>・{{ __('Wallets to set up') }}: <span
                             id="walletsCountDisplay">{{ $settingCounts['walletsCount'] }}</span></li>
                     @if ($settingCounts['walletsCount'] < 1)
                         <span class="text-red-500">{{ __('(At least one wallet is required)') }}</span>
                     @endif
 
+                    <li>・{{ __('Payment Methods to set up') }}: <span
+                            id="paymentMethodsCountDisplay">{{ $settingCounts['paymentMethodsCount'] }}</span></li>
+                    @if ($settingCounts['paymentMethodsCount'] < 1)
+                        <span class="text-red-500">{{ __('(At least one payment method is required)') }}</span>
+                    @endif
                 </ul>
             </div>
 
