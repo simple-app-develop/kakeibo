@@ -19,7 +19,8 @@ class Expense extends Model
         'date',
         'reflected_date',
         'type',
-        'wallet_id'
+        'wallet_id',
+        'target_wallet_id',
     ];
 
     protected $casts = [
