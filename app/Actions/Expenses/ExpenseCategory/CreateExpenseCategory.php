@@ -43,9 +43,12 @@ class CreateExpenseCategory
     public function create()
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('category')) {
+        $isPermission = $this->expensePermissionService->checkPermission('category', 'create');
+        if (!$isPermission) {
             throw new \Exception('You are not authorized to create categories on this team.');
         }
+
+
 
         // 品目カテゴリ作成ビューを返す
         return view('expenses.expense_categories.create');
@@ -61,7 +64,8 @@ class CreateExpenseCategory
     public function store(array $data)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('category')) {
+        $isPermission = $this->expensePermissionService->checkPermission('category', 'create');
+        if (!$isPermission) {
             throw new \Exception('You are not authorized to create categories on this team.');
         }
 

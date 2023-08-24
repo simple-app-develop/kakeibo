@@ -43,7 +43,8 @@ class UpdateFinance
     public function update(Expense $expense, array $data)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('finance')) {
+        $isPermission = $this->expensePermissionService->checkPermission('finance', 'update');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to edit household data.');
         }
 

@@ -89,7 +89,7 @@ class ExpenseCategoryController extends Controller
         // ビューにデータを渡す
         return view('expenses.expense_categories.index', [
             'categories' => $result['categories'],
-            'isPermission' => $result['isPermission']
+            'permissions' => $result['permissions']
         ]);
     }
 

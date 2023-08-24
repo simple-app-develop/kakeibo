@@ -29,10 +29,14 @@ class GetFinance
     public function index()
     {
         // 権限を確認する
-        $isPermission = $this->expensePermissionService->checkPermission('finance');
+        $permissions = [
+            'canUpdate' => $this->expensePermissionService->checkPermission('category', 'update'),
+            'canDelete' => $this->expensePermissionService->checkPermission('category', 'delete'),
+            'canCreate' => $this->expensePermissionService->checkPermission('category', 'create')
+        ];
 
         return [
-            'isPermission' => $isPermission
+            'permissions' => $permissions
         ];
     }
 }

@@ -44,7 +44,7 @@ class PaymentMethodController extends Controller
         // ビューにデータを渡す
         return view('expenses.payment_method.index', [
             'paymentMethods' => $result['paymentMethods'],
-            'isPermission' => $result['isPermission']
+            'permissions' => $result['permissions']
         ]);
     }
 

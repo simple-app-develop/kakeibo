@@ -70,7 +70,10 @@
         }
     </script>
 
-    @if ($isPermission)
+
+    @if ($permissions['canCreate'])
         <a href="{{ route('finance.create') }}" class="create_fab">+</a>
+    @else
+        <span class="create_fab bg-gray-400">+</span>
     @endif
 </x-app-layout>

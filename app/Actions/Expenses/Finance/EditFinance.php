@@ -46,7 +46,8 @@ class EditFinance
     public function edit(Expense $finance)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('finance')) {
+        $isPermission = $this->expensePermissionService->checkPermission('finance', 'update');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to edit household data.');
         }
 
@@ -57,7 +58,7 @@ class EditFinance
         $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
 
         // 財布を取得
-        $wallets = Wallet::where('team_id', $currentTeamId)->orderBy('name', 'asc')->get();
+        $wallets = Wallet::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
 
         return [
             'finance' => $finance,

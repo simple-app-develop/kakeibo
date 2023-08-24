@@ -28,7 +28,8 @@ class ReorderPaymentMethod
     public function reorder(array $order)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod')) {
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'create');
+        if (!$isPermission) {
             throw new \Exception('You do not have the authority to sort payment methods for this team.');
         }
 

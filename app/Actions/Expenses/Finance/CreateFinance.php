@@ -45,7 +45,8 @@ class CreateFinance
     public function create()
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('finance')) {
+        $isPermission = $this->expensePermissionService->checkPermission('finance', 'create');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to create household data.');
         }
 
@@ -56,7 +57,7 @@ class CreateFinance
         $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
 
         // 財布を取得
-        $wallets = Wallet::where('team_id', $currentTeamId)->get();
+        $wallets = Wallet::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
 
         return [
             'paymentMethods' => $paymentMethods,

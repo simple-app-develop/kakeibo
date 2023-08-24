@@ -24,7 +24,9 @@ class FinancesTable extends Component
     public $totalAmount = 0;
 
     // 
-    public $hasFinancePermission = false;
+    public $permissions = [false, false, false, false];
+
+
 
     //
     public $scheduledExpenseDetails = [];
@@ -49,7 +51,12 @@ class FinancesTable extends Component
         $this->year = Carbon::now()->year;
 
         // 権限を確認する
-        $this->hasFinancePermission = $expensePermissionService->checkPermission('finance');
+        $this->permissions = [
+            'canRead' => $expensePermissionService->checkPermission('finance', 'read'),
+            'canUpdate' => $expensePermissionService->checkPermission('finance', 'update'),
+            'canDelete' => $expensePermissionService->checkPermission('finance', 'delete'),
+            'canCreate' => $expensePermissionService->checkPermission('finance', 'create')
+        ];
     }
 
     /**

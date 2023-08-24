@@ -29,7 +29,8 @@ class UpdatePaymentMethod
     public function update($id, array $data)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod')) {
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'update', $id);
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to edit payment methods.');
         }
 

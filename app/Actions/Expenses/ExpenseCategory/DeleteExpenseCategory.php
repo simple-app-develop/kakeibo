@@ -42,7 +42,8 @@ class DeleteExpenseCategory
     public function delete(int $id): array
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('category', $id)) {
+        $isPermission = $this->expensePermissionService->checkPermission('category', 'delete', $id);
+        if (!$isPermission) {
             throw new AuthorizationException('You do not have permission to delete categories for this team.');
         }
 

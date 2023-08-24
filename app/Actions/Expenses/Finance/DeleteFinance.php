@@ -42,7 +42,8 @@ class DeleteFinance
     public function delete(Expense $finance)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('finance')) {
+        $isPermission = $this->expensePermissionService->checkPermission('finance', 'delete');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to delete household data.');
         }
 

@@ -43,7 +43,16 @@ class GetExpenseCategoriesByTeam
     public function getByTeam(int $teamId)
     {
         // 権限を確認する
-        $isPermission = $this->expensePermissionService->checkPermission('category');
+        $isPermission = $this->expensePermissionService->checkPermission('category', 'read');
+        if (!$isPermission) {
+            throw new \Exception('You are not authorized to create categories on this team.');
+        }
+
+        $permissions = [
+            'canUpdate' => $this->expensePermissionService->checkPermission('category', 'update'),
+            'canDelete' => $this->expensePermissionService->checkPermission('category', 'delete'),
+            'canCreate' => $this->expensePermissionService->checkPermission('category', 'create')
+        ];
 
 
         $categories = ExpenseCategory::where('team_id', $teamId)
@@ -52,7 +61,7 @@ class GetExpenseCategoriesByTeam
 
         return [
             'categories' => $categories,
-            'isPermission' => $isPermission
+            'permissions' => $permissions
         ];
     }
 }

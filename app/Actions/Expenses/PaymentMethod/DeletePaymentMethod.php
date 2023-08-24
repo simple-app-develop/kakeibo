@@ -29,7 +29,8 @@ class DeletePaymentMethod
     public function delete($id)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod')) {
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'delete');
+        if (!$isPermission) {
             throw new \Exception('This team does not have the authority to remove payment methods.');
         }
 

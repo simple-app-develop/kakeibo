@@ -22,15 +22,28 @@
                                         <span class="px-6 py-4 whitespace-no-wrap category-description">
                                             {{ $category->description }}
                                         </span>
-                                        @if ($isPermission)
+                                        @if ($permissions['canUpdate'])
                                             <a href="{{ route('expense-category-edit', $category->id) }}"
-                                                class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
-
-                                            <button
-                                                onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
-                                                class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                                class="icon-btn icon-btn-blue ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @else
+                                            <span class="icon-btn icon-btn-blue icon-btn-disabled ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
                                         @endif
 
+                                        @if ($permissions['canDelete'])
+                                            <button
+                                                onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
+                                                class="icon-btn icon-btn-red ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <span class="icon-btn icon-btn-red icon-btn-disabled ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
+                                        @endif
                                     </div>
                                 @endforeach
                             </div>
@@ -50,13 +63,27 @@
                                         <span class="px-6 py-4 whitespace-no-wrap category-description">
                                             {{ $category->description }}
                                         </span>
-                                        @if ($isPermission)
+                                        @if ($permissions['canUpdate'])
                                             <a href="{{ route('expense-category-edit', $category->id) }}"
-                                                class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+                                                class="icon-btn icon-btn-blue ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
+                                        @else
+                                            <span class="icon-btn icon-btn-blue icon-btn-disabled ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
+                                        @endif
 
+                                        @if ($permissions['canDelete'])
                                             <button
                                                 onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
-                                                class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                                class="icon-btn icon-btn-red ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        @else
+                                            <span class="icon-btn icon-btn-red icon-btn-disabled ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
                                         @endif
                                     </div>
                                 @endforeach
@@ -69,9 +96,12 @@
     </div>
 
     <!-- FABボタンの追加 -->
-    @if ($isPermission)
+    @if ($permissions['canCreate'])
         <a href="{{ route('expense-category-create') }}" class="create_fab">+</a>
+    @else
+        <span class="create_fab bg-gray-400">+</span>
     @endif
+
 
     <!-- 削除確認モーダル -->
     <div id="deleteModal"
@@ -103,7 +133,7 @@
     </div>
 
     <script>
-        window.isPermission = @json($isPermission);
+        window.canCreatePermission = @json($permissions['canCreate']);
 
         function toggleModal() {
             const modal = document.getElementById('deleteModal');
