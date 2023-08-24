@@ -38,6 +38,10 @@ class CreatePaymentMethod
         $teamId = auth()->user()->currentTeam->id;
         $wallets = Wallet::where('team_id', $teamId)->orderBy('order_column', 'asc')->get();
 
+        if ($wallets->count() === 0) {
+            throw new \Exception('No wallets have been registered. Please register a wallet before proceeding.');
+        }
+
         // 作成ビューを返す
         return view('expenses.payment_method.create', compact('wallets'));
     }
