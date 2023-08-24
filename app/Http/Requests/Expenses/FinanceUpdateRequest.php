@@ -31,12 +31,14 @@ class FinanceUpdateRequest extends FormRequest
                 Rule::exists('wallets', 'id')->where(function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 }),
+                'different:target_wallet_id',
             ],
             'target_wallet_id' => [
                 'required_if:transaction_type,transfer',
                 Rule::exists('wallets', 'id')->where(function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 }),
+                'different:wallet_id',
             ],
             'category' => [
                 'nullable',

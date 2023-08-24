@@ -103,6 +103,7 @@
                                     </option>
                                 @endforeach
                             </x-select-input>
+                            <x-input-error for="wallet_id" class="mt-2" />
                         </div>
 
                         <!-- Target Wallet Selection -->
@@ -116,6 +117,7 @@
                                     </option>
                                 @endforeach
                             </x-select-input>
+                            <x-input-error for="target_wallet_id" class="mt-2" />
                         </div>
 
 
