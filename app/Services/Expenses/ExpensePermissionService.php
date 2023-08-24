@@ -7,13 +7,36 @@ use App\Models\PaymentMethod;
 
 class ExpensePermissionService
 {
+    protected $permissions = [
+        'category' => [
+            'read' => 'read',
+            'update' => 'update',
+            'delete' => 'delete',
+            'create' => 'create'
+        ],
+        'paymentMethod' => [
+            'read' => 'read',
+            'update' => 'update',
+            'delete' => 'delete',
+            'create' => 'create'
+        ],
+        'wallet' => [
+            'read' => 'read',
+            'update' => 'update',
+            'delete' => 'delete',
+            'create' => 'create'
+        ],
+    ];
+
     /**
-     * Check if the user has permission to edit the category
+     * Check if the user has a specific permission.
      *
-     * @param int $id Category ID
+     * @param string $modelType
+     * @param string $action
+     * @param int|null $id
      * @return bool
      */
-    public function checkPermission(string $modelType, int $id = null): bool
+    public function checkPermission(string $modelType, string $action, int $id = null): bool
     {
         /** @var \App\Models\User|null */
         $user = auth()->user();
@@ -24,12 +47,8 @@ class ExpensePermissionService
 
         $teamId = $user->currentTeam->id;
 
-        // ユーザーが 'viewer' のロールだけを持っている場合は、アクセスを制限
-        if (
-            $user->hasTeamRole($user->currentTeam, 'viewer') &&
-            !$user->hasTeamRole($user->currentTeam, 'administrator') &&
-            !$user->hasTeamRole($user->currentTeam, 'editor')
-        ) {
+        // Check if user has permission based on the provided model type and action.
+        if (!$user->hasTeamPermission($user->currentTeam, $this->permissions[$modelType][$action])) {
             return false;
         }
 
