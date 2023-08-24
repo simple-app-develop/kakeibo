@@ -55,9 +55,11 @@ class CreateFinance
         $paymentMethods = PaymentMethod::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
         $expenseCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'expense')->orderBy('order_column', 'asc')->get();
         $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
-
-        // 財布を取得
         $wallets = Wallet::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
+
+        if (!$paymentMethods->count() || !$wallets->count()) {
+            throw new \Exception('Some essential settings are missing. Please set them up before creating a finance record.');
+        }
 
         return [
             'paymentMethods' => $paymentMethods,
