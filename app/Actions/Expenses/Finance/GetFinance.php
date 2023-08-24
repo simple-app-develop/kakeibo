@@ -2,6 +2,9 @@
 
 namespace App\Actions\Expenses\Finance;
 
+use App\Models\ExpenseCategory;
+use App\Models\PaymentMethod;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 
 class GetFinance
@@ -35,8 +38,17 @@ class GetFinance
             'canCreate' => $this->expensePermissionService->checkPermission('category', 'create')
         ];
 
+        $teamId = auth()->user()->currentTeam->id;
+
+        $settingCounts = [
+            'categoriesCount' => ExpenseCategory::where('team_id', $teamId)->count(),
+            'paymentMethodsCount' => PaymentMethod::where('team_id', $teamId)->count(),
+            'walletsCount' => Wallet::where('team_id', $teamId)->count(),
+        ];
+
         return [
-            'permissions' => $permissions
+            'permissions' => $permissions,
+            'settingCounts' => $settingCounts
         ];
     }
 }

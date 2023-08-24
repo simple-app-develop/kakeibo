@@ -28,7 +28,8 @@ class FinanceController extends Controller
         $result = $getFinance->index();
 
         return view('expenses.finance.index', [
-            'permissions' => $result['permissions']
+            'permissions' => $result['permissions'],
+            'settingCounts' => $result['settingCounts']
         ]);
     }
 
