@@ -211,6 +211,7 @@
     "This team is not authorized to edit payment methods.": "このチームで支払い方法を編集する権限がありません",
     "You do not have the authority to sort payment methods for this team.": "このチームで支払い方法を並び替える権限がありません",
     "Can edit the payment method used by your team": "チームで使用されている支払い方法を編集できます",
+    "This specifically determines from which \"wallet\" (bank) the money will be disbursed. This is a tool to ensure that the difference between the date of purchase and the date of posting is properly tracked and managed, especially when the date of purchase and the date of posting are different, as is the case with credit cards.": "具体的にどの「お財布（銀行）」からお金を支出するかを決定します。特に、クレジットカードのように購入日と計上日が異なる場合、その差を確実に把握して適切に管理するためのツールとなります。",
     "Delete Finance Data": "家計簿データを削除",
     "Are you sure you want to delete this finance data? This action cannot be undone.": "この家計簿データを削除してもよろしいですか？この操作は取り消せません。",
     "Saved household data.": "家計データを保存しました",
@@ -228,5 +229,6 @@
     "Wallet successfully updated.": "お財布（銀行）を更新しました",
     "Wallet successfully deleted.": "お財布（銀行）を削除しました",
     "Cannot delete wallet as it is associated with payment methods or finances.": "支払い方法や家計データに紐付いているため、お財布（銀行）を削除できません",
-    "You can edit the wallets (bank) used by your team.": "チームで使用されているお財布（銀行）を編集できます"
+    "You can edit the wallets (bank) used by your team.": "チームで使用されているお財布（銀行）を編集できます",
+    "This refers to where the money is actually kept. Specifically, we maintain bank accounts, wallets on hand, and all other places where money comes in and out of the bank.": "実際にお金が保管されている場所を指します。具体的には、銀行口座や手元の財布など、お金の出入りが発生する全ての場所を管理します。"
 }
