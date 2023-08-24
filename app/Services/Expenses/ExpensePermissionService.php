@@ -8,6 +8,12 @@ use App\Models\PaymentMethod;
 class ExpensePermissionService
 {
     protected $permissions = [
+        'finance' => [
+            'read' => 'read',
+            'update' => 'update',
+            'delete' => 'delete',
+            'create' => 'create'
+        ],
         'category' => [
             'read' => 'read',
             'update' => 'update',

@@ -43,7 +43,8 @@ class StoreFinance
     public function store(array $data): Expense
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('finance')) {
+        $isPermission = $this->expensePermissionService->checkPermission('finance', 'create');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to create household data.');
         }
 

@@ -45,7 +45,8 @@ class CreateFinance
     public function create()
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('finance')) {
+        $isPermission = $this->expensePermissionService->checkPermission('finance', 'create');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to create household data.');
         }
 
