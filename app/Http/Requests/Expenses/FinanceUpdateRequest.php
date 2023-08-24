@@ -19,7 +19,7 @@ class FinanceUpdateRequest extends FormRequest
         $teamId = auth()->user()->currentTeam->id;
 
         return [
-            'transaction_type' => 'required|in:expense,income',
+            'transaction_type' => 'required|in:expense,income,transfer',
             'payment_method' => [
                 'required_if:transaction_type,expense',
                 Rule::exists('payment_methods', 'id')->where(function ($query) use ($teamId) {
@@ -27,7 +27,13 @@ class FinanceUpdateRequest extends FormRequest
                 }),
             ],
             'wallet_id' => [
-                'required_if:transaction_type,income',
+                'required_if:transaction_type,transfer',
+                Rule::exists('wallets', 'id')->where(function ($query) use ($teamId) {
+                    $query->where('team_id', $teamId);
+                }),
+            ],
+            'target_wallet_id' => [
+                'required_if:transaction_type,transfer',
                 Rule::exists('wallets', 'id')->where(function ($query) use ($teamId) {
                     $query->where('team_id', $teamId);
                 }),

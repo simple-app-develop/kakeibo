@@ -12,7 +12,7 @@
                     @csrf
                     @method('PUT')
 
-                    <div x-data="{ transactionType: '{{ old('transaction_type', is_null($finance->payment_method_id) ? 'income' : 'expense') }}' }">
+                    <div x-data="{ transactionType: '{{ old('transaction_type', $finance->type) }}' }">
 
                         <!-- Transaction Type Selection -->
                         <div class="col-span-6 sm:col-span-4 p-6">
@@ -29,11 +29,15 @@
                                     $finance->payment_method_id ? 'expense' : 'income',
                                 ) === 'income'" x-model="transactionType"
                                 x-on:click="document.getElementById('category').selectedIndex = 0"></x-radio-button>
+                            <x-radio-button label="{{ __('Transfer') }}" id="type-transfer" name="transaction_type"
+                                value="transfer" :checked="old('transaction_type', $finance->type) === 'transfer'" x-model="transactionType"
+                                x-on:click="setCategory('transfer')"></x-radio-button>
+
                             <x-input-error for="transaction_type" class="mt-2" />
                         </div>
 
                         <!-- Category Selection -->
-                        <div class="col-span-6 sm:col-span-4 p-6">
+                        <div class="col-span-6 sm:col-span-4 p-6" x-show="transactionType !== 'transfer'">
                             <x-label for="category" value="{{ __('Category') }}" />
                             <x-select-input id="category" name="category">
                                 <option value=""
@@ -86,6 +90,32 @@
                                 @endforeach
                             </x-select-input>
                             <x-input-error for="wallet_id" class="mt-2" />
+                        </div>
+
+                        <!-- Source Wallet Selection -->
+                        <div x-show="transactionType === 'transfer'" class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="source_wallet" value="{{ __('Source Wallet') }}" />
+                            <x-select-input id="source_wallet" name="wallet_id">
+                                @foreach ($wallets as $wallet)
+                                    <option value="{{ $wallet->id }}"
+                                        {{ old('wallet_id', $finance->wallet_id) == $wallet->id ? 'selected' : '' }}>
+                                        {{ $wallet->name }}
+                                    </option>
+                                @endforeach
+                            </x-select-input>
+                        </div>
+
+                        <!-- Target Wallet Selection -->
+                        <div x-show="transactionType === 'transfer'" class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="target_wallet" value="{{ __('Target Wallet') }}" />
+                            <x-select-input id="target_wallet" name="target_wallet_id">
+                                @foreach ($wallets as $wallet)
+                                    <option value="{{ $wallet->id }}"
+                                        {{ old('target_wallet_id', $finance->target_wallet_id) == $wallet->id ? 'selected' : '' }}>
+                                        {{ $wallet->name }}
+                                    </option>
+                                @endforeach
+                            </x-select-input>
                         </div>
 
 
