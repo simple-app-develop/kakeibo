@@ -206,5 +206,15 @@
     "Deleted household data.": "家計データを削除しました",
     "This team is not authorized to create household data.": "このチームで家計データを作成する権限がありません",
     "This team is not authorized to delete household data.": "このチームで家計データを削除する権限がありません",
-    "This team is not authorized to edit household data.": "このチームで家計データを編集する権限がありません"
+    "This team is not authorized to edit household data.": "このチームで家計データを編集する権限がありません",
+    "Wallet(bank)": "お財布（銀行）",
+    "Balance": "残高",
+    "Initial Balance": "初期残高",
+    "Delete Wallet": "お財布（銀行）を削除",
+    "Are you sure you want to delete this wallet? This action cannot be undone.": "このお財布（銀行）を削除してもよろしいですか？この操作は取り消せません。",
+    "Wallet successfully created.": "お財布（銀行）を作成しました",
+    "Wallet successfully updated.": "お財布（銀行）を更新しました",
+    "Wallet successfully deleted.": "お財布（銀行）を削除しました",
+    "Cannot delete wallet as it is associated with payment methods or finances.": "支払い方法や家計データに紐付いているため、お財布（銀行）を削除できません",
+    "You can edit the wallets (bank) used by your team.": "チームで使用されているお財布（銀行）を編集できます"
 }

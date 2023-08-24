@@ -22,7 +22,7 @@
                 <th class="py-2 px-6 text-left hidden md:table-cell">{{ __('Description') }}</th>
                 <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Payment Method') }}</th>
                 <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Reflected Date') }}</th>
-                <th class="py-2 px-6 text-left @if (!$hasFinancePermission) md:hidden @endif">
+                <th class="py-2 px-6 text-left @if (!$permissions['canUpdate'] || !$permissions['canDelete']) md:hidden @endif">
                     {{ __('Action') }}
                 </th>
             </tr>
@@ -44,20 +44,26 @@
                         {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
 
                     <!-- Action Button -->
-                    <td class="py-2 px-6 text-left @if (!$hasFinancePermission) md:hidden @endif">
+                    <th class="py-2 px-6 text-left @if (!$permissions['canUpdate'] || !$permissions['canDelete']) md:hidden @endif">
+
                         <div class="md:hidden">
                             <button class="action_btn text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">
                                 <i class="fas fa-chevron-down"></i>
                             </button>
                         </div>
 
-                        @if ($hasFinancePermission)
+                        @if ($permissions['canUpdate'])
                             <!-- This will be visible only on desktop -->
                             <div class="flex items-center space-x-4">
                                 <a href="{{ route('finance.edit', $finance->id) }}"
                                     class="action_btn text-blue-500 hover:text-blue-700 md:block hidden">
                                     <i class="fas fa-pen"></i>
                                 </a>
+                            </div>
+                        @endif
+                        @if ($permissions['canDelete'])
+                            <div class="flex items-center space-x-4">
+
                                 <button
                                     onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
                                     class="action_btn text-red-500 hover:text-red-700 md:block hidden">
@@ -65,7 +71,7 @@
                                 </button>
                             </div>
                         @endif
-                    </td>
+                        </td>
                 </tr>
                 <!-- Details Section for Mobile -->
                 <tr class="details-section hidden md:hidden bg-gray-100">
@@ -75,18 +81,18 @@
                             <li>{{ __('Payment Method') }}: {{ optional($finance->payment_method)->name }}</li>
                             <li>{{ __('Reflected Date') }}:
                                 {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</li>
-                            @if ($hasFinancePermission)
-                                <li>
-                                    <a href="{{ route('finance.edit', $finance->id) }}"
-                                        class="action_btn text-blue-500 hover:text-blue-700">
-                                        <i class="fas fa-pen"></i>
-                                    </a>
-                                    <button
-                                        onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
-                                        class="action_btn text-red-500  hover:text-red-700">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </li>
+                            @if ($permissions['canUpdate'])
+                                <a href="{{ route('finance.edit', $finance->id) }}"
+                                    class="action_btn text-blue-500 hover:text-blue-700">
+                                    <i class="fas fa-pen"></i>
+                                </a>
+                            @endif
+                            @if ($permissions['canDelete'])
+                                <button
+                                    onclick="showFinanceDeleteModal('{{ route('finance.destroy', $finance->id) }}')"
+                                    class="action_btn text-red-500 hover:text-red-700">
+                                    <i class="fas fa-trash"></i>
+                                </button>
                             @endif
                         </ul>
                     </td>

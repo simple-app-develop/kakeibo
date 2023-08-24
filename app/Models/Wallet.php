@@ -14,4 +14,14 @@ class Wallet extends Model
         'name',
         'balance',
     ];
+
+    public function paymentMethods()
+    {
+        return $this->hasMany(PaymentMethod::class);
+    }
+
+    public function expenses()
+    {
+        return $this->hasMany(Expense::class);
+    }
 }

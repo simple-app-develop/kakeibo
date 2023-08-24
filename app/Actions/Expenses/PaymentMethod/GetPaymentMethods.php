@@ -29,7 +29,16 @@ class GetPaymentMethods
     public function getByTeam($teamId)
     {
         // 権限を確認する
-        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod');
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'read');
+        if (!$isPermission) {
+            throw new \Exception('error01');
+        }
+
+        $permissions = [
+            'canUpdate' => $this->expensePermissionService->checkPermission('paymentMethod', 'update'),
+            'canDelete' => $this->expensePermissionService->checkPermission('paymentMethod', 'delete'),
+            'canCreate' => $this->expensePermissionService->checkPermission('paymentMethod', 'create')
+        ];
 
         $paymentMethods = PaymentMethod::where('team_id', $teamId)
             ->orderBy('order_column', 'asc')
@@ -37,7 +46,7 @@ class GetPaymentMethods
 
         return [
             'paymentMethods' => $paymentMethods,
-            'isPermission' => $isPermission
+            'permissions' => $permissions
         ];
     }
 }

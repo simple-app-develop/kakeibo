@@ -29,7 +29,8 @@ class EditPaymentMethod
     public function get(int $id, int $teamId)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod', $id)) {
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'update', $id);
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to edit payment methods.');
         }
 

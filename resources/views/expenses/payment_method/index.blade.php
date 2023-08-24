@@ -46,17 +46,30 @@
                                         </div>
                                     @endif
                                 </div>
-
-                                @if ($isPermission)
-                                    <div class="actions">
+                                <div class="actions">
+                                    @if ($permissions['canUpdate'])
                                         <a href="{{ route('payment-method.edit', $method->id) }}"
-                                            class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+                                            class="icon-btn icon-btn-blue ml-4 text-blue-600 hover:text-blue-700">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                    @else
+                                        <span class="icon-btn icon-btn-blue icon-btn-disabled ml-4 text-blue-600">
+                                            <i class="fas fa-edit"></i>
+                                        </span>
+                                    @endif
 
+                                    @if ($permissions['canDelete'])
                                         <button
                                             onclick="showDeleteModal('{{ route('payment-method.destroy', $method->id) }}')"
-                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
-                                    </div>
-                                @endif
+                                            class="icon-btn icon-btn-red ml-4 text-red-600 hover:text-red-700">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    @else
+                                        <span class="icon-btn icon-btn-red icon-btn-disabled ml-4 text-red-600">
+                                            <i class="fas fa-trash"></i>
+                                        </span>
+                                    @endif
+                                </div>
                             </div>
                         @endforeach
 
@@ -66,10 +79,14 @@
         </div>
     </div>
 
+
     <!-- FABボタンの追加 -->
-    @if ($isPermission)
+    @if ($permissions['canCreate'])
         <a href="{{ route('payment-method.create') }}" class="create_fab">+</a>
+    @else
+        <span class="create_fab bg-gray-400">+</span>
     @endif
+
 
     <!-- 削除確認モーダル -->
     <div id="deleteModal"
@@ -101,7 +118,7 @@
     </div>
 
     <script>
-        window.isPermission = @json($isPermission);
+        window.canCreatePermission = @json($permissions['canCreate']);
 
         function toggleModal() {
             const modal = document.getElementById('deleteModal');

@@ -1,16 +1,16 @@
 document.addEventListener("DOMContentLoaded", () => {
     const isSortableDisabled = !window.canCreatePermission;
 
-    const updatePaymentMethodOrder = (elementId, reorderUrl) => {
-        const paymentMethodList = document.getElementById(elementId);
-        if (!paymentMethodList) return;
+    const updateWalletOrder = (elementId, reorderUrl) => {
+        const walletList = document.getElementById(elementId);
+        if (!walletList) return;
 
-        Sortable.create(paymentMethodList, {
+        Sortable.create(walletList, {
             animation: 150,
             disabled: isSortableDisabled,
             onEnd: function () {
                 const order = [];
-                paymentMethodList
+                walletList
                     .querySelectorAll("[data-id]")
                     .forEach(function (item) {
                         order.push(item.dataset.id);
@@ -44,5 +44,5 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     };
 
-    updatePaymentMethodOrder("paymentMethodList", "/payment-methods/reorder");
+    updateWalletOrder("walletList", "/wallets/reorder");
 });

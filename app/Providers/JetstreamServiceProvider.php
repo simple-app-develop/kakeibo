@@ -61,5 +61,27 @@ class JetstreamServiceProvider extends ServiceProvider
         Jetstream::role('viewer', 'Viewer', [
             'read',
         ])->description('Viewer users have the ability to read only.');
+
+        /* 以下テスト用 */
+        Jetstream::role('create', 'create', [
+            'create',
+            'read',
+
+        ])->description('テスト用権限です');
+        Jetstream::role('update', 'update', [
+            'update',
+            'read',
+
+        ])->description('テスト用権限です');
+        Jetstream::role('delete', 'delete', [
+            'delete',
+            'read',
+
+        ])->description('テスト用権限です');
+        Jetstream::role('read', 'read', [
+            'read',
+            'read',
+
+        ])->description('テスト用権限です');
     }
 }
