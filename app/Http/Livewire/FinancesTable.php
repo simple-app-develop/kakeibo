@@ -228,11 +228,23 @@ class FinancesTable extends Component
      */
     public function getOverallExpense()
     {
-        return Expense::where('team_id', auth()->user()->currentTeam->id)
+        // 通常の支出
+        $expenseTotal = Expense::where('team_id', auth()->user()->currentTeam->id)
             ->where('reflected_date', '<=', now())
-            ->whereNotNull('payment_method_id')
+            ->where('type', 'expense')
             ->sum('amount');
+
+        // 残高移動で引き出された合計
+        $transferOutTotal = Expense::where('team_id', auth()->user()->currentTeam->id)
+            ->where('reflected_date', '<=', now())
+            ->where('type', 'transfer')
+            ->whereNotNull('wallet_id')
+            ->sum('amount');
+
+        return $expenseTotal + $transferOutTotal;
     }
+
+
 
     /**
      * 今日までの総合計を取得
@@ -371,12 +383,14 @@ class FinancesTable extends Component
             $balance += Expense::where('team_id', $teamId)
                 ->where('target_wallet_id', $wallet->id)
                 ->where('type', 'transfer')
+                ->where('reflected_date', '<=', now())
                 ->sum('amount');
 
             // この財布からの残高移動引き出し
             $balance -= Expense::where('team_id', $teamId)
                 ->where('wallet_id', $wallet->id)
                 ->where('type', 'transfer')
+                ->where('reflected_date', '<=', now())
                 ->sum('amount');
 
             $balances[$wallet->name] = $balance;
