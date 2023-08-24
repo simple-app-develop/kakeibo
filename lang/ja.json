@@ -166,6 +166,7 @@
     "(At least one wallet is required)": "（お財布（銀行）は最低1つ必要です）",
     "You do not have the required permissions. Please contact the team owner for assistance.": "必要な権限がありません。チーム所有者にお問い合わせください。",
     "Some essential settings are missing. Please set them up before creating a finance record.": "必要な設定が完了していないようです。家計簿データを作成する前に設定を完了してください。",
+    "No wallets have been registered. Please register a wallet before proceeding.": "お財布（銀行）が登録されていません。先にお財布（銀行）を登録してください。",
     "Item category": "品目カテゴリ",
     "Edit Item Category": "品目カテゴリ",
     "Category Name": "カテゴリ名",
