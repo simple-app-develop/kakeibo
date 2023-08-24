@@ -34,4 +34,23 @@ class WalletController extends Controller
         $wallets = Wallet::where('team_id', auth()->user()->currentTeam->id)->get();
         return view('expenses.wallet.index', compact('wallets'));
     }
+
+    public function edit(Wallet $wallet)
+    {
+
+        return view('expenses.wallet.edit', compact('wallet'));
+    }
+
+    public function update(Request $request, Wallet $wallet)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+
+        $wallet->name = $request->name;
+        $wallet->save();
+
+        return redirect()->route('wallet.index')->with('success', 'Wallet successfully updated.');
+    }
 }

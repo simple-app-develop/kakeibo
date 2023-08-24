@@ -211,5 +211,6 @@
     "Balance": "残高",
     "Initial Balance": "初期残高",
     "Wallet successfully created.": "お財布（銀行）を作成しました",
+    "Wallet successfully updated.": "お財布（銀行）を更新しました",
     "You can edit the wallets (bank) used by your team.": "チームで使用されているお財布（銀行）を編集できます"
 }

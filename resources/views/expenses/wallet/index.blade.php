@@ -26,7 +26,10 @@
                             <tr>
                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $wallet->name }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $wallet->balance }}
+                                    <a href="{{ route('wallet.edit', $wallet->id) }}"
+                                        class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
                                 </td>
+
                             </tr>
                         @endforeach
                     </tbody>
