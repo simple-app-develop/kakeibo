@@ -11,6 +11,10 @@
                 <form method="POST" action="{{ route('finance.store') }}">
                     @csrf
 
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+
                     <div x-data="{ transactionType: '{{ old('transaction_type', 'expense') }}' }">
 
                         <!-- Transaction Type Selection -->
