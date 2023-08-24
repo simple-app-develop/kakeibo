@@ -13,7 +13,7 @@
 
                     <!-- Wallet Name -->
                     <div class="col-span-6 sm:col-span-4 p-6">
-                        <x-label for="name" value="{{ __('Wallet Name') }}" />
+                        <x-label for="name" value="{{ __('Name') }}" />
                         <x-input id="name" type="text" class="mt-1 block w-full" name="name" :value="old('name')"
                             required autofocus />
                         <x-input-error for="name" class="mt-2" />
