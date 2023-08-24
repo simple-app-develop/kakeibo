@@ -15,11 +15,12 @@
 
             <x-section-border />
 
-            @livewire('teams.payment-method', ['team' => $team])
+            @livewire('teams.wallet-setting', ['team' => $team])
 
             <x-section-border />
 
-            @livewire('teams.wallet-setting', ['team' => $team])
+            @livewire('teams.payment-method', ['team' => $team])
+
 
             @livewire('teams.team-member-manager', ['team' => $team])
 

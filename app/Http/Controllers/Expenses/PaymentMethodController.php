@@ -12,6 +12,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentMethodController extends Controller
 {
@@ -40,7 +41,11 @@ class PaymentMethodController extends Controller
 
     public function index()
     {
-        $result = $this->getPaymentMethods->getByTeam(auth()->user()->currentTeam->id);
+        try {
+            $result = $this->getPaymentMethods->getByTeam(auth()->user()->currentTeam->id);
+        } catch (\Exception $e) {
+            return redirect()->route('teams.show', Auth::user()->currentTeam->id)->with('failure', $e->getMessage());
+        }
         // ビューにデータを渡す
         return view('expenses.payment_method.index', [
             'paymentMethods' => $result['paymentMethods'],

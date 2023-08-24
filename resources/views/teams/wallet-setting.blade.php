@@ -1,6 +1,12 @@
 <x-form-section submit="">
     <x-slot name="title">
-        {{ __('Wallet(bank)') }}
+        <div class="label-with-tooltip">
+            {{ __('Wallet(bank)') }}<span class="tooltip">
+                <span class="tooltip-text">
+                    {{ __('This refers to where the money is actually kept. Specifically, we maintain bank accounts, wallets on hand, and all other places where money comes in and out of the bank.') }}
+                </span>
+            </span>
+        </div>
     </x-slot>
 
     <x-slot name="description">
