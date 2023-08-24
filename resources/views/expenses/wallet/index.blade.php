@@ -26,10 +26,12 @@
                             <tr>
                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $wallet->name }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $wallet->balance }}
-                                    <a href="{{ route('wallet.edit', $wallet->id) }}"
-                                        class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
-                                    <button onclick="showDeleteModal('{{ route('wallet.destroy', $wallet->id) }}')"
-                                        class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                    @if ($isPermission)
+                                        <a href="{{ route('wallet.edit', $wallet->id) }}"
+                                            class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+                                        <button onclick="showDeleteModal('{{ route('wallet.destroy', $wallet->id) }}')"
+                                            class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                    @endif
 
                                 </td>
 
@@ -40,6 +42,11 @@
             </div>
         </div>
     </div>
+
+    <!-- FABボタンの追加 -->
+    @if ($isPermission)
+        <a href="{{ route('wallet.create') }}" class="create_fab">+</a>
+    @endif
 
     <!-- Wallet Deletion Confirmation Modal -->
     <div id="walletDeleteModal"

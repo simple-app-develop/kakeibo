@@ -5,9 +5,30 @@ namespace App\Http\Controllers\Expenses;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Wallet;
+use App\Services\Expenses\ExpensePermissionService;
 
 class WalletController extends Controller
 {
+    /**
+     * 品目カテゴリサービス
+     *
+     * @var ExpensePermissionService
+     */
+    protected $expensePermissionService;
+
+    /**
+     * WalletController コンストラクタ
+     *
+     * 依存性を注入してプロパティを初期化します。
+     *
+     * @param ExpensePermissionService $expensePermissionService Permissionサービス
+     */
+    public function __construct(ExpensePermissionService $expensePermissionService)
+    {
+        $this->expensePermissionService = $expensePermissionService;
+    }
+
+
     public function create()
     {
         return view('expenses.wallet.create');
@@ -31,9 +52,15 @@ class WalletController extends Controller
 
     public function index()
     {
-        $wallets = Wallet::where('team_id', auth()->user()->currentTeam->id)->get();
-        return view('expenses.wallet.index', compact('wallets'));
+        $teamId = auth()->user()->currentTeam->id;
+
+        $isPermission = $this->expensePermissionService->checkPermission('wallet');
+
+        $wallets = Wallet::where('team_id', $teamId)->get();
+
+        return view('expenses.wallet.index', compact('wallets', 'isPermission'));
     }
+
 
     public function edit(Wallet $wallet)
     {
