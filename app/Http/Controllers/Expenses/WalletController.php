@@ -78,7 +78,8 @@ class WalletController extends Controller
             'canCreate' => $this->expensePermissionService->checkPermission('wallet', 'create')
         ];
 
-        $wallets = Wallet::where('team_id', $teamId)->get();
+        $wallets = Wallet::where('team_id', $teamId)->orderBy('order_column', 'asc')
+            ->get();
 
         return view('expenses.wallet.index', compact('wallets', 'permissions'));
     }
@@ -131,5 +132,27 @@ class WalletController extends Controller
         $wallet->delete();
 
         return redirect()->route('wallet.index')->with('success', 'Wallet successfully deleted.');
+    }
+
+    public function reorder(Request $request)
+    {
+
+        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'create');
+        if (!$isPermission) {
+            throw new \Exception('You do not have the authority to sort wallets for this team.');
+        }
+
+        $order = $request->input('order');
+
+        try {
+            foreach ($order as $index => $id) {
+                $wallet = Wallet::findOrFail($id);
+                $wallet->order_column = $index;
+                $wallet->save();
+            }
+        } catch (\Exception $e) {
+            return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
+        }
+        return response()->json(['message' => 'Order updated successfully']);
     }
 }

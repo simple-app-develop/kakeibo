@@ -66,4 +66,5 @@ Route::middleware([
     Route::get('/wallet/{wallet}/edit', [WalletController::class, 'edit'])->name('wallet.edit');
     Route::put('/wallet/{wallet}', [WalletController::class, 'update'])->name('wallet.update');
     Route::delete('/wallet/{wallet}', [WalletController::class, 'destroy'])->name('wallet.destroy');
+    Route::post('/wallets/reorder', [WalletController::class, 'reorder'])->name('wallet.reorder');
 });

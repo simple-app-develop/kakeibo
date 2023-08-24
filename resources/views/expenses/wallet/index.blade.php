@@ -21,9 +21,9 @@
                             </th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="walletList">
                         @foreach ($wallets as $wallet)
-                            <tr>
+                            <tr data-id="{{ $wallet->id }}">
                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $wallet->name }}</td>
                                 <td class="px-5 py-5 border-b border-gray-200 bg-white text-sm">{{ $wallet->balance }}
                                     @if ($permissions['canUpdate'])
@@ -90,6 +90,8 @@
         </div>
     </div>
     <script>
+        window.canCreatePermission = @json($permissions['canCreate']);
+
         function toggleWalletDeleteModal() {
             const modal = document.getElementById('walletDeleteModal');
             if (modal.classList.contains('hidden')) {
@@ -114,5 +116,5 @@
             toggleWalletDeleteModal();
         }
     </script>
-
+    <script src="{{ asset('script/wallet-sortable.js') }}"></script>
 </x-app-layout>
