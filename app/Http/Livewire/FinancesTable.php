@@ -374,8 +374,9 @@ class FinancesTable extends Component
 
             // この財布の支出合計
             $balance -= Expense::where('team_id', $teamId)
-                ->where('wallet_id', $wallet->id)
-                ->whereDate('reflected_date', '<=', now())
+                ->whereHas('payment_method', function ($query) use ($wallet) {
+                    $query->where('wallet_id', $wallet->id);
+                })->whereDate('reflected_date', '<=', now())
                 ->where('type', 'expense')
                 ->sum('amount');
 
