@@ -3,6 +3,7 @@
 namespace App\Actions\Expenses\PaymentMethod;
 
 use App\Models\PaymentMethod;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 
 class CreatePaymentMethod
@@ -35,7 +36,7 @@ class CreatePaymentMethod
         }
 
         $teamId = auth()->user()->currentTeam->id;
-        $wallets = \App\Models\Wallet::where('team_id', $teamId)->get();
+        $wallets = Wallet::where('team_id', $teamId)->orderBy('order_column', 'asc')->get();
 
         // 作成ビューを返す
         return view('expenses.payment_method.create', compact('wallets'));

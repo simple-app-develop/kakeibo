@@ -58,7 +58,7 @@ class EditFinance
         $incomeCategories = ExpenseCategory::where('team_id', $currentTeamId)->where('type', 'income')->orderBy('order_column', 'asc')->get();
 
         // 財布を取得
-        $wallets = Wallet::where('team_id', $currentTeamId)->orderBy('name', 'asc')->get();
+        $wallets = Wallet::where('team_id', $currentTeamId)->orderBy('order_column', 'asc')->get();
 
         return [
             'finance' => $finance,
