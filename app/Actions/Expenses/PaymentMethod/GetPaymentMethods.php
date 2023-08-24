@@ -3,6 +3,7 @@
 namespace App\Actions\Expenses\PaymentMethod;
 
 use App\Models\PaymentMethod;
+use App\Models\Wallet;
 use App\Services\Expenses\ExpensePermissionService;
 
 class GetPaymentMethods
@@ -43,6 +44,11 @@ class GetPaymentMethods
         $paymentMethods = PaymentMethod::where('team_id', $teamId)
             ->orderBy('order_column', 'asc')
             ->get();
+
+        $walletsCount = Wallet::where('team_id', $teamId)->count();
+        if ($walletsCount === 0) {
+            throw new \Exception('No wallets have been registered. Please register a wallet before proceeding.');
+        }
 
         return [
             'paymentMethods' => $paymentMethods,
