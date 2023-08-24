@@ -53,4 +53,16 @@ class WalletController extends Controller
 
         return redirect()->route('wallet.index')->with('success', 'Wallet successfully updated.');
     }
+
+    public function destroy(Wallet $wallet)
+    {
+        // 既に支払い方法に登録されている場合、または家計簿データで使用されている場合は削除不可
+        if ($wallet->paymentMethods->count() > 0 || $wallet->expenses->count() > 0) {
+            return redirect()->route('wallet.index')->with('failure', 'Cannot delete wallet as it is associated with payment methods or finances.');
+        }
+
+        $wallet->delete();
+
+        return redirect()->route('wallet.index')->with('success', 'Wallet successfully deleted.');
+    }
 }
