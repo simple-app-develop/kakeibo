@@ -164,6 +164,7 @@
     "Wallets to set up": "設定済みのお財布（銀行）数",
     "(At least one payment method is required)": "（支払い方法は最低1つ必要です）",
     "(At least one wallet is required)": "（お財布（銀行）は最低1つ必要です）",
+    "You do not have the required permissions. Please contact the team owner for assistance.": "必要な権限がありません。チーム所有者にお問い合わせください。",
     "Item category": "品目カテゴリ",
     "Edit Item Category": "品目カテゴリ",
     "Category Name": "カテゴリ名",

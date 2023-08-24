@@ -82,11 +82,23 @@
             </div>
 
             <div class="flex justify-between mt-5">
-                <a href="{{ route('teams.show', Auth::user()->currentTeam->id) }}"
-                    class="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">{{ __('Go to Settings') }}</a>
+                @if ($permissions['canCreate'])
+                    <a href="{{ route('teams.show', Auth::user()->currentTeam->id) }}"
+                        class="px-4 py-2 text-white bg-indigo-600 rounded-lg hover:bg-indigo-700">{{ __('Go to Settings') }}</a>
+                @else
+                    <span
+                        class="px-4 py-2 text-gray-400 bg-gray-200 border border-gray-300 rounded-lg cursor-not-allowed">{{ __('Go to Settings') }}</span>
+                @endif
                 <button onclick="toggleSettingsGuideModal()"
                     class="px-4 py-2 text-gray-500 border border-gray-300 rounded-lg hover:bg-gray-100">{{ __('Not Now') }}</button>
             </div>
+
+            @if (!$permissions['canCreate'])
+                <p class="text-red-500 mt-2 text-sm">
+                    {{ __('You do not have the required permissions. Please contact the team owner for assistance.') }}
+                </p>
+            @endif
+
         </div>
     </div>
 
