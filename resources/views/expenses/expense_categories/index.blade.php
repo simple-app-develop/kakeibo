@@ -24,19 +24,26 @@
                                         </span>
                                         @if ($permissions['canUpdate'])
                                             <a href="{{ route('expense-category-edit', $category->id) }}"
-                                                class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+                                                class="icon-btn icon-btn-blue ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                         @else
-                                            <span class="px-4 py-2 ml-4 bg-gray-400 rounded">{{ __('Edit') }}</span>
+                                            <span class="icon-btn icon-btn-blue icon-btn-disabled ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
                                         @endif
 
                                         @if ($permissions['canDelete'])
                                             <button
                                                 onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
-                                                class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                                class="icon-btn icon-btn-red ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         @else
-                                            <span class="px-4 py-2 ml-4 bg-gray-400 rounded">{{ __('Delete') }}</span>
+                                            <span class="icon-btn icon-btn-red icon-btn-disabled ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
                                         @endif
-
                                     </div>
                                 @endforeach
                             </div>
@@ -58,17 +65,25 @@
                                         </span>
                                         @if ($permissions['canUpdate'])
                                             <a href="{{ route('expense-category-edit', $category->id) }}"
-                                                class="px-4 py-2 ml-4 text-white bg-blue-600 rounded hover:bg-blue-700">{{ __('Edit') }}</a>
+                                                class="icon-btn icon-btn-blue ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </a>
                                         @else
-                                            <span class="px-4 py-2 ml-4 bg-gray-400 rounded">{{ __('Edit') }}</span>
+                                            <span class="icon-btn icon-btn-blue icon-btn-disabled ml-4 text-blue-600">
+                                                <i class="fas fa-edit"></i>
+                                            </span>
                                         @endif
 
                                         @if ($permissions['canDelete'])
                                             <button
                                                 onclick="showDeleteModal('{{ route('expense-category-destroy', $category->id) }}')"
-                                                class="px-4 py-2 ml-4 text-white bg-red-600 rounded hover:bg-red-700">{{ __('Delete') }}</button>
+                                                class="icon-btn icon-btn-red ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         @else
-                                            <span class="px-4 py-2 ml-4 bg-gray-400 rounded">{{ __('Delete') }}</span>
+                                            <span class="icon-btn icon-btn-red icon-btn-disabled ml-4 text-red-600">
+                                                <i class="fas fa-trash"></i>
+                                            </span>
                                         @endif
                                     </div>
                                 @endforeach
