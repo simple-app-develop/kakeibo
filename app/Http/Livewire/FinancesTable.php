@@ -350,30 +350,34 @@ class FinancesTable extends Component
 
         $balances = [];
         foreach ($wallets as $wallet) {
-            $incomes = Expense::where('team_id', $teamId)
-                ->where('wallet_id', $wallet->id)
-                ->whereDate('reflected_date', '<=', now())
-                ->where('type', 'income')
-                ->get();
-
-            $expenses = Expense::where('team_id', $teamId)
-                ->whereHas('payment_method', function ($query) use ($wallet) {
-                    $query->where('wallet_id', $wallet->id);
-                })
-                ->whereDate('reflected_date', '<=', now())
-                ->where('type', 'expense')
-                ->get();
-
             // 初期残高をセット
             $balance = $wallet->balance;
 
-            foreach ($incomes as $income) {
-                $balance += $income->amount;
-            }
+            // この財布の収入合計
+            $balance += Expense::where('team_id', $teamId)
+                ->where('wallet_id', $wallet->id)
+                ->whereDate('reflected_date', '<=', now())
+                ->where('type', 'income')
+                ->sum('amount');
 
-            foreach ($expenses as $expense) {
-                $balance -= $expense->amount;
-            }
+            // この財布の支出合計
+            $balance -= Expense::where('team_id', $teamId)
+                ->where('wallet_id', $wallet->id)
+                ->whereDate('reflected_date', '<=', now())
+                ->where('type', 'expense')
+                ->sum('amount');
+
+            // この財布への残高移動入金
+            $balance += Expense::where('team_id', $teamId)
+                ->where('target_wallet_id', $wallet->id)
+                ->where('type', 'transfer')
+                ->sum('amount');
+
+            // この財布からの残高移動引き出し
+            $balance -= Expense::where('team_id', $teamId)
+                ->where('wallet_id', $wallet->id)
+                ->where('type', 'transfer')
+                ->sum('amount');
 
             $balances[$wallet->name] = $balance;
         }
