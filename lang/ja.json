@@ -206,5 +206,8 @@
     "Deleted household data.": "家計データを削除しました",
     "This team is not authorized to create household data.": "このチームで家計データを作成する権限がありません",
     "This team is not authorized to delete household data.": "このチームで家計データを削除する権限がありません",
-    "This team is not authorized to edit household data.": "このチームで家計データを編集する権限がありません"
+    "This team is not authorized to edit household data.": "このチームで家計データを編集する権限がありません",
+    "Wallet(bank)": "お財布（銀行）",
+    "Balance": "残高",
+    "You can edit the wallets (bank) used by your team.": "チームで使用されているお財布（銀行）を編集できます"
 }

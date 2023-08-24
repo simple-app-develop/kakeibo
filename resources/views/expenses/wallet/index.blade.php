@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('Wallets') }}
+            {{ __('Wallet(bank)') }}
         </h2>
     </x-slot>
 
@@ -13,11 +13,11 @@
                         <tr>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Wallet Name
+                                {{ __('Name') }}
                             </th>
                             <th
                                 class="px-5 py-3 border-b-2 border-gray-200 bg-gray-100 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">
-                                Balance
+                                {{ __('Balance') }}
                             </th>
                         </tr>
                     </thead>

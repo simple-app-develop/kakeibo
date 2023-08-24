@@ -17,7 +17,9 @@
 
             @livewire('teams.payment-method', ['team' => $team])
 
+            <x-section-border />
 
+            @livewire('teams.wallet-setting', ['team' => $team])
 
             @livewire('teams.team-member-manager', ['team' => $team])
 
