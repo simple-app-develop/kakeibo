@@ -116,8 +116,12 @@ html {
     z-index: 1000;
 }
 
-.create_fab:hover {
+.create_fab:not(.bg-gray-400):hover {
     background-color: #e91e63;
+}
+
+.create_fab.bg-gray-400 {
+    cursor: not-allowed;
 }
 
 .action_btn {
