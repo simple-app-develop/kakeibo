@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const isSortableDisabled = !window.isPermission;
+    const isSortableDisabled = !window.canCreatePermission;
 
     const updatePaymentMethodOrder = (elementId, reorderUrl) => {
         const paymentMethodList = document.getElementById(elementId);

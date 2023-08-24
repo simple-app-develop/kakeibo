@@ -29,7 +29,8 @@ class CreatePaymentMethod
     public function create()
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod')) {
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'create');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to create payment methods.');
         }
 
@@ -43,7 +44,8 @@ class CreatePaymentMethod
     public function store(array $data)
     {
         // 権限を確認する
-        if (!$this->expensePermissionService->checkPermission('paymentMethod')) {
+        $isPermission = $this->expensePermissionService->checkPermission('paymentMethod', 'create');
+        if (!$isPermission) {
             throw new \Exception('This team is not authorized to create payment methods.');
         }
 
