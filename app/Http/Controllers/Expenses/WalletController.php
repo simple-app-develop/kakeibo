@@ -2,6 +2,13 @@
 
 namespace App\Http\Controllers\Expenses;
 
+use App\Actions\Expenses\Wallet\CreateWallet;
+use App\Actions\Expenses\Wallet\DestroyWallet;
+use App\Actions\Expenses\Wallet\EditWallet;
+use App\Actions\Expenses\Wallet\FetchWallets;
+use App\Actions\Expenses\Wallet\ReorderWallet;
+use App\Actions\Expenses\Wallet\StoreWallet;
+use App\Actions\Expenses\Wallet\UpdateWallet;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Wallet;
@@ -9,6 +16,15 @@ use App\Services\Expenses\ExpensePermissionService;
 
 class WalletController extends Controller
 {
+    private $createWallet;
+    private $storeWallet;
+    private $fetchWallets;
+    private $editWallet;
+    private $updateWallet;
+    private $destroyWallet;
+    private $reorderWallet;
+
+
     /**
      * 品目カテゴリサービス
      *
@@ -21,138 +37,100 @@ class WalletController extends Controller
      *
      * 依存性を注入してプロパティを初期化します。
      *
+     * @param CreateWallet $createWallet 
      * @param ExpensePermissionService $expensePermissionService Permissionサービス
      */
-    public function __construct(ExpensePermissionService $expensePermissionService)
-    {
+
+    public function __construct(
+        CreateWallet $createWallet,
+        StoreWallet $storeWallet,
+        ExpensePermissionService $expensePermissionService,
+        FetchWallets $fetchWallets,
+        EditWallet $editWallet,
+        UpdateWallet $updateWallet,
+        DestroyWallet $destroyWallet,
+        ReorderWallet $reorderWallet
+    ) {
+        $this->createWallet = $createWallet;
+        $this->storeWallet = $storeWallet;
         $this->expensePermissionService = $expensePermissionService;
-    }
-
-
-    public function create()
-    {
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'create');
-
-        if (!$isPermission) {
-            return redirect()->route('wallet.index')->with('failure', 'You do not have permission to edit this wallet.');
-        }
-
-        return view('expenses.wallet.create');
-    }
-
-    public function store(Request $request)
-    {
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'create');
-
-        if (!$isPermission) {
-            return redirect()->route('wallet.index')->with('failure', 'You do not have permission to edit this wallet.');
-        }
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'balance' => 'required|integer|min:0',
-        ]);
-
-        $wallet = new Wallet;
-        $wallet->team_id = $request->user()->currentTeam->id;
-        $wallet->name = $request->name;
-        $wallet->balance = $request->balance;
-        $wallet->save();
-
-        return redirect()->route('wallet.index')->with('success', 'Wallet successfully created.');
+        $this->fetchWallets = $fetchWallets;
+        $this->editWallet = $editWallet;
+        $this->updateWallet = $updateWallet;
+        $this->destroyWallet = $destroyWallet;
+        $this->reorderWallet = $reorderWallet;
     }
 
     public function index()
     {
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'read');
-
-        if (!$isPermission) {
-            return redirect()->route('welcome')->with('failure', 'You do not have permission to view this wallet.');
-        }
-
         $teamId = auth()->user()->currentTeam->id;
 
-        $permissions = [
-            'canUpdate' => $this->expensePermissionService->checkPermission('wallet', 'update'),
-            'canDelete' => $this->expensePermissionService->checkPermission('wallet', 'delete'),
-            'canCreate' => $this->expensePermissionService->checkPermission('wallet', 'create')
-        ];
+        try {
+            $data = $this->fetchWallets->fetch($teamId);
+        } catch (\Exception $e) {
+            return redirect()->route('wallet.index')->with('failure', $e->getMessage());
+        }
 
-        $wallets = Wallet::where('team_id', $teamId)->orderBy('order_column', 'asc')
-            ->get();
-
-        return view('expenses.wallet.index', compact('wallets', 'permissions'));
+        return view('expenses.wallet.index', $data);
     }
 
+    public function create()
+    {
+        try {
+            $view = $this->createWallet->create();
+        } catch (\Exception $e) {
+            return redirect()->route('wallet.index')->with('failure', $e->getMessage());
+        }
+        return $view;
+    }
+
+    public function store(Request $request)
+    {
+        try {
+            $this->storeWallet->store($request);
+        } catch (\Exception $e) {
+            return redirect()->route('wallet.index')->with('failure', $e->getMessage());
+        }
+        return redirect()->route('wallet.index')->with('success', 'Wallet successfully created.');
+    }
 
     public function edit(Wallet $wallet)
     {
-
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'update');
-
-        if (!$isPermission) {
-            return redirect()->route('wallet.index')->with('failure', 'You do not have permission to update this wallet.');
+        try {
+            $this->editWallet->edit();
+            return view('expenses.wallet.edit', compact('wallet'));
+        } catch (\Exception $e) {
+            return redirect()->route('wallet.index')->with('failure', $e->getMessage());
         }
-
-        return view('expenses.wallet.edit', compact('wallet'));
     }
 
     public function update(Request $request, Wallet $wallet)
     {
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'update');
-
-        if (!$isPermission) {
-            return redirect()->route('wallet.index')->with('failure', 'You do not have permission to update this wallet.');
+        try {
+            $this->updateWallet->update($request, $wallet);
+        } catch (\Exception $e) {
+            return redirect()->route('wallet.index')->with('failure', $e->getMessage());
         }
-
-        $request->validate([
-            'name' => 'required|string|max:255',
-        ]);
-
-
-        $wallet->name = $request->name;
-        $wallet->save();
-
         return redirect()->route('wallet.index')->with('success', 'Wallet successfully updated.');
     }
 
     public function destroy(Wallet $wallet)
     {
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'delete');
-
-        if (!$isPermission) {
-            return redirect()->route('wallet.index')->with('failure', 'You do not have permission to delete this wallet.');
+        try {
+            $this->destroyWallet->destroy($wallet);
+        } catch (\Exception $e) {
+            return redirect()->route('wallet.index')->with('failure', $e->getMessage());
         }
-
-        // 既に支払い方法に登録されている場合、または家計簿データで使用されている場合は削除不可
-        if ($wallet->paymentMethods->count() > 0 || $wallet->expenses->count() > 0) {
-            return redirect()->route('wallet.index')->with('failure', 'Cannot delete wallet as it is associated with payment methods or finances.');
-        }
-
-        $wallet->delete();
-
         return redirect()->route('wallet.index')->with('success', 'Wallet successfully deleted.');
     }
 
     public function reorder(Request $request)
     {
-
-        $isPermission = $this->expensePermissionService->checkPermission('wallet', 'create');
-        if (!$isPermission) {
-            throw new \Exception('You do not have the authority to sort wallets for this team.');
-        }
-
-        $order = $request->input('order');
-
         try {
-            foreach ($order as $index => $id) {
-                $wallet = Wallet::findOrFail($id);
-                $wallet->order_column = $index;
-                $wallet->save();
-            }
+            $this->reorderWallet->reorder($request);
+            return response()->json(['message' => 'Order updated successfully']);
         } catch (\Exception $e) {
             return redirect()->route('payment-method.index')->with('failure', $e->getMessage());
         }
-        return response()->json(['message' => 'Order updated successfully']);
     }
 }
