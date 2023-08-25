@@ -74,8 +74,12 @@
                         </div>
 
                         <!-- Wallet Selection for Income -->
-                        <div x-show="transactionType === 'income'" class="col-span-6 sm:col-span-4 p-6">
-                            <x-label for="wallet" value="{{ __('Wallet') }}" />
+                        <div x-show="transactionType === 'income' || transactionType === 'transfer'"
+                            class="col-span-6 sm:col-span-4 p-6">
+                            <x-label for="wallet">
+                                <span x-text="transactionType === 'transfer' ? '移動元の財布' : '入金先'"></span>
+                            </x-label>
+
                             <x-select-input id="wallet" name="wallet_id">
                                 @foreach ($wallets as $wallet)
                                     <option value="{{ $wallet->id }}"
@@ -87,18 +91,6 @@
                             <x-input-error for="wallet_id" class="mt-2" />
                         </div>
 
-                        <!-- Source Wallet Selection -->
-                        <div x-show="transactionType === 'transfer'" class="col-span-6 sm:col-span-4 p-6">
-                            <x-label for="source_wallet" value="{{ __('Source Wallet') }}" />
-                            <x-select-input id="source_wallet" name="wallet_id">
-                                @foreach ($wallets as $wallet)
-                                    <option value="{{ $wallet->id }}">
-                                        {{ $wallet->name }}
-                                    </option>
-                                @endforeach
-                            </x-select-input>
-                            <X-input-error for="wallet_id" class="mt-2" />
-                        </div>
 
                         <!-- Target Wallet Selection -->
                         <div x-show="transactionType === 'transfer'" class="col-span-6 sm:col-span-4 p-6">

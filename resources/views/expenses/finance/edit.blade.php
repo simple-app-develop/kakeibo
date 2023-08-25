@@ -79,7 +79,6 @@
                         </div>
 
 
-                        <!-- Wallet Selection for Income -->
                         <div x-show="transactionType === 'income' || transactionType === 'transfer'"
                             class="col-span-6 sm:col-span-4 p-6">
 
