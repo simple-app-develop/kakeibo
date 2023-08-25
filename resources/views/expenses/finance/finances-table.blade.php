@@ -22,7 +22,7 @@
                 <th class="py-2 px-6 text-left hidden md:table-cell">{{ __('Description') }}</th>
                 <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Payment Method') }}</th>
                 <th class="py-2 px-6 text-left fixed-width hidden md:table-cell">{{ __('Reflected Date') }}</th>
-                <th class="py-2 px-6 text-left @if (!$permissions['canUpdate'] || !$permissions['canDelete']) md:hidden @endif">
+                <th class="py-2 px-6 text-left @if (!$permissions['canUpdate'] && !$permissions['canDelete']) md:hidden @endif">
                     {{ __('Action') }}
                 </th>
             </tr>
@@ -44,7 +44,7 @@
                         {{ \Carbon\Carbon::parse($finance->reflected_date)->format('Y-m-d') }}</td>
 
                     <!-- Action Button -->
-                    <th class="py-2 px-6 text-left @if (!$permissions['canUpdate'] || !$permissions['canDelete']) md:hidden @endif">
+                    <th class="py-2 px-6 text-left @if (!$permissions['canUpdate'] && !$permissions['canDelete']) md:hidden @endif">
 
                         <div class="md:hidden">
                             <button class="action_btn text-blue-500 hover:text-blue-700" onclick="toggleDetails(this)">

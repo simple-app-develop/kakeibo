@@ -88,7 +88,17 @@ class StoreFinance
             $financeData['wallet_id'] = $data['wallet_id'] ?? null; // null合体演算子を使用
             $financeData['reflected_date'] = Carbon::parse($data['date']);
             $financeData['payment_method_id'] = null;
+        } elseif ($data['transaction_type'] === 'transfer') {
+            $financeData['wallet_id'] = $data['wallet_id'];
+            $financeData['target_wallet_id'] = $data['target_wallet_id'];
+            $financeData['reflected_date'] = Carbon::parse($data['date']);
+            $financeData['payment_method_id'] = null;
+            $financeData['amount'] = $data['amount'];
+            $financeData['description'] = "Transfer from Wallet {$data['wallet_id']} to Wallet {$data['target_wallet_id']}";
+
+            return Expense::create($financeData);
         }
+
 
 
         return Expense::create($financeData);
