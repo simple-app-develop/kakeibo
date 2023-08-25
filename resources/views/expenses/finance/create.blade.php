@@ -26,8 +26,8 @@
                             <x-radio-button label="{{ __('Income') }}" id="type-income" name="transaction_type"
                                 value="income" :checked="old('transaction_type', 'expense') === 'income'" x-model="transactionType"
                                 x-on:click="document.getElementById('category').selectedIndex = 0"></x-radio-button>
-                            <x-radio-button label="{{ __('Transfer') }}" id="type-transfer" name="transaction_type"
-                                value="transfer" x-model="transactionType"></x-radio-button>
+                            <x-radio-button label="{{ __('Money transfer') }}" id="type-transfer"
+                                name="transaction_type" value="transfer" x-model="transactionType"></x-radio-button>
                             <x-input-error for="transaction_type" class="mt-2" />
                         </div>
 
@@ -77,7 +77,8 @@
                         <div x-show="transactionType === 'income' || transactionType === 'transfer'"
                             class="col-span-6 sm:col-span-4 p-6">
                             <x-label for="wallet">
-                                <span x-text="transactionType === 'transfer' ? '移動元の財布' : '入金先'"></span>
+                                <span
+                                    x-text="transactionType === 'transfer' ? '{{ __('Source wallet') }}' : '{{ __('Wallet') }}'"></span>
                             </x-label>
 
                             <x-select-input id="wallet" name="wallet_id">
