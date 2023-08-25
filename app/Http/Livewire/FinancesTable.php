@@ -173,7 +173,7 @@ class FinancesTable extends Component
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
-            ->whereNull('payment_method_id')
+            ->where('type', 'income')
             ->sum('amount');
     }
 
@@ -204,7 +204,7 @@ class FinancesTable extends Component
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
-            ->whereNotNull('payment_method_id')
+            ->where('type', 'expense')
             ->sum('amount');
     }
 
@@ -217,7 +217,7 @@ class FinancesTable extends Component
     {
         return Expense::where('team_id', auth()->user()->currentTeam->id)
             ->where('reflected_date', '<=', now())
-            ->whereNull('payment_method_id')
+            ->where('type', 'income')
             ->sum('amount');
     }
 
@@ -284,7 +284,7 @@ class FinancesTable extends Component
             ->whereYear('reflected_date', $this->year)
             ->whereMonth('reflected_date', $this->month)
             ->where('reflected_date', '>=', now()) // 今日の日付以降のもののみ
-            ->whereNotNull('payment_method_id')
+            ->where('type', 'expense')
             ->with('expense_category') // <--- 項目名を取得するためのリレーション
             ->get();
     }
@@ -296,7 +296,7 @@ class FinancesTable extends Component
                 ->whereYear('reflected_date', $this->year)
                 ->whereMonth('reflected_date', $this->month)
                 ->where('reflected_date', '>=', now())
-                ->whereNull('payment_method_id')
+                ->where('type', 'income')
                 ->get();
         }
         $this->showScheduledIncomeDetails = !$this->showScheduledIncomeDetails;
